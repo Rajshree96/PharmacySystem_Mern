@@ -8,7 +8,6 @@ function App() {
 
   return (
     <>
-    Welcome to Pharmacy system
       <Router>
         <Routes>
           <Route path="/" element={<Registration />} />
