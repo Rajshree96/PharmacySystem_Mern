@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Card, CardContent, Grid, TextField, Typography, Box, Divider } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import lock from '../assets/lock.png'
 
 
 const Login = () => {
     const history = useNavigate();
     const [data, setData] = useState([]);
-    const [inpval, setInpval] = useState({
-        name: "",
+    const [inpval, setInpval] = useState({        
         email: "",
         password: ""
     });
@@ -30,11 +30,9 @@ const Login = () => {
         const getUserArr = localStorage.getItem("userCredential");
         console.log(getUserArr);
 
-        const { name, email, password } = inpval;
+        const { email, password } = inpval;
 
-        if (name === "") {
-            alert("name field is required")
-        } else if (email === "") {
+         if (email === "") {
             alert("email field is required")
         } else if (!email.includes("@")) {
             alert("enter valid email address")
@@ -59,36 +57,48 @@ const Login = () => {
 
         }
     }
-  return (
-    <Grid container style={{
-        display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
-    }}>        
-        <Grid item lg={3} xs={10} md={4}>
-            <Card>
-                <CardContent>
-                    <Typography variant='h6' style={{ fontSize: '20px', fontWeight: 'bold' }}>Hi!
-                        Log in to Dashboard</Typography>
-                    <Box mt={2}>
-                        <TextField variant='outlined' name="name" value={inpval.name} onChange={getData} placeholder='Enter Your Name' fullWidth />
-                    </Box>
-                    <Box mt={2}>
-                        <TextField variant='outlined' name="email" value={inpval.email} onChange={getData} placeholder='Enter Your Email' fullWidth />
-                    </Box>
-                    <Box mt={2}>
-                        <TextField variant='outlined' name="password" value={inpval.password} onChange={getData} placeholder='Enter your Password' fullWidth />
-                    </Box>
-                    <Box style={{ display: 'flex', justifyContent: 'end' }} mt={2}>
-                        <Typography>Don't have account, <Link to='/signup'>click here</Link></Typography>
-                    </Box>
-                    <Box style={{ display: 'grid', justifyContent: 'center' }} mt={2} >
-                        <Button onClick={addData} style={{ width: "150px", color: 'white', backgroundImage: "linear-gradient(#D1CCF4,#E6CECE)" }}>Login</Button>
-                    </Box>
-                    
-                </CardContent>
-            </Card>
+    return (
+        <Grid container style={{
+            display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
+        }}>
+            <Grid item lg={4} md={5} sm={7} xs={12} >
+                <Card>
+                    <CardContent>
+                        <Box style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                            <Box>
+                                <img src={lock} alt='lock' />
+                            </Box>
+                            <Box style={{ margin: '5px' }}>
+                                <Typography variant='h4' style={{ fontSize: '20px', fontWeight: 'bold' }}>
+                                    Login
+                                </Typography>
+                                <Typography>Please enter your login information.</Typography>
+                            </Box>
+                        </Box>
+                        <Box mt={2}>
+                            <Typography>Email</Typography>
+                            <TextField variant='outlined' name="email" value={inpval.email} onChange={getData}
+                                placeholder='Email' fullWidth />
+                        </Box>
+                        <Box mt={2}>
+                            <Typography>Password</Typography>
+                            <TextField variant='outlined' name="password" value={inpval.password} onChange={getData}
+                                placeholder='Password' fullWidth />
+                        </Box>
+                        <Box style={{ display: 'grid', justifyContent: 'start' }} mt={2} >
+                            <Typography>Your strong password</Typography>
+                            <Box>
+                                <Button onClick={addData} variant="contained"
+                                    style={{ width: "80px", color: 'white', marginTop: '15px', backgroundColor: '#14950A' }} >
+                                    Login</Button>
+                            </Box>
+                        </Box>
+
+                    </CardContent>
+                </Card>
+            </Grid>
         </Grid>
-    </Grid>
-  )
+    )
 }
 
 export default Login
