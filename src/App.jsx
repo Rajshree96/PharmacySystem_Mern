@@ -1,23 +1,25 @@
-import './App.css'
-import Registration from './pages/Registration'
-import Login from './pages/Login'
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-
+import "./App.css";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import SignUp from "./pages/auth/SignUp";
+import Login from "./pages/auth/Login";
+import Medicine from "./container/AddMedicine/Medicine/Medicine";
+import Dashboard from "./pages/Dashboard";
+import DynamicMedicineForm from "./common-components/Forms/medicineForms/DynamicMedicineForm";
 
 function App() {
-
-  return (
-    <>
-    Welcome to Pharmacy system
-      <Router>
-        <Routes>
-          <Route path="/" element={<Registration />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
-
-    </>
-  )
+    return (
+        <>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<SignUp />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/medicine" element={<Medicine />} />
+                    <Route path="/form/:formType" element={<DynamicMedicineForm />} />
+                </Routes>
+            </Router>
+        </>
+    );
 }
 
-export default App
+export default App;
