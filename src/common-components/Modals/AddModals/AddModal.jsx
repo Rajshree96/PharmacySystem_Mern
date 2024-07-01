@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import AddCategoryModal from "./AddCategoryModal";
+import AddMedicineModal from "./AddMedicineModal";
+import AddUnitsModal from "./AddUnitsModal";
+import AddMedicineTypeModal from "./AddMedicineTypeModal";
 
 const AddModal = ({ open, handleClose, formType }) => {
   const [categoryName, setCategoryName] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [unitName, setUnitName] = useState('');
+  const [medicineTypeName, setMedicineTypeName] = useState('');
   const [success, setSuccess] = useState(false);
 
   const handleAddCategory = () => {
@@ -26,10 +31,17 @@ const AddModal = ({ open, handleClose, formType }) => {
     }, 500);
   };
 
+  const handleAddMedicineType = () => {
+    setTimeout(() => {
+      setSuccess(true);
+    }, 500);
+  };
+
   const resetForm = () => {
     setCategoryName('');
     setMedicineName('');
     setUnitName('');
+    setMedicineTypeName('');
     setSuccess(false);
   };
 
@@ -40,62 +52,14 @@ const AddModal = ({ open, handleClose, formType }) => {
 
   const renderForm = () => {
     switch (formType) {
-      case 'category':
-        return (
-          <>
-            <DialogContentText>
-              Enter the name of the category you want to add.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Category Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
-            />
-          </>
-        );
-      case 'medicine':
-        return (
-          <>
-            <DialogContentText>
-              Enter the details of the medicine you want to add.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Medicine Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={medicineName}
-              onChange={(e) => setMedicineName(e.target.value)}
-            />
-            {/* Add other medicine fields here */}
-          </>
-        );
-      case 'unit':
-        return (
-          <>
-            <DialogContentText>
-              Enter the details of the unit you want to add.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Unit Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={unitName}
-              onChange={(e) => setUnitName(e.target.value)}
-            />
-            {/* Add other unit fields here */}
-          </>
-        );
+      case 'add category':
+        return <AddCategoryModal categoryName={categoryName} setCategoryName={setCategoryName} />;
+      case 'add medicine':
+        return <AddMedicineModal medicineName={medicineName} setMedicineName={setMedicineName} />;
+      case 'add medicinetype':
+        return <AddMedicineTypeModal medicineTypeName={medicineTypeName} setMedicineTypeName={setMedicineTypeName} />;
+      case 'add units':
+        return <AddUnitsModal unitName={unitName} setUnitName={setUnitName} />;
       default:
         return null;
     }
@@ -103,13 +67,16 @@ const AddModal = ({ open, handleClose, formType }) => {
 
   const handleSubmit = () => {
     switch (formType) {
-      case 'category':
+      case 'add category':
         handleAddCategory();
         break;
-      case 'medicine':
+      case 'add medicine':
         handleAddMedicine();
         break;
-      case 'unit':
+      case 'add medicinetype':
+        handleAddMedicineType();
+        break;
+      case 'add units':
         handleAddUnit();
         break;
       default:
@@ -119,7 +86,7 @@ const AddModal = ({ open, handleClose, formType }) => {
 
   return (
     <Dialog open={open} onClose={handleDialogClose}>
-      <DialogTitle>Add {formType.charAt(0).toUpperCase() + formType.slice(1)}</DialogTitle>
+      <DialogTitle>{formType.charAt(0).toUpperCase() + formType.slice(1)}</DialogTitle>
       <DialogContent>
         {!success ? (
           renderForm()

@@ -38,7 +38,36 @@ const Categories = () => {
                 <DynamicButton
                   icon={Add}
                   label={"Add Category"}
-                  onClick={() => handleOpenModal("category")}
+                  onClick={() => handleOpenModal("add category")}
+                  sx={{
+                    bgcolor: "#00816b",
+                    "&:hover": { bgcolor: "#004d40" },
+                    transition: "all 0.3s",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <DynamicButton
+                  icon={Add}
+                  label={"Add Units"}
+                  onClick={() => handleOpenModal("add units")}
+                  sx={{
+                    bgcolor: "#00816b",
+                    "&:hover": { bgcolor: "#004d40" },
+                    transition: "all 0.3s",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <DynamicButton
+                  icon={Add}
+                  label={"Add Medicine"}
+                  onClick={() => handleOpenModal("add medicine")}
+                  sx={{
+                    bgcolor: "#00816b",
+                    "&:hover": { bgcolor: "#004d40" },
+                    transition: "all 0.3s",
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -46,6 +75,11 @@ const Categories = () => {
                   icon={Edit}
                   label={"Manage Category"}
                   onClick={() => handleOpenModal("medicine")} // Example for other form types
+                  sx={{
+                    bgcolor: "#00796b",
+                    "&:hover": { bgcolor: "#004d40" },
+                    transition: "all 0.3s",
+                  }}
                 />
               </Grid>
             </Grid>
