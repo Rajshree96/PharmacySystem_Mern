@@ -167,7 +167,7 @@ const Dashboard = () => {
         <Box
               sx={{
                 bgcolor: opens ? 'skyblue' : 'skyblue',
-                pb: opens ? 2 : 0,x
+                pb: opens ? 2 : 0,
               }}
             >
               <ListItemButton
