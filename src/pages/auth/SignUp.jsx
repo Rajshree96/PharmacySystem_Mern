@@ -131,8 +131,9 @@ const SignUp = () => {
             "content-type": "application/json",
           }
         });
-        alert(response.data.result);
+        
         console.log('Form submitted successfully:', response.data);
+        history('/login');
       } catch (error) {
         alert(response.data.message);
       }
