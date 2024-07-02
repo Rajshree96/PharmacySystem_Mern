@@ -1,4 +1,4 @@
-  import React, { useState } from 'react';
+import React, { useState } from 'react';
   import Box from '@mui/material/Box';
   import ListItemButton from '@mui/material/ListItemButton';
   import ListItemText from '@mui/material/ListItemText';
@@ -114,19 +114,7 @@
 
     return (
       <Box >        
-          {/* <List sx={{backgroundColor:'blue'}}>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List> */}
-
+       
           <Box
             sx={{
               bgcolor: medicine ? '#086070' : '#086070',
