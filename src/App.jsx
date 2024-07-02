@@ -17,7 +17,7 @@ function App() {
                     <Route path="/" element={<SignUp />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/medicine" element={<Medicine />} />
+                    {/* <Route path="/medicine" element={<Medicine />} /> */}
                     <Route path="/form/:formType" element={<DynamicMedicineForm />} />
                 </Routes>
             </Router>
