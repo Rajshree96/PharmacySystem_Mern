@@ -5,6 +5,7 @@ import MedicineTable from "../../../../common-components/TableContainer/Medicine
 import DynamicButton from "../../../../common-components/ButtonContainer/DynamicButton";
 import { Add, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import AddMedicineTable from "../../../../common-components/TableContainer/AddMedicineTable";
 
 const AddMedicine = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const AddMedicine = () => {
               />
             </Grid>
           </Grid>
-          <MedicineTable />
+         <AddMedicineTable/>
         </Paper>
       </Container>
     </Box>
