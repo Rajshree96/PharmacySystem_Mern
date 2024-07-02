@@ -5,7 +5,6 @@ import Login from "./pages/auth/Login";
 import Medicine from "./container/AddMedicine/Medicine/Medicine";
 import Dashboard from "./pages/Dashboard";
 import DynamicMedicineForm from "./common-components/Forms/medicineForms/DynamicMedicineForm";
-
 function App() {
     return (
         <>
@@ -16,10 +15,11 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/medicine" element={<Medicine />} />
                     <Route path="/form/:formType" element={<DynamicMedicineForm />} />
+
+                 
                 </Routes>
             </Router>
         </>
     );
 }
-
 export default App;
