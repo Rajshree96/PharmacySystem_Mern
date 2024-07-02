@@ -125,7 +125,6 @@ const SignUp = () => {
     }  else if (confirmPassword === "") {
       alert("confirmPassword field is required")
     } else {
-      console.log(inpval);
       try {
         const response = await axios.post('http://localhost:4000/api/v1/user/register', inpval, {
           headers: {

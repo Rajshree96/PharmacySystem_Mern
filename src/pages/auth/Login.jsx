@@ -65,7 +65,6 @@ const Login = () => {
         } else if (password.length < 6) {
             alert("password length greater than 6")
         } else {
-            console.log(inpval);
       try {
         const response = await axios.post('http://localhost:4000/api/v1/user/login', inpval, {
           headers: {
@@ -82,9 +81,9 @@ const Login = () => {
     }
     return (
         <Grid container sx={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: "#e0f7fa"
+            display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'auto', bgcolor: "#e0f7fa",padding:"121px 0 121px 0"
         }}>
-            <Grid item lg={4} md={5} sm={7} xs={12} m={3} >
+            <Grid item lg={4} md={5} sm={7} xs={12} m={1} >
                 <Card >
                     <CardContent  >
                         <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
