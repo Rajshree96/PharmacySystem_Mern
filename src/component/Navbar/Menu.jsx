@@ -13,10 +13,10 @@
   // ];
 
   const medicines = [
-    { label: 'Categories', path: '/dashboard/categories' },
-    { label: 'Medicine Type', path: '/dashboard/medicinetype' },
-    { label: 'Units', path: '/dashboard/units' },
-    { label: 'Add Medicine', path: '/dashboard/addmedicine' },
+    { label: 'Categories' },
+    { label: 'Medicine Type'},
+    { label: 'Units' },
+    { label: 'Add Medicine' },
   ];
   const manufactuer = [
       { label: 'Add Manufacturer' },
@@ -76,7 +76,7 @@
 
     ];
 
-  const Menu = () => {
+  const Menu = ({setActiveComponent }) => {
     const [opens, setOpens] = useState(false);
     const [medicine, setMedicine] = useState(false);
     const [manufacturer, setManufacturer] = useState(false);
@@ -91,6 +91,10 @@
     const [search, setSearch] = useState(false);
     const [setting, setSetting] = useState(false);
     const [logout, setLogout] = useState(false);
+
+    const handleMenuItemClick = (component) => {
+      setActiveComponent(component);
+    };
 
   //   const handleDrawerClose = () => {
   //     setOpens(false);
@@ -168,11 +172,15 @@
                 }}
               />
             </ListItemButton>
+
+        {/* medicines */}
             {medicine &&
               medicines.map((item) => (
                 <ListItemButton
                   key={item.label}
                   sx={{ pl: 6, minHeight: 32, color: 'white' }}
+                  component={Link}
+                  onClick={() => handleMenuItemClick(item.label)}
                 >
                   <Link to="">
                   <ListItemText
