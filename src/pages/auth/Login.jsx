@@ -72,9 +72,10 @@ const Login = () => {
             "content-type": "application/json",
           }
         });
-        alert('Login successfully');
+        
         localStorage.setItem('token', response.data.result);
         // console.log('Login successfully:', response.data);
+        history('/dashboard');
       } catch (error) {
         alert(response.data.message);
       }
