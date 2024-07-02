@@ -9,6 +9,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import PasswordIcon from '@mui/icons-material/Password';
+import axios from 'axios';
 
 const theme = createTheme({
   overrides: {
@@ -67,8 +68,16 @@ const SignUp = () => {
   const history = useNavigate();
   const [data, setData] = useState([]);
   const [inpval, setInpval] = useState({
+    firstName: "",
+    lastName: "",
+    gender: "",
+    address: "",
+    state: "",
+    pinCode: "",
+    country: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: "",
   });
 
   const getData = (e) => {
@@ -83,15 +92,29 @@ const SignUp = () => {
     })
 
   }
-  const addData = (e) => {
+  const addData = async (e) => {
     e.preventDefault();
 
     const getUserArr = localStorage.getItem("userCredential");
     console.log(getUserArr);
 
-    const { email, password } = inpval;
+    const { firstName, lastName, gender, address, state, country, pinCode ,email, password, confirmPassword } = inpval;
 
-    if (email === "") {
+    if (firstName === "") {
+      alert("firstName field is required")
+    } else if (lastName === "") {
+      alert("lastName field is required")
+    }  else if (gender === "") {
+      alert("gender field is required")
+    }  else if (address === "") {
+      alert("address field is required")
+    } else if (state === "") {
+      alert("state field is required")
+    } else if (country === "") {
+      alert("country field is required")
+    } else if (pinCode === "") {
+      alert("pincode field is required")
+    } else if (email === "") {
       alert("email field is required")
     } else if (!email.includes("@")) {
       alert("enter valid email address")
@@ -99,19 +122,20 @@ const SignUp = () => {
       alert("password field is required")
     } else if (password.length < 6) {
       alert("password length greater than 6")
+    }  else if (confirmPassword === "") {
+      alert("confirmPassword field is required")
     } else {
-
-      if (getUserArr && getUserArr.length) {
-        const userData = JSON.parse(getUserArr);
-        // const userLogin = userData.email === email && userData.password === password ;
-
-        if (userData.email === email && userData.password === password) {
-          alert("user login sucessfully")
-          history("/medicalCenter")
-        } else {
-          alert("invalid details")
-
-        }
+      console.log(inpval);
+      try {
+        const response = await axios.post('http://localhost:4000/api/v1/user/register', inpval, {
+          headers: {
+            "content-type": "application/json",
+          }
+        });
+        alert(response.data.result);
+        console.log('Form submitted successfully:', response.data);
+      } catch (error) {
+        alert(response.data.message);
       }
 
     }
@@ -147,8 +171,9 @@ const SignUp = () => {
                       </InputAdornment>
                     )
                   }}
-                  fullWidth 
-                  label="First Name" variant="outlined" type="text" />
+                  fullWidth
+                  label="First Name" variant="outlined" type="text"
+                  name="firstName" value={inpval.firstName} onChange={getData} />
               </Grid>
               <Grid item xs={12} sm={6} md={6} lg={6}>
                 <TextField
@@ -162,8 +187,9 @@ const SignUp = () => {
                       </InputAdornment>
                     )
                   }}
-                  fullWidth 
-                  label="Last Name" variant="outlined" type="text" />
+                  fullWidth
+                  label="Last Name" variant="outlined" type="text"
+                  name="lastName" value={inpval.lastName} onChange={getData} />
               </Grid>
 
             </Grid>
@@ -183,8 +209,8 @@ const SignUp = () => {
                   id="outlined-select-gender"
                   select
                   defaultValue="Gender"
-                  label='Gender'
-                  fullWidth
+                  label='Gender' fullWidth
+                  name="gender" value={inpval.gender} onChange={getData}
                 >
                   {gender.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -205,8 +231,8 @@ const SignUp = () => {
                       </InputAdornment>
                     )
                   }}
-                  label='Address' type="text"
-                  fullWidth
+                  label='Address' type="text" fullWidth
+                  name="address" value={inpval.address} onChange={getData}
                 />
               </Grid>
             </Grid>
@@ -220,8 +246,8 @@ const SignUp = () => {
                   }}
                   select
                   defaultValue="State"
-                  label='State'
-                  fullWidth
+                  label='State' fullWidth
+                  name="state" value={inpval.state} onChange={getData}
                 >
                   {states.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -237,8 +263,8 @@ const SignUp = () => {
                       height: '50px'
                     },
                   }}
-                  label='PinCode' type="text"
-                  fullWidth
+                  label='PinCode' type="text" fullWidth
+                  name="pinCode" value={inpval.pinCode} onChange={getData}
                 />
               </Grid>
             </Grid>
@@ -254,6 +280,7 @@ const SignUp = () => {
                   defaultValue="Country"
                   label='Country'
                   fullWidth
+                  name="country" value={inpval.country} onChange={getData}
                 >
                   {countries.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -279,6 +306,7 @@ const SignUp = () => {
                   type='text'
                   label='Email'
                   fullWidth
+                  name="email" value={inpval.email} onChange={getData}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -296,6 +324,7 @@ const SignUp = () => {
                   type='password'
                   label='Password'
                   fullWidth
+                  name="password" value={inpval.password} onChange={getData}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -313,6 +342,7 @@ const SignUp = () => {
                   type='password'
                   label='Confirm Password'
                   fullWidth
+                  name="confirmPassword" value={inpval.confirmPassword} onChange={getData}
                 />
               </Grid>
             </Grid>

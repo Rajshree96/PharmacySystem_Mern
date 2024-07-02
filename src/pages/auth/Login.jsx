@@ -6,8 +6,24 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import lock from '../../assets/lock.png';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import axios from 'axios';
+
+const styles = () => ({
+    cover: {
+  display: 'flex', 
+  justifyContent: 'center', 
+  alignItems: 'center',
+   height: '100vh', 
+   bgcolor: "#e0f7fa",
+   '@media(maxWidth:600px)':{
+    width:'auto'
+   }
+  
+    },
+  });
 
 const Login = () => {
+    const classes = styles();
     const history = useNavigate();
     const [showPassword, setShowPassword] = React.useState(false);
 
@@ -23,9 +39,7 @@ const Login = () => {
     });
 
     const getData = (e) => {
-        // console.log(e.target.value)
         const { value, name } = e.target;
-        // console.log(value,name)
         setInpval(() => {
             return {
                 ...inpval,
@@ -34,7 +48,7 @@ const Login = () => {
         })
 
     }
-    const addData = (e) => {
+    const addData = async(e) => {
         e.preventDefault();
 
         const getUserArr = localStorage.getItem("userCredential");
@@ -51,20 +65,19 @@ const Login = () => {
         } else if (password.length < 6) {
             alert("password length greater than 6")
         } else {
-
-            if (getUserArr && getUserArr.length) {
-                const userData = JSON.parse(getUserArr);
-                // const userLogin = userData.email === email && userData.password === password ;
-
-                if (userData.email === email && userData.password === password) {
-                    alert("user login sucessfully")
-                    history("/medicalCenter")
-                } else {
-                    alert("invalid details")
-
-                }
-            }
-
+            console.log(inpval);
+      try {
+        const response = await axios.post('http://localhost:4000/api/v1/user/login', inpval, {
+          headers: {
+            "content-type": "application/json",
+          }
+        });
+        alert('Login successfully');
+        localStorage.setItem('token', response.data.result);
+        // console.log('Login successfully:', response.data);
+      } catch (error) {
+        alert(response.data.message);
+      }
         }
     }
     return (
@@ -109,7 +122,8 @@ const Login = () => {
                                         </InputAdornment>
                                     }
                                     placeholder='Password'
-                                    // value={inpval.password} 
+                                    name="password"
+                                    value={inpval.password} 
                                     onChange={getData}
                                 />
                             </FormControl>
