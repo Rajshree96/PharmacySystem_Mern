@@ -7,10 +7,7 @@ const categorySchema = new mongoose.Schema({
         unique: true,
         trim: true,
     },
-    action:{
-        type:String,
-        enum: ['edit', 'delete'],
-    }
+   
 }, {timestamps:true});
 
 
