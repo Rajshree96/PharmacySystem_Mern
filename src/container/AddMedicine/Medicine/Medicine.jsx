@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Container, Typography, Grid, Card, Breadcrumbs, Link } from "@mui/material";
+import { Box, Container, Typography, Grid, Card, Breadcrumbs, Link, Button } from "@mui/material";
 import Categories from "./Categories/Categories";
 import MedicineType from "./MedicineType/MedicineType";
 import Units from "./Units/Units";
@@ -7,9 +7,11 @@ import AddMedicine from "./AddMedicine/AddMedicine";
 
 const Medicine = () => {
   const [activeComponent, setActiveComponent] = useState('Categories');
+  const [breadcrumb, setBreadcrumb] = useState(['Medicine']);
 
   const handleComponentChange = (componentName) => {
     setActiveComponent(componentName);
+    setBreadcrumb(['Medicine', componentName]);
   };
 
   const renderActiveComponent = () => {
@@ -30,6 +32,19 @@ const Medicine = () => {
   return (
     <Box sx={{ bgcolor: "#e0f7fa", py: 5 }}>
       <Container>
+        <Breadcrumbs aria-label="breadcrumb">
+          {breadcrumb.map((crumb, index) => (
+            <Link
+              key={index}
+              color="inherit"
+              href="#"
+              onClick={() => handleComponentChange(crumb)}
+              sx={{ textDecoration: "none", color: "#00695c" }}
+            >
+              {crumb}
+            </Link>
+          ))}
+        </Breadcrumbs>
         <Typography variant="h3" gutterBottom sx={{ color: "#00695c", fontWeight: "bold", textAlign: "center" }}>
           {activeComponent}
         </Typography>
