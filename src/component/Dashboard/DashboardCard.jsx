@@ -15,10 +15,27 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
+import VaccinesIcon from '@mui/icons-material/Vaccines';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import HealingIcon from '@mui/icons-material/Healing';
+import DescriptionIcon from '@mui/icons-material/Description';
+import sales from '../../assets/sales.png'
+import pie from '../../assets/pieGraph.png'
+import purchase from '../../assets/credit.png'
+import stock from '../../assets/stock.png'
+import day from '../../assets/day.png'
+import customer from '../../assets/customer.png'
+import store from '../../assets/store.png'
+import medicine from '../../assets/medicine.png'
+import inventry from '../../assets/inventry.png'
+import expire from '../../assets/expire.png'
+import invoice from '../../assets/invoice.png'
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: "#086070",
         color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -41,27 +58,25 @@ const createData = (name, calories, fat, carbs) => {
 };
 
 const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
+    createData('syruf', 159, 6.0, 24, 4.0),
+    createData('capsules', 237, 9.0, 37, 4.3),
+    createData('tablets', 262, 16.0, 24, 6.0),
+    createData('syrum', 305, 3.7, 67, 4.3),
+    createData('cold tab', 356, 16.0, 49, 3.9),
 ];
 
 const DashboardCard = () => {
     return (
         <>
             <Box className="dashboardcard">
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                     <Grid item lg={2} md={2} sm={3} xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Card sx={{ maxWidth: 'auto' }}>
                                 <CardContent>
                                     <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
-                                        <Avatar sx={{ bgcolor: 'pink' }} aria-label="recipe" >
-                                            <PersonIcon sx={{ color: 'black' }} />
-                                        </Avatar>
-                                        <Typography variant="h6" sx={{ fontWeight: '700' }}> 15</Typography>
+                                            <img src={customer} alt="logo" height={50} width={50} />
+                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#78A75A",fontSize:"25px"}}> 15</Typography>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -78,11 +93,9 @@ const DashboardCard = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Card sx={{ maxWidth: 'auto' }}>
                                 <CardContent>
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
-                                        <Avatar sx={{ bgcolor: 'pink' }} aria-label="recipe" >
-                                            <PersonIcon sx={{ color: 'black' }} />
-                                        </Avatar>
-                                        <Typography variant="h6" sx={{ fontWeight: '700' }}> 566</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
+                                            <img src={store} alt="logo" height={50} width={50} />
+                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#EA33F7",fontSize:"25px"}}> 546</Typography>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '17px', width: '155px' }} >
@@ -99,11 +112,9 @@ const DashboardCard = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Card sx={{ maxWidth: 'auto' }}>
                                 <CardContent>
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
-                                        <Avatar sx={{ bgcolor: 'pink' }} aria-label="recipe" >
-                                            <PersonIcon sx={{ color: 'black' }} />
-                                        </Avatar>
-                                        <Typography variant="h6" sx={{ fontWeight: '700' }}> 878</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
+                                            <img src={medicine} alt="logo" height={50} width={50} />
+                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#2854C5",fontSize:"25px"}}> 375</Typography>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -120,11 +131,9 @@ const DashboardCard = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Card sx={{ maxWidth: 'auto' }}>
                                 <CardContent>
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
-                                        <Avatar sx={{ bgcolor: 'pink' }} aria-label="recipe" >
-                                            <PersonIcon sx={{ color: 'black' }} />
-                                        </Avatar>
-                                        <Typography variant="h6" sx={{ fontWeight: '700' }}> 563</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
+                                            <img src={inventry} alt="logo" height={50} width={50} />
+                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#BB271A",fontSize:"25px"}}> 285</Typography>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -141,11 +150,9 @@ const DashboardCard = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Card sx={{ maxWidth: 'auto' }}>
                                 <CardContent>
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
-                                        <Avatar sx={{ bgcolor: 'pink' }} aria-label="recipe" >
-                                            <PersonIcon sx={{ color: 'black' }} />
-                                        </Avatar>
-                                        <Typography variant="h6" sx={{ fontWeight: '700' }}> 563</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
+                                            <img src={expire} alt="logo" height={50} width={50} />
+                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#8C1AF6",fontSize:"25px"}}> 895</Typography>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -157,15 +164,14 @@ const DashboardCard = () => {
                             </Card>
                         </Box>
                     </Grid>
+
                     <Grid item lg={2} md={2} sm={3} xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Card sx={{ maxWidth: 'auto' }}>
                                 <CardContent>
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
-                                        <Avatar sx={{ bgcolor: 'pink' }} aria-label="recipe" >
-                                            <PersonIcon sx={{ color: 'black' }} />
-                                        </Avatar>
-                                        <Typography variant="h6" sx={{ fontWeight: '700' }}> 764</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
+                                            <img src={invoice} alt="logo" height={50} width={50} />
+                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#F19E39",fontSize:"25px"}}> 785</Typography>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -180,162 +186,187 @@ const DashboardCard = () => {
 
                 </Grid>
 
-                <Grid container spacing={1} mt='2rem'>
+                <Grid container spacing={2} mt='1rem'>
                     <Grid item lg={3} md={3} sm={6} xs={12}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <CardContent >
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'end' }}>
-                                        <Box style={{ backgroundColor: '#086070', color: 'white', height: '50px', width: '50px', borderRadius: '5px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {/* <img src={image1} alt='graph' height={49} width={58} /> */}icon
-                                        </Box>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '600', fontSize: '18px' }} >
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                            <CardContent >
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem' }}>
+                                    <Box sx={{ display: 'grid', justifyContent: 'start', gap: '5px', alignItems: 'start' }}>
+                                        <img src={sales} alt='graph' height={50} width={50} />
+                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: '#EA3323', fontWeight: '600', fontSize: '19px' }} >
                                             Sales Report
                                         </Typography>
                                     </Box>
-                                </CardContent>
-                            </Card>
+                                    <img src={pie} alt='graph' height={50} width={50} />
+                                </Box>
+                            </CardContent>
+                        </Card>
                         </Box>
                     </Grid>
                     <Grid item lg={3} md={3} sm={6} xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <CardContent >
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'end' }}>
-                                        <Box style={{ backgroundColor: '#086070', color: 'white', height: '50px', width: '50px', borderRadius: '5px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {/* <img src={image1} alt='graph' height={49} width={58} /> */}icon
-                                        </Box>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '600', fontSize: '18px' }} >
+                        <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                            <CardContent >
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem' }}>
+                                    <Box sx={{ display: 'grid', justifyContent: 'start', gap: '5px', alignItems: 'start' }}>
+                                        <img src={purchase} alt='graph' height={50} width={50} />
+                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: '#8C1AF6', fontWeight: '600', fontSize: '18px' }} >
                                             Purchase Report
                                         </Typography>
                                     </Box>
-                                </CardContent>
-                            </Card>
+                                    <img src={pie} alt='graph' height={50} width={50} />
+                                </Box>
+                            </CardContent>
+                        </Card>
                         </Box>
                     </Grid>
                     <Grid item lg={3} md={3} sm={6} xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <CardContent >
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'end' }}>
-                                        <Box style={{ backgroundColor: '#086070', color: 'white', height: '50px', width: '50px', borderRadius: '5px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {/* <img src={image1} alt='graph' height={49} width={58} /> */}icon
-                                        </Box>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '600', fontSize: '18px' }} >
+                        <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                            <CardContent >
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem' }}>
+                                    <Box sx={{ display: 'grid', justifyContent: 'start', gap: '5px', alignItems: 'start' }}>
+                                        <img src={stock} alt='graph' height={50} width={50} />
+                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: '#78A75A', fontWeight: '600', fontSize: '18px' }} >
                                             Stock Report
                                         </Typography>
                                     </Box>
-                                </CardContent>
-                            </Card>
+                                    <img src={pie} alt='graph' height={50} width={50} />
+                                </Box>
+                            </CardContent>
+                        </Card>
                         </Box>
                     </Grid>
                     <Grid item lg={3} md={3} sm={6} xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-                            <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <CardContent >
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'end' }}>
-                                        <Box style={{ backgroundColor: '#086070', color: 'white', height: '50px', width: '50px', borderRadius: '5px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {/* <img src={image1} alt='graph' height={49} width={58} /> */}icon
-                                        </Box>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '600', fontSize: '18px' }} >
+                        <Card sx={{ width: '280px', height: '130px', bgcolor: '#fff', display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                            <CardContent >
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem' }}>
+                                    <Box sx={{ display: 'grid', justifyContent: 'start', gap: '5px', alignItems: 'start' }}>
+                                        <img src={day} alt='graph' height={50} width={50} />
+                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: '#0000F5', fontWeight: '600', fontSize: '18px' }} >
                                             Day Book
                                         </Typography>
                                     </Box>
-                                </CardContent>
-                            </Card>
+                                    <img src={pie} alt='graph' height={50} width={50} />
+                                </Box>
+                            </CardContent>
+                        </Card>
                         </Box>
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={0} mt='2rem' >
+                <Grid container spacing={4} mt='1rem' >
                     <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Card sx={{ width: '580px', height: '420px' }}>
-                                <CardContent>
-                                    <Box sx={{ display: 'grid', justifyContent: 'start', alignItems: 'center' }}>
-                                        <Typography variant='h6' sx={{ color: 'grey' }}>Statistics</Typography>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
-                                            Monthly Progress Report
-                                        </Typography>
-                                        <Box>
-                                            <img src={dumy} alt='graph' style={{ width: '530px', height: '320px' }} />
-                                        </Box>
+                        <Card sx={{ width: 'auto', height: '420px' }}>
+                            <CardContent>
+                                <Box sx={{ display: 'grid', justifyContent: 'start', alignItems: 'center' }}>
+                                    <Typography variant='h6' sx={{ color: 'grey' }}>Statistics</Typography>
+                                    <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
+                                        Monthly Progress Report
+                                    </Typography>
+                                    <Box>
+                                        <img src={dumy} alt='graph' style={{ width: '530px', height: '320px' }} />
                                     </Box>
-                                </CardContent>
-                            </Card>
-                        </Box>
+                                </Box>
+                            </CardContent>
+                        </Card>
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Card sx={{ width: '580px', height: '420px' }}>
-                                <CardContent>
-                                    <Box sx={{ display: 'grid', justifyContent: 'start', alignItems: 'center' }}>
-                                        <Typography variant='h6' sx={{ color: 'grey' }}>Statistics</Typography>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
-                                            Inventory Report
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <img src={circle} alt='graph' />
-                                    </Box>
-                                </CardContent>
-                            </Card>
-                        </Box>
+                        <Card sx={{ width: 'auto', height: '420px' }}>
+                            <CardContent>
+                                <Box sx={{ display: 'grid', justifyContent: 'start', alignItems: 'center' }}>
+                                    <Typography variant='h6' sx={{ color: 'grey' }}>Statistics</Typography>
+                                    <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
+                                        Inventory Report
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <img src={circle} alt='graph' />
+                                </Box>
+                            </CardContent>
+                        </Card>
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={3} mt='2rem' >
+                <Grid container spacing={4} mt='1rem' >
                     <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 'auto' }} aria-label="customized table">
-                                <TableHead >
-                                    <TableRow >
-                                        <StyledTableCell>Medicine Name</StyledTableCell>
-                                        <StyledTableCell align="right">Category</StyledTableCell>
-                                        <StyledTableCell align="right">Medicine Type</StyledTableCell>
-                                        <StyledTableCell align="right">Unit</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rows.map((row) => (
-                                        <StyledTableRow key={row.name}>
-                                            <StyledTableCell component="th" scope="row">
-                                                {row.name}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                                            <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                                            <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        <Card sx={{ width: 'auto', height: 'auto' }} >
+                            <CardContent>
+                                <Box sx={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Typography variant='h6' sx={{ color: 'grey' }}>Data Table</Typography>
+                                    <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
+                                        Medicine Report
+                                    </Typography>
+                                    <Box>
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 500 }} aria-label="customized table">
+                                                <TableHead >
+                                                    <TableRow >
+                                                        <StyledTableCell>Medicine Name</StyledTableCell>
+                                                        <StyledTableCell align="right">Category</StyledTableCell>
+                                                        <StyledTableCell align="right">Medicine Type</StyledTableCell>
+                                                        <StyledTableCell align="right">Unit</StyledTableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {rows.map((row) => (
+                                                        <StyledTableRow key={row.name}>
+                                                            <StyledTableCell component="th" scope="row" sx={{ color: '#086070' }}>
+                                                                {row.name}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="right" sx={{ color: '#086070' }}>{row.calories}</StyledTableCell>
+                                                            <StyledTableCell align="right" sx={{ color: '#086070' }}>{row.fat}</StyledTableCell>
+                                                            <StyledTableCell align="right" sx={{ color: '#086070' }}>{row.carbs}</StyledTableCell>
+                                                        </StyledTableRow>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Box>
+                                </Box>
+                            </CardContent>
+                        </Card>
+
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 'auto' }} aria-label="customized table">
-                                <TableHead >
-                                    <TableRow >
-                                        <StyledTableCell>Medicine Name</StyledTableCell>
-                                        <StyledTableCell align="right">Category</StyledTableCell>
-                                        <StyledTableCell align="right">Medicine Type</StyledTableCell>
-                                        <StyledTableCell align="right">Unit</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rows.map((row) => (
-                                        <StyledTableRow key={row.name}>
-                                            <StyledTableCell component="th" scope="row">
-                                                {row.name}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                                            <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                                            <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        <Card sx={{ width: 'auto', height: 'auto' }} >
+                            <CardContent>
+                                <Box sx={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Typography variant='h6' sx={{ color: 'grey' }}>Data Table</Typography>
+                                    <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
+                                        Invoice Report
+                                    </Typography>
+                                    <Box>
+                                        <TableContainer component={Paper} >
+                                            <Table sx={{ minWidth: 500 }} aria-label="customized table">
+                                                <TableHead sx={{ bgcolor: 'red' }}>
+                                                    <TableRow >
+                                                        <StyledTableCell>Sale Invoice</StyledTableCell>
+                                                        <StyledTableCell align="right">POS Scale</StyledTableCell>
+                                                        <StyledTableCell align="right">GUI Scale</StyledTableCell>
+                                                        <StyledTableCell align="right">Sale Return</StyledTableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {rows.map((row) => (
+                                                        <StyledTableRow key={row.name}>
+                                                            <StyledTableCell component="th" scope="row" sx={{ color: '#086070' }}>
+                                                                {row.name}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="right" sx={{ color: '#086070' }}>{row.calories}</StyledTableCell>
+                                                            <StyledTableCell align="right" sx={{ color: '#086070' }}>{row.fat}</StyledTableCell>
+                                                            <StyledTableCell align="right" sx={{ color: '#086070' }}>{row.carbs}</StyledTableCell>
+                                                        </StyledTableRow>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Box>
+                                </Box>
+                            </CardContent>
+                        </Card>
                     </Grid>
                 </Grid>
             </Box>
