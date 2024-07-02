@@ -10,7 +10,7 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Visibility } from "@mui/icons-material";
 
 const AddMedicineTable = () => {
   return (
@@ -43,6 +43,9 @@ const AddMedicineTable = () => {
               <TableCell>10</TableCell>
               <TableCell>1</TableCell>
               <TableCell>
+                <IconButton color="success">
+                  <Visibility />
+                </IconButton>
                 <IconButton color="primary">
                   <Edit />
                 </IconButton>
