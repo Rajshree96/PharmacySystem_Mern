@@ -1,41 +1,22 @@
 import path from 'path';
 import SetUpBusiness from '../models/setUpBusinessModel.js';
- import upload from '../config/multerConfig.js';
-
+import upload from '../config/multerConfig.js';
 
 export const addBusinessSetup = async (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ message: 'Error uploading file', error: err });
         }
-        try {
-            // console.log('File:', req.file); // Log file information
-            // console.log('Body:', req.body); // Log body information
 
+        try {
             const {
-                businessName,
-                address,
-                pinCode,
-                state,
-                country,
-                email,
-                website,
-                phoneNumber,
-                enableGst,
-                stateRegistrationType,
-                taxRate,
-                gstin,
-                drugLicenceNo,
-                otherTax,
-                taxName,
-                taxNumber,
-                bankName,
-                bankAddress,
-                ifscCode,
-                accountHolderName,
-                accountNumber,
+                businessName, address, pinCode, state, country, email, website, phoneNumber,
+                enableGst, stateRegistrationType, taxRate, gstin, drugLicenceNo,
+                otherTax, taxName, taxNumber, bankName, bankAddress, ifscCode,
+                accountHolderName, accountNumber
             } = req.body;
 
+            // Validate required fields
             const requiredFields = [
                 'businessName', 'address', 'pinCode', 'state', 'country', 'email', 'phoneNumber',
                 'enableGst', 'stateRegistrationType', 'bankName', 'ifscCode', 'accountHolderName', 'accountNumber'
@@ -52,6 +33,7 @@ export const addBusinessSetup = async (req, res) => {
                 return res.status(400).json({ message: 'businessLogo is required' });
             }
 
+            // Create a new instance of SetUpBusiness model
             const newBusinessSetup = new SetUpBusiness({
                 businessInfo: {
                     businessLogo,
@@ -66,14 +48,13 @@ export const addBusinessSetup = async (req, res) => {
                 },
                 statutoryDetails: {
                     enableGst,
-                    stateRegistrationType,
+                     stateRegistrationType,
                     taxRate,
                     gstin,
-                    drugLicenceNo,
+                     drugLicenceNo,
                     otherTax,
                     taxName,
                     taxNumber,
-                    state,
                 },
                 bankDetails: {
                     bankName,
@@ -84,11 +65,13 @@ export const addBusinessSetup = async (req, res) => {
                 },
             });
 
+            // Save the new business setup to database
             await newBusinessSetup.save();
             res.status(201).json({ message: 'Business setup created successfully', businessSetup: newBusinessSetup });
 
         } catch (error) {
+            console.error('Error creating business setup:', error);
             res.status(400).json({ message: 'Error creating business setup', error });
         }
-     });
+    });
 };
