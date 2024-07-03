@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {styled, useTheme, ThemeProvider, createTheme} from "@mui/material/styles";
+import React, { useState } from "react";
+import { styled, useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,7 +17,7 @@ import MedicineType from "../container/AddMedicine/Medicine/MedicineType/Medicin
 import Units from "../container/AddMedicine/Medicine/Units/Units";
 import AddMedicine from "../container/AddMedicine/Medicine/AddMedicine/AddMedicine";
 import DashboardCard from "../component/Dashboard/DashboardCard";
-import { Button } from "@mui/material";
+import logo from '../assets/service3.png'
 
 const FireNav = styled(List)({
     "& .MuiListItemButton-root": {
@@ -37,41 +37,41 @@ const drawerWidth = 265;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
     ({ theme, open }) => ({
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create("margin", {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: `-${drawerWidth}px`,
+        ...(open && {
+            transition: theme.transitions.create("margin", {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+        }),
+    })
+);
+
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+    transition: theme.transitions.create(["margin", "width"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: `-${drawerWidth}px`, 
-      ...(open && {
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-      }),
-    })
-  );
-  
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== "open",
-  })(({ theme, open }) => ({
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`, 
-      marginLeft: `${drawerWidth}px`, 
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
     }),
-  }));
-  
-const DrawerHeader = styled("div")(({theme}) => ({
+}));
+
+const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
@@ -80,11 +80,10 @@ const DrawerHeader = styled("div")(({theme}) => ({
 }));
 
 const Dashboard = () => {
-    const [ activeComponent, setActiveComponent ] = useState('');
-
+    const [activeComponent, setActiveComponent] = useState('');
 
     const theme = useTheme();
-    const [ open, setOpen ] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -94,10 +93,9 @@ const Dashboard = () => {
         setOpen(false);
     };
 
-    const handleDashboard =() =>{
-        return(<DashboardCard/>)
+    const handleDashboard = () => {
+        window.location.reload(false);
     }
-
 
     const renderActiveComponent = () => {
         switch (activeComponent) {
@@ -115,22 +113,22 @@ const Dashboard = () => {
     };
 
     return (
-        <Box sx={{display: "flex"}}>
+        <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open} sx={{bgcolor: "#086070"}}>
+            <AppBar position="fixed" open={open} sx={{ bgcolor: "#086070" }}>
                 <Toolbar>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        sx={{mr: 2, ...(open && {display: "none"})}}
+                        sx={{ mr: 2, ...(open && { display: "none" }) }}
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Button variant="h6" noWrap component="div" onClick={handleDashboard()}>
+                    <Typography variant="h6" noWrap component="div" onClick={handleDashboard} sx={{ cursor: 'pointer' }}>
                         Dashboard
-                    </Button>
+                    </Typography>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -146,30 +144,27 @@ const Dashboard = () => {
                 anchor="left"
                 open={open}
             >
-                <DrawerHeader sx={{bgcolor: "#086070"}}>
-                    <Box>
-                        <Typography sx={{fontWeight: "400", color: "white", fontSize: "19px"}}>
+                <DrawerHeader sx={{ bgcolor: "#086070" }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <img src={logo} alt="logo" height="50px" width="50px" />
+                        <Typography sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}>
                             Business Name
                         </Typography>
                     </Box>
-                    <IconButton onClick={handleDrawerClose} sx={{color: "white"}}>
+                    <IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
                         {theme.direction === "ltr" ? <ArrowRight /> : <ArrowRight />}
                     </IconButton>
                 </DrawerHeader>
 
                 <Menu setActiveComponent={setActiveComponent} />
                 <Divider />
-
             </Drawer>
-            <Main open={open} sx={{bgcolor: "#e0f7fa", height: "auto"}}>
+
+            <Main open={open} sx={{ bgcolor: "#e0f7fa", height: "auto" }}>
                 <DrawerHeader />
-
-                {!activeComponent? handleDashboard():(  
-                  renderActiveComponent()     
-                )}
-              
-
-              
+                {!activeComponent ? <DashboardCard /> :
+                    renderActiveComponent()
+                }
             </Main>
         </Box>
     );
