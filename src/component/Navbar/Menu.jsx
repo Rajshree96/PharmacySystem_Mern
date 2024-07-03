@@ -170,12 +170,10 @@ import React, { useState } from 'react';
                   component={Link}
                   onClick={() => handleMenuItemClick(item.label)}
                 >
-                  <Link to="">
                   <ListItemText
                     primary={item.label}
                     primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
                   />
-                  </Link>
                 </ListItemButton>
               ))}
           </Box>

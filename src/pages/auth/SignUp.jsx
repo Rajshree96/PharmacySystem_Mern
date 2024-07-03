@@ -10,6 +10,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import PasswordIcon from '@mui/icons-material/Password';
 import axios from 'axios';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+
 
 const theme = createTheme({
   overrides: {
@@ -34,34 +36,53 @@ const gender = [
     value: 'Female',
   },
 ];
-const states = [
-  {
-    value: 'Madhya Pradesh',
-  },
-  {
-    value: 'Uttar Pradesh',
-  },
-  {
-    value: 'Assam',
-  },
-  {
-    value: 'Gujarat',
-  },
-];
-const countries = [
-  {
-    value: 'India',
-  },
-  {
-    value: 'Australia',
-  },
-  {
-    value: 'America',
-  },
-  {
-    value: 'China',
-  },
-]
+
+const countryStateMapping = {
+  India: [
+    { value: 'Andhra Pradesh' },
+    { value: 'Arunachal Pradesh' },
+    { value: 'Assam' },
+    { value: 'Bihar' },
+    { value: 'Chhattisgarh' },
+    { value: 'Goa' },
+    { value: 'Gujarat' },
+    { value: 'Haryana' },
+    { value: 'Himachal Pradesh' },
+    { value: 'Jharkhand' },
+  ],
+  Australia: [
+    { value: 'New South Wales' },
+    { value: 'Victoria' },
+    { value: 'Queensland' },
+    { value: 'South Australia' },
+    { value: 'Western Australia' },
+    { value: 'Tasmania' },
+    { value: 'Northern Territory' },
+    { value: 'Australian Capital Territory' },
+  ],
+  America: [
+    { value: 'Alabama' },
+    { value: 'Alaska' },
+    { value: 'Arizona' },
+    { value: 'Arkansas' },
+    { value: 'California' },
+    { value: 'Colorado' },
+    { value: 'Connecticut' },
+    { value: 'Delaware' },
+    { value: 'Florida' },
+    { value: 'Georgia' },
+    { value: 'Hawaii' },
+  ],
+  China: [
+    { value: 'Anhui' },
+    { value: 'Beijing' },
+    { value: 'Chongqing' },
+    { value: 'Fujian' },
+    { value: 'Gansu' },
+    { value: 'Guangdong' },
+    { value: 'Guangxi' },
+  ],
+};
 
 const SignUp = () => {
   const classes = styles();
@@ -79,6 +100,21 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const handleCountryChange = (val) => {
+    setInpval((prev) => ({
+      ...prev,
+      country: val,
+      state: '', // Reset state when country changes
+    }));
+  };
+
+  const handleRegionChange = (val) => {
+    setInpval((prev) => ({
+      ...prev,
+      state: val,
+    }));
+  };
+
 
   const getData = (e) => {
     // console.log(e.target.value)
@@ -90,23 +126,31 @@ const SignUp = () => {
         [name]: value
       }
     })
+   
+  };
+  const textFieldStyle = {
+    height: '50px',
+    width: '100%',
+    border: '1px solid #c4c4c4',  
+    borderRadius: '4px', 
+    color:'grey'      
+  };
 
-  }
   const addData = async (e) => {
     e.preventDefault();
 
-    const getUserArr = localStorage.getItem("userCredential");
-    console.log(getUserArr);
+    // const getUserArr = localStorage.getItem("userCredential");
+    // console.log(getUserArr);
 
-    const { firstName, lastName, gender, address, state, country, pinCode ,email, password, confirmPassword } = inpval;
+    const { firstName, lastName, gender, address, state, country, pinCode, email, password, confirmPassword } = inpval;
 
     if (firstName === "") {
       alert("firstName field is required")
     } else if (lastName === "") {
       alert("lastName field is required")
-    }  else if (gender === "") {
+    } else if (gender === "") {
       alert("gender field is required")
-    }  else if (address === "") {
+    } else if (address === "") {
       alert("address field is required")
     } else if (state === "") {
       alert("state field is required")
@@ -122,7 +166,7 @@ const SignUp = () => {
       alert("password field is required")
     } else if (password.length < 6) {
       alert("password length greater than 6")
-    }  else if (confirmPassword === "") {
+    } else if (confirmPassword === "") {
       alert("confirmPassword field is required")
     } else {
       try {
@@ -131,7 +175,7 @@ const SignUp = () => {
             "content-type": "application/json",
           }
         });
-        
+
         console.log('Form submitted successfully:', response.data);
         history('/login');
       } catch (error) {
@@ -237,25 +281,35 @@ const SignUp = () => {
               </Grid>
             </Grid>
             <Grid container spacing={4} mt={0} >
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <TextField
-                  InputProps={{
-                    style: {
-                      height: '50px'
-                    },
-                  }}
-                  select
-                  defaultValue="State"
-                  label='State' fullWidth
-                  name="state" value={inpval.state} onChange={getData}
-                >
-                  {states.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6}>
+            <RegionDropdown
+          name="state"
+          country={inpval.country}
+          value={inpval.state}
+          onChange={handleRegionChange}
+          classes="my-custom-select"
+          style={textFieldStyle}          
+        />
+        {/* <TextField
+          InputProps={{
+            style: {
+              height: '50px',
+            },
+          }}
+          select
+          label="State"
+          fullWidth
+          name="state"
+          value={inpval.state}
+          onChange={getData}
+        >
+          {states.map((option) => (
+            <MenuItem key={option.isoCode} value={option.name}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField> */}
+      </Grid>
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <TextField
                   InputProps={{
@@ -268,28 +322,37 @@ const SignUp = () => {
                 />
               </Grid>
             </Grid>
-            <Grid container spacing={4} mt={0} >
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <TextField
-                  InputProps={{
-                    style: {
-                      height: '50px'
-                    },
-                  }}
-                  select
-                  defaultValue="Country"
-                  label='Country'
-                  fullWidth
-                  name="country" value={inpval.country} onChange={getData}
-                >
-                  {countries.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+            <Grid container spacing={4} mt={0}>
+      <Grid item xs={12} sm={12} md={6} lg={6}>
+      <CountryDropdown
+      name="country"
+      value={inpval.country}
+      onChange={handleCountryChange}
+          classes="my-custom-select"          
+          style={textFieldStyle}
+        />
+        {/* <TextField
+          InputProps={{
+            style: {
+              height: '50px',
+            },
+          }}
+          select
+          label="Country"
+          fullWidth
+          name="country"
+          value={inpval.country}
+          onChange={getData}
+        >
+          {Country.getAllCountries().map((option) => (
+            <MenuItem key={option.isoCode} value={option.name}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField> */}
+      </Grid>
             </Grid>
+
             <Grid container spacing={3} mt={1}>
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <TextField
