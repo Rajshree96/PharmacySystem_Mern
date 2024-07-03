@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
+import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel, Box } from "@mui/material";
+import Chip from '@mui/material/Chip';
 
 const AddMedicineModal = ({ medicineName, setMedicineName }) => {
   const [category, setCategory] = useState('');
@@ -29,11 +30,24 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
     units: '',
     amount: ''
   });
+  const [ingredients, setIngredients] = useState('');
+  const [ingredientList, setIngredientList] = useState([]);
 
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setIngredients(value);
+
+    // Split the input text by commas or new lines to create an array of ingredients
+    const list = value.split(/[\n,]+/).map(item => item.trim()).filter(item => item);
+    setIngredientList(list);
+  };
   return (
     <>
-     
-      <Grid container spacing={2}>
+
+      <Grid container spacing={2} >
+      <Grid item xs={12}>
+          <DialogContentText sx={{fontWeight:'700',fontSize:'20px',color:'#086070'}}>Product Information</DialogContentText>
+        </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             autoFocus
@@ -116,7 +130,11 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             variant="standard"
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
-          />
+            select
+          ><MenuItem value="5">5</MenuItem>
+            <MenuItem value="12">12</MenuItem>
+            <MenuItem value="18">18</MenuItem>
+          </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -195,23 +213,45 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
           <TextField
             margin="dense"
             label="Expiry Date"
-            type="date"
+            placeholder="MM/YYYY"
+            type="month"
             fullWidth
             variant="standard"
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item xs={12}>
+          {/* <TextField
+            margin="dense"
+            label="Ingredients"
+            type="text"
+            fullWidth
+            variant="standard"
+          /> */}
           <TextField
             margin="dense"
             label="Ingredients"
             type="text"
             fullWidth
             variant="standard"
+            multiline
+            rows={4}
+            value={ingredients}
+            onChange={handleInputChange}
           />
+          <Box display="flex" flexWrap="wrap" mt={2}>
+            {ingredientList.map((ingredient, index) => (
+              <Chip
+                key={index}
+                label={ingredient}
+                variant="outlined"
+                style={{ margin: '4px' }}
+              />
+            ))}
+          </Box>
         </Grid>
         <Grid item xs={12}>
-          <DialogContentText>Price Details</DialogContentText>
+          <DialogContentText sx={{fontWeight:'700',fontSize:'20px',color:'#086070'}}>Price Details</DialogContentText>
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
@@ -324,12 +364,12 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <DialogContentText>Opening Balance</DialogContentText>
+          <DialogContentText sx={{fontWeight:'700',fontSize:'20px',color:'#086070'}}>Opening Balance</DialogContentText>
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
             margin="dense"
-            label="Particular"
+            label="Opening Balance"
             type="text"
             fullWidth
             variant="standard"

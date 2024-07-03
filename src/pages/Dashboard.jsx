@@ -33,7 +33,7 @@ const FireNav = styled(List)({
     },
 });
 
-const drawerWidth = 265;
+const drawerWidth = 270;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
     ({ theme, open }) => ({
@@ -149,7 +149,7 @@ const Dashboard = () => {
                         <img src={logo} alt="logo" height="50px" width="50px" />
                         <Typography sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}>
                             Business Name
-                        </Typography>
+                        </Typography>                        
                     </Box>
                     <IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
                         {theme.direction === "ltr" ? <ArrowRight /> : <ArrowRight />}

@@ -28,7 +28,7 @@ const MedicineType = () => {
                         <BreadcrumbContainer breadcrumbs={breadcrumbs} />
                         <Grid container spacing={3} sx={{mb: 3}}>
                             <Grid item xs={12} sm={6} md={4}>
-                                <Typography variant="h6" sx={{color: "black", fontWeight: "bold"}}>
+                                <Typography variant="h6"  sx={{color: "black", fontWeight: "bold"}}>
                                     Medicine Type
                                 </Typography>
                             </Grid>
@@ -54,7 +54,7 @@ const MedicineType = () => {
             </Box>
 
             {/* Modals */}
-            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} />
+            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} style={{ width: '100%' }} />
         </>
     );
 };

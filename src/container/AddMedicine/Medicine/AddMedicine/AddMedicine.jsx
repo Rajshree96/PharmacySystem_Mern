@@ -54,7 +54,9 @@ const AddMedicine = () => {
             </Box>
 
             {/* Modals */}
-            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} />
+            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} maxWidth="xl"
+        fullWidth={true}
+        style={{ width: '100%' }}/>
             
             
         </>

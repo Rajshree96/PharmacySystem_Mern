@@ -53,7 +53,7 @@ const Units = () => {
                 </Container>
             </Box>
             {/* Modals */}
-            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} />
+            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} style={{ width: '100%' }}/>
         </>
     );
 };

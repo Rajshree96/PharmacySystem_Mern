@@ -65,9 +65,15 @@ const rows = [
     createData('syrum', 305, 3.7, 67, 4.3),
     createData('cold tab', 356, 16.0, 49, 3.9),
 ];
+const styles ={
+    tableCard: {
+     width: 'auto',
+      height: 'auto'
+    },
+};
 
 const DashboardCard = () => {
-
+const classes = styles;
     const handleCard =()=>{
         console.log("medicine")
         return(<AddMedicine/>)
@@ -298,14 +304,14 @@ const DashboardCard = () => {
 
                 <Grid container spacing={4} mt='1rem' >
                     <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <Card sx={{ width: 'auto', height: 'auto' }} >
+                        <Card sx={classes.tableCard} >
                             <CardContent>
                                 <Box sx={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
                                     <Typography variant='h6' sx={{ color: 'grey' }}>Data Table</Typography>
                                     <Typography gutterBottom variant="h6" component="div" sx={{ color: 'black', fontWeight: '700', fontSize: '25px' }} >
                                         Medicine Report
                                     </Typography>
-                                    <Box>
+                                    <Box >
                                         <TableContainer component={Paper}>
                                             <Table sx={{ minWidth: 500 }} aria-label="customized table">
                                                 <TableHead >
