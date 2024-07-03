@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DialogContentText, TextField, Grid, MenuItem, Box, Typography, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import { addUnit } from "../../../../unitapi";
 
 const AddUnitForm = () => {
   const [type, setType] = useState('Single');
@@ -11,14 +12,27 @@ const AddUnitForm = () => {
   const [conversion, setConversion] = useState('');
   const [secondaryUnit, setSecondaryUnit] = useState('');
 
+  const handleAddUnit = async () => {
+    const unitData = {
+      name: formalName,
+      // Add other fields if necessary
+    };
+
+    try {
+      const response = await addUnit(unitData);
+      console.log('Unit added successfully:', response);
+      // onUnitAdded(response.data); // Notify parent component with the newly added unit data
+      // Handle success (e.g., clear form, show success message, etc.)
+    } catch (error) {
+      console.error("Error adding unit:", error.response?.data || error.message);
+      // Handle error (e.g., show error message)
+    }
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ mb: 2 }}>Add Unit</Typography>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <DialogContentText>Enter the details of the unit you want to add.</DialogContentText>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -107,12 +121,13 @@ const AddUnitForm = () => {
           startIcon={<Add />}
           color="primary"
           sx={{ mt: 3 }}
+          onClick={handleAddUnit}
         >
           Add Unit
         </Button>
       </motion.div>
     </Box>
   );
-}
+};
 
 export default AddUnitForm;

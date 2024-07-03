@@ -7,6 +7,7 @@ const router = express.Router();
 
 //route to add a new businsess setup 
 
-router.post('/add', checkUserLogin , isAdmin,  addBusinessSetup);
+// Corrected route definition
+router.post('/add', checkUserLogin, isAdmin, addBusinessSetup);
 
 export default router;

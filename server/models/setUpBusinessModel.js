@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose  from "mongoose";
 
 const setUpBusinessSchema = new mongoose.Schema({
      businessInfo:{
@@ -16,7 +16,7 @@ const setUpBusinessSchema = new mongoose.Schema({
         required: true,
      },
      pinCode:{
-        type: String,
+        type: Number,
         required: true
      },
      state:{
@@ -43,7 +43,7 @@ const setUpBusinessSchema = new mongoose.Schema({
      statutoryDetails:{
         enableGst:{
             type: Boolean,
-            enum: ['Yes', 'NO'],
+            // enum: ['Yes', 'NO'],
             required: true,
 
         },
