@@ -14,7 +14,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/setupbusiness" element={<SetUpBusiness />} />
-                    <Route path="/form/:formType" element={<DynamicMedicineForm />} />
+                    {/* <Route path="/form/:formType" element={<DynamicMedicineForm />} /> */}
                 </Routes>
             </Router>
         </>
