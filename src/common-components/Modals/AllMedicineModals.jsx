@@ -6,7 +6,7 @@ import AddMedicineModal from "./medicineModals/addMedicineModals/AddMedicineModa
 import AddUnitsModal from "./medicineModals/addMedicineModals/AddUnitsModal";
 import AddMedicineTypeModal from "./medicineModals/addMedicineModals/AddMedicineTypeModal";
 
-const AllMedicineModals = ({ open, handleClose, formType }) => {
+const AllMedicineModals = ({ open, handleClose, formType , style}) => {
   const [categoryName, setCategoryName] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [unitName, setUnitName] = useState('');
@@ -85,8 +85,8 @@ const AllMedicineModals = ({ open, handleClose, formType }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleDialogClose}>
-      <DialogTitle>{formType.charAt(0).toUpperCase() + formType.slice(1)}</DialogTitle>
+    <Dialog open={open} onClose={handleDialogClose} PaperProps={{ style }}>
+      <DialogTitle sx={{color:'#086070',fontWeight:'600'}}>{formType.charAt(0).toUpperCase() + formType.slice(1)}</DialogTitle>
       <DialogContent>
         {!success ? (
           renderForm()
