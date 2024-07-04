@@ -2,7 +2,7 @@ import "./App.css";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import SignUp from "./pages/auth/SignUp";
 import Login from "./pages/auth/Login";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import DynamicMedicineForm from "./common-components/Forms/medicineForms/DynamicMedicineForm";
 import SetUpBusiness from "./pages/SetUpBusiness/SetUpBusiness";
 function App() {

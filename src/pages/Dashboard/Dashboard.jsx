@@ -11,13 +11,13 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowRight from "@mui/icons-material/ArrowRight";
-import Menu from "../component/Navbar/Menu";
-import Categories from "../container/AddMedicine/Medicine/Categories/Categories";
-import MedicineType from "../container/AddMedicine/Medicine/MedicineType/MedicineType";
-import Units from "../container/AddMedicine/Medicine/Units/Units";
-import AddMedicine from "../container/AddMedicine/Medicine/AddMedicine/AddMedicine";
-import DashboardCard from "../component/Dashboard/DashboardCard";
-import logo from '../assets/service3.png'
+import Menu from "../../layouts/Navbar/Menu";
+import Categories from "../../container/Medicine/Categories/Categories";
+import MedicineType from "../../container/Medicine/MedicineType/MedicineType";
+import Units from "../../container/Medicine/Units/Units";
+import AddMedicine from "../../container/Medicine/AddMedicine/AddMedicine";
+import DashboardCard from "../Dashboard/DashboardCard";
+import logo from '../../assets/service3.png'
 
 const FireNav = styled(List)({
     "& .MuiListItemButton-root": {

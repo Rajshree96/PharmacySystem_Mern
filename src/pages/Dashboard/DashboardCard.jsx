@@ -32,7 +32,7 @@ import inventry from '../../assets/inventry.png'
 import expire from '../../assets/expire.png'
 import invoice from '../../assets/invoice.png'
 import { useNavigate } from "react-router-dom";
-import AddMedicine from "../../container/AddMedicine/Medicine/AddMedicine/AddMedicine";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -74,10 +74,10 @@ const styles ={
 
 const DashboardCard = () => {
 const classes = styles;
-    const handleCard =()=>{
-        console.log("medicine")
-        return(<AddMedicine/>)
-    };
+    // const handleCard =()=>{
+    //     console.log("medicine")
+    //     return(<AddMedicine/>)
+    // };
     return (
         <>
             <Box className="dashboardcard">
@@ -122,7 +122,7 @@ const classes = styles;
 
                     <Grid item lg={2} md={2} sm={3} xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Card sx={{ maxWidth: 'auto' ,cursor:'pointer'}} onClick={handleCard}>
+                            <Card sx={{ maxWidth: 'auto' ,cursor:'pointer'}} >
                                 <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={medicine} alt="logo" height={50} width={50} />

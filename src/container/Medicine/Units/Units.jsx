@@ -1,16 +1,15 @@
 import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
-import BreadcrumbContainer from "../../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import MedicineCategoryTable from "../../../../common-components/TableContainer/MedicineCategory";
-import DynamicButton from "../../../../common-components/ButtonContainer/DynamicButton";
+import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import AllMedicineModals from "../../../../common-components/Modals/AllMedicineModals";
-// import MedicineCategoryTable from "../../../../common-components/TableContainer/MedicineCategory";
+import AllMedicineModals from "../../../common-components/Modals/AllMedicineModals";
+import MedicineTable from "../../../common-components/TableContainer/MedicineUnit";
 
-const Categories = () => {
-    const breadcrumbs = [ "Medicine", "Categories" ];
-
+const Units = () => {
+    //const navigate = useNavigate();
+    const breadcrumbs = [ "Medicine", "Units" ];
     const [ modalType, setModalType ] = useState("");
 
     const handleOpenModal = (type) => {
@@ -30,7 +29,7 @@ const Categories = () => {
                         <Grid container spacing={3} sx={{mb: 3}}>
                             <Grid item xs={12} sm={6} md={4}>
                                 <Typography variant="h6" sx={{color: "black", fontWeight: "bold"}}>
-                                    Categories
+                                    Units
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -38,9 +37,9 @@ const Categories = () => {
                             <Grid item xs={12} sm={6} md={3}>
                                 <DynamicButton
                                     icon={Add}
-                                    label={"Add Category"}
-                                    onClick={() => handleOpenModal("add category")}
-                                    // onClick={() => navigate("/form/addcategory")}
+                                    label={"Add Units"}
+                                    onClick={() => handleOpenModal("add units")}
+                                    // onClick={() => navigate("/form/addunit")}
                                     sx={{
                                         bgcolor: "#00816b",
                                         "&:hover": {bgcolor: "#004d40"},
@@ -49,18 +48,14 @@ const Categories = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <MedicineCategoryTable
-                        />
+                        <MedicineTable />
                     </Paper>
                 </Container>
             </Box>
-
             {/* Modals */}
-            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType}  style={{ width: '100%' }}/>
-            
-            
+            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} style={{ width: '100%' }}/>
         </>
     );
 };
 
-export default Categories;
+export default Units;

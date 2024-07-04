@@ -1,15 +1,16 @@
 import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
-import BreadcrumbContainer from "../../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import MedicineTable from "../../../../common-components/TableContainer/MedicineUnit";
-import DynamicButton from "../../../../common-components/ButtonContainer/DynamicButton";
+import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+import AddMedicineTable from "../../../common-components/TableContainer/AddMedicineTable";
+
+import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import AllMedicineModals from "../../../../common-components/Modals/AllMedicineModals";
-
-const MedicineType = () => {
+import AllMedicineModals from "../../../common-components/Modals/AllMedicineModals";
+const AddMedicine = () => {
     // const navigate = useNavigate();
-    const breadcrumbs = [ "Medicine", "Medicine Type" ];
+    const breadcrumbs = [ "Medicine", "AddMedicine" ];
+
     const [ modalType, setModalType ] = useState("");
 
     const handleOpenModal = (type) => {
@@ -28,8 +29,8 @@ const MedicineType = () => {
                         <BreadcrumbContainer breadcrumbs={breadcrumbs} />
                         <Grid container spacing={3} sx={{mb: 3}}>
                             <Grid item xs={12} sm={6} md={4}>
-                                <Typography variant="h6"  sx={{color: "black", fontWeight: "bold"}}>
-                                    Medicine Type
+                                <Typography variant="h6" sx={{color: "black", fontWeight: "bold"}}>
+                                AddMedicine
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -37,9 +38,9 @@ const MedicineType = () => {
                             <Grid item xs={12} sm={6} md={3}>
                                 <DynamicButton
                                     icon={Add}
-                                    label={"Add Medicine Type"}
-                                    onClick={() => handleOpenModal("add medicinetype")}
-                                    // onClick={() => navigate("/form/addmedicinetype")}
+                                    label={"Add Medicine"}
+                                    onClick={() => handleOpenModal("add medicine")}
+                                    // onClick={() => navigate("/form/addmedicine")}
                                     sx={{
                                         bgcolor: "#00816b",
                                         "&:hover": {bgcolor: "#004d40"},
@@ -48,15 +49,19 @@ const MedicineType = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <MedicineTable />
+                        <AddMedicineTable />
                     </Paper>
                 </Container>
             </Box>
 
             {/* Modals */}
-            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} style={{ width: '100%' }} />
+            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} maxWidth="xl"
+        fullWidth={true}
+        style={{ width: '100%' }}/>
+            
+            
         </>
     );
 };
 
-export default MedicineType;
+export default AddMedicine;
