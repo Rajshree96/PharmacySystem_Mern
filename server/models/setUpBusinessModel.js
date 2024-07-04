@@ -93,7 +93,7 @@ const setUpBusinessSchema = new mongoose.Schema({
             required: true,
         },
         accountNumber: {
-            type: String,
+            type: Number,
             required: true,
         },
     },

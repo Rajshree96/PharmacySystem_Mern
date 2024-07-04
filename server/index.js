@@ -26,7 +26,7 @@ app.use("/api/v1/unit", unitRoutes);
 app.use('/api/v1/business-setup', businessSetupRoutes);
 
 
-const port = process.env.PORT || 2000;
+const port = process.env.PORT || 4000;
 
 app.listen(port,()=>{
     console.log(`server running on port ${port}`);
