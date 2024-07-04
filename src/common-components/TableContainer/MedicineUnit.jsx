@@ -10,16 +10,17 @@ import {
   IconButton,
   Box,
   Modal,
-  TextField,
   Button,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { getAllUnits, deleteUnit, editUnit } from "../../unitapi";
+import AddUnitsModal from "../Modals/medicineModals/addMedicineModals/AddUnitsModal";
 
 const MedicineTable = () => {
   const [units, setUnits] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentUnit, setCurrentUnit] = useState({});
+  const [modalMode, setModalMode] = useState("add"); // State to manage modal mode (add or edit)
 
   useEffect(() => {
     fetchUnits();
@@ -54,20 +55,33 @@ const MedicineTable = () => {
 
   const handleEditUnit = (unit) => {
     setCurrentUnit(unit);
+    setModalMode("edit"); // Set modal mode to edit
     setEditModalOpen(true);
   };
 
-  const handleSaveUnit = async () => {
+  const handleSaveUnit = async (updatedUnit) => {
     try {
-      await editUnit(currentUnit._id, currentUnit);
+      await editUnit(updatedUnit._id, updatedUnit);
       const updatedUnits = units.map((unit) =>
-        unit._id === currentUnit._id ? currentUnit : unit
+        unit._id === updatedUnit._id ? updatedUnit : unit
       );
       setUnits(updatedUnits);
       setEditModalOpen(false);
-      console.log("Unit edited successfully with ID:", currentUnit._id);
+      console.log("Unit edited successfully with ID:", updatedUnit._id);
     } catch (error) {
       console.error("Error editing unit:", error);
+    }
+  };
+
+  const handleAddUnit = async (newUnitData) => {
+    try {
+      const response = await addUnit(newUnitData);
+      const updatedUnits = [...units, response.data];
+      setUnits(updatedUnits);
+      console.log("Unit added successfully:", response.data);
+      setEditModalOpen(false);
+    } catch (error) {
+      console.error("Error adding unit:", error);
     }
   };
 
@@ -101,21 +115,16 @@ const MedicineTable = () => {
         </Table>
       </TableContainer>
 
-      <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)}>
-        <Box sx={{ padding: 4, backgroundColor: 'white', margin: 'auto', width: 400 }}>
-          <TextField
-            fullWidth
-            margin="dense"
-            label="Unit Name"
-            value={currentUnit.name || ''}
-            onChange={(e) => setCurrentUnit({ ...currentUnit, name: e.target.value })}
-          />
-          <Button onClick={handleSaveUnit} variant="contained" color="primary" sx={{ mt: 2 }}>
-            Save
-          </Button>
-        </Box>
+       <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)}>
+        <Box sx={{ padding: 4, backgroundColor: 'white', margin: 'auto', width: 550, marginTop:"140px" , borderRadius:"2%", border:"none", }}>
+          <AddUnitsModal
+            unitData={currentUnit} // Pass currentUnit data to AddUnitsModal for editing
+            onSave={handleSaveUnit} // Always pass handleSaveUnit for both editing and adding
+            onClose={() => setEditModalOpen(false)} // Close modal handler
+          /> 
+         </Box>
       </Modal>
-    </Box>
+    </Box> 
   );
 };
 

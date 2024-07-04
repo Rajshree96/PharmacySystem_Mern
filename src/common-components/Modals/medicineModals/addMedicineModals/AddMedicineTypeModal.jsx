@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { DialogContentText, TextField } from "@mui/material";
+import { Button, DialogContentText, TextField } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 const AddMedicineTypeModal = ({ medicineTypeName, setMedicineTypeName }) => {
   return (
@@ -15,7 +16,16 @@ const AddMedicineTypeModal = ({ medicineTypeName, setMedicineTypeName }) => {
         value={medicineTypeName}
         onChange={(e) => setMedicineTypeName(e.target.value)}
       />
-     
+     <Button
+          variant="contained"
+          startIcon={<Add/>}
+          
+          color="primary"
+          sx={{ mt: 2 }}
+          // onClick={handleAddCategory}
+        >
+         Add
+        </Button>
     </>
   );
 };

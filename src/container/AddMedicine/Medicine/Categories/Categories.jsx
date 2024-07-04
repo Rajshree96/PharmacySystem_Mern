@@ -1,13 +1,14 @@
 import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import BreadcrumbContainer from "../../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import MedicineTable from "../../../../common-components/TableContainer/MedicineTable";
+import MedicineCategoryTable from "../../../../common-components/TableContainer/MedicineCategory";
 import DynamicButton from "../../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import AllMedicineModals from "../../../../common-components/Modals/AllMedicineModals";
+// import MedicineCategoryTable from "../../../../common-components/TableContainer/MedicineCategory";
+
 const Categories = () => {
-    // const navigate = useNavigate();
     const breadcrumbs = [ "Medicine", "Categories" ];
 
     const [ modalType, setModalType ] = useState("");
@@ -48,7 +49,8 @@ const Categories = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <MedicineTable />
+                        <MedicineCategoryTable
+                        />
                     </Paper>
                 </Container>
             </Box>

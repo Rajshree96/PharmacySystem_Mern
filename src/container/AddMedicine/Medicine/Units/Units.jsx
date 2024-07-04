@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import BreadcrumbContainer from "../../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import MedicineTable from "../../../../common-components/TableContainer/MedicineTable";
 import DynamicButton from "../../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import AllMedicineModals from "../../../../common-components/Modals/AllMedicineModals";
+import MedicineTable from "../../../../common-components/TableContainer/MedicineUnit";
 
 const Units = () => {
     //const navigate = useNavigate();

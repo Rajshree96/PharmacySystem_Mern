@@ -6,6 +6,10 @@ import { motion } from "framer-motion";
 const AddCategoryForm = () => {
   const [categoryName, setCategoryName] = useState('');
 
+ 
+
+  
+  
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ mb: 2 }}>Add Category</Typography>
@@ -31,7 +35,9 @@ const AddCategoryForm = () => {
           startIcon={<Add />}
           color="primary"
           sx={{ mt: 2 }}
+          
         >
+          
           Add Category
         </Button>
       </motion.div>

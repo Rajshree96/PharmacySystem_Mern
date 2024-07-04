@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:2000/api/v1/business-setup';
+const API_URL = 'http://localhost:4000/api/v1/business-setup';
 
 const addBusinessSetup = async (data) => {
   const token = localStorage.getItem('token');

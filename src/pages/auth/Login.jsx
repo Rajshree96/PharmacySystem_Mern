@@ -66,7 +66,7 @@ const Login = () => {
             alert("password length greater than 6")
         } else {
       try {
-        const response = await axios.post('http://localhost:2000/api/v1/user/login', inpval, {
+        const response = await axios.post('http://localhost:4000/api/v1/user/login', inpval, {
           headers: {
             "content-type": "application/json",
           }

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import BreadcrumbContainer from "../../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import MedicineTable from "../../../../common-components/TableContainer/MedicineTable";
+import MedicineTable from "../../../../common-components/TableContainer/MedicineUnit";
 import DynamicButton from "../../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";

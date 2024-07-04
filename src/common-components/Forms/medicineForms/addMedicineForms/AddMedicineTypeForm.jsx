@@ -32,7 +32,7 @@ const AddMedicineTypeForm = () => {
           color="primary"
           sx={{ mt: 2 }}
         >
-          Add Medicine Type
+          Add 
         </Button>
       </motion.div>
     </Box>
