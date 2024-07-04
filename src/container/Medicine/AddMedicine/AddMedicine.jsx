@@ -6,7 +6,7 @@ import AddMedicineTable from "../../../common-components/TableContainer/AddMedic
 import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import AllMedicineModals from "../../../common-components/Modals/AllMedicineModals";
+import AllMedicineModals from "../../../common-components/Modals/medicineModals/AllMedicineModals";
 const AddMedicine = () => {
     // const navigate = useNavigate();
     const breadcrumbs = [ "Medicine", "AddMedicine" ];
