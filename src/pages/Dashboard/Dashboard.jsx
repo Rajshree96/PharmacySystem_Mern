@@ -12,12 +12,19 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowRight from "@mui/icons-material/ArrowRight";
 import Menu from "../../layouts/Navbar/Menu";
+import logo from '../../assets/service3.png'
+// medicines
 import Categories from "../../container/Medicine/Categories/Categories";
 import MedicineType from "../../container/Medicine/MedicineType/MedicineType";
 import Units from "../../container/Medicine/Units/Units";
 import AddMedicine from "../../container/Medicine/AddMedicine/AddMedicine";
-import DashboardCard from "../Dashboard/DashboardCard.jsx";
-import logo from '../../assets/service3.png'
+import DashboardCard from "../Dashboard/DashboardCard";
+//manufacture
+
+import AddManufacturer from "../../container/Manufacturer/AddManufacturer/AddManufacturer";
+
+
+
 
 const FireNav = styled(List)({
     "& .MuiListItemButton-root": {
@@ -107,6 +114,8 @@ const Dashboard = () => {
                 return <Units />;
             case "Add Medicine":
                 return <AddMedicine />;
+            case "Add Manufacturer":
+                return <AddManufacturer/>
             default:
                 return null;
         }
