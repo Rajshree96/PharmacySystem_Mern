@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import AddCategoryModal from "./medicineModals/addMedicineModals/AddCategoryModal";
-import AddMedicineModal from "./medicineModals/addMedicineModals/AddMedicineModal";
-import AddUnitsModal from "./medicineModals/addMedicineModals/AddUnitsModal";
-import AddMedicineTypeModal from "./medicineModals/addMedicineModals/AddMedicineTypeModal";
+import AddCategoryModal from "./addMedicineModals/AddCategoryModal";
+import AddMedicineModal from "./addMedicineModals/AddMedicineModal";
+import AddUnitsModal from "./addMedicineModals/AddUnitsModal";
+import AddMedicineTypeModal from "./addMedicineModals/AddMedicineTypeModal";
 
 const AllMedicineModals = ({ open, handleClose, formType , style}) => {
   const [categoryName, setCategoryName] = useState('');

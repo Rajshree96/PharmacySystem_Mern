@@ -5,7 +5,7 @@ import MedicineTable from "../../../common-components/TableContainer/MedicineUni
 import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import AllMedicineModals from "../../../common-components/Modals/AllMedicineModals";
+import AllMedicineModals from "../../../common-components/Modals/medicineModals/AllMedicineModals";
 
 const MedicineType = () => {
     // const navigate = useNavigate();

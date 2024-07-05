@@ -5,8 +5,8 @@ import MedicineCategoryTable from "../../../common-components/TableContainer/Med
 import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import AllMedicineModals from "../../../common-components/Modals/AllMedicineModals";
-// import MedicineCategoryTable from "../../../../common-components/TableContainer/MedicineCategory";
+import AllMedicineModals from "../../../common-components/Modals/medicineModals/AllMedicineModals";
+
 
 const Categories = () => {
     const breadcrumbs = [ "Medicine", "Categories" ];
