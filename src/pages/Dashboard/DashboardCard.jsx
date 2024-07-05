@@ -95,6 +95,9 @@ const useStyles = makeStyles ({
         fontWeight: 700,
         // fontSize: '18px',
         width: '150px',
+        '@media(max-width(600))':{
+            width:"auto"
+        }
     },
     graphImage: {
         width: '530px',
@@ -128,8 +131,8 @@ const useStyles = makeStyles ({
     },
     saleBoxIcon:{
         display:'flex',
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent:'end',
+        alignItems:'end'
     }
 });
 const DashboardCard = () => {
@@ -142,7 +145,7 @@ const DashboardCard = () => {
         <>
           <Box className={classes.dashboardcard}>
             <Grid container spacing={2}>
-                {/* Card Components */}
+                
                 {[{ img: customer, end: 180, color: "#78A75A", title: "Total Customer" },
                 { img: store, end: 120, color: "#EA33F7", title: "Total Manufacturer" },
                 { img: medicine, end: 70, color: "#2854C5", title: "Total Medicine" },
@@ -150,7 +153,7 @@ const DashboardCard = () => {
                 { img: expire, end: 56, color: "#8C1AF6", title: "Expired" },
                 { img: invoice, end: 69, color: "#F19E39", title: "Total Invoice" }
                 ].map((item, index) => (
-                    <Grid item lg={2} md={2} sm={3} xs={12} key={index}>
+                    <Grid item lg={2} md={3} sm={4} xs={12} key={index}>
                         <Box className={classes.cardBox}>
                             <Card className={classes.card}>
                                 <CardContent>
