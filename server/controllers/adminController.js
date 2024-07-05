@@ -30,8 +30,8 @@ export async function addMedicineController(req, res) {
       
         if (
             !itemCode || !medicineName || !medicineCategory || !medicineType ||
-            !manufacturer || !brand || !unit || gstRate == null ||
-            purchaseTaxIncluded == null || salesTaxIncluded == null || 
+            !manufacturer || !brand || !unit || !gstRate  ||
+            !purchaseTaxIncluded  || !salesTaxIncluded || 
             !productPhotos || !description || !batchNo || !expiryDate ||
             !ingredients || !priceDetails || !openingBalance
         ) {
@@ -77,7 +77,7 @@ export async function getAllMedicineController(req, res) {
         const medicines = await medicineModel.find();
 
        
-        return res.send(success(200, "Medicines fetched successfully", medicines));
+        return res.send(success(200,  medicines));
     } catch (err) {
         
         return res.send(error(500, err.message));
@@ -108,7 +108,7 @@ export async function updateMedicineController(req, res) {
         }
 
         
-        return res.send(success(200, "Medicine updated successfully", updatedMedicine));
+        return res.send(success(200,  updatedMedicine));
     } catch (err) {
         
         return res.send(error(500, err.message));
@@ -134,7 +134,7 @@ export async function deleteMedicineController(req, res) {
             return res.send(error(404, "Medicine not found."));
         }
 
-        return res.send(success(200, "Medicine deleted successfully", deletedMedicine));
+        return res.send(success(200,  deletedMedicine));
     } catch (err) {
         
         return res.send(error(500, err.message));

@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel, Box } from "@mui/material";
+import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel, Box,Button } from "@mui/material";
 import Chip from '@mui/material/Chip';
+import { Add } from "@mui/icons-material";
+import axios from "axios";
 
-const AddMedicineModal = ({ medicineName, setMedicineName }) => {
-  const [category, setCategory] = useState('');
+const AddMedicineModal = () => {
+  const[medicineName,setMedicineName] =useState('');
+  const [itemCode,setItemCode] = useState('')
+  const [medicineCategory, setCategory] = useState('');
   const [medicineType, setMedicineType] = useState('');
   const [manufacturer, setManufacturer] = useState('');
   const [brand, setBrand] = useState('');
   const [unit, setUnit] = useState('');
   const [gstRate, setGstRate] = useState('');
+  const[expiryDate,setExpiryDate]=useState();
+  const[photos,setPhotos] = useState('');
+  const[netWeight,setNetWeight]= useState("");
+  const[batchNo,setBatchNumber]=useState('');
+  const[description,setDescription] =useState('');
   const [purchaseTaxIncluded, setPurchaseTaxIncluded] = useState(false);
   const [salesTaxIncluded, setSalesTaxIncluded] = useState(false);
   const [priceDetails, setPriceDetails] = useState({
@@ -20,7 +29,7 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
     retailMargin: '',
     wholesalerDiscount: '',
     wholesalerPrice: '',
-    wholesaleMargin: '',
+    wholesalerMargin: '',
     minimumStock: ''
   });
   const [openingBalance, setOpeningBalance] = useState({
@@ -41,6 +50,80 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
     const list = value.split(/[\n,]+/).map(item => item.trim()).filter(item => item);
     setIngredientList(list);
   };
+
+  
+  const addMedicine = async (medicineData) => {
+    try {
+      console.log(medicineData)
+      const token = localStorage.getItem('token');
+      const response = await axios.post('http://localhost:4000/api/v1/admin/add-medicine', medicineData,
+        { 
+          
+          headers: {
+            "content-type": "application/json",
+             "Authorization": `Bearer ${token}`
+          }
+        }
+      );
+      if (response.status === 201) {
+        console.log('Medicine added successfully!');
+        
+      } 
+    } catch (error) {
+      console.error('Error adding medicine:', error);
+      
+    }
+  };
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+    const gstRateNumber = parseFloat(gstRate.replace('%', ''));
+    const medicineData = {
+      itemCode: itemCode,
+      medicineName: medicineName,
+      medicineCategory: medicineCategory,
+      medicineType: medicineType,
+      manufacturer: manufacturer,
+      brand: brand,
+      unit: unit,
+      gstRate: gstRate,
+      purchaseTaxIncluded: purchaseTaxIncluded,
+      salesTaxIncluded: salesTaxIncluded,
+      productPhotos: photos,
+      netWeight: netWeight,
+      description: description,
+      batchNo: batchNo,
+      expiryDate: expiryDate,
+      ingredients: ingredientList,
+      priceDetails: {
+        purchasePrice: priceDetails.purchasePrice,
+        landingCost: priceDetails.landingCost,
+        mrp: priceDetails.mrp,
+        retailDiscount: priceDetails.retailDiscount,
+        retailPrice: priceDetails.retailPrice,
+        retailMargin: priceDetails.retailMargin,
+        wholesalerDiscount: priceDetails.wholesalerDiscount,
+        wholesalerPrice: priceDetails.wholesalerPrice,
+        wholesalerMargin: priceDetails.wholesaleMargin || 0,
+        minimumStock: priceDetails.minimumStock,
+      },
+      openingBalance: {
+        particular: openingBalance.particular,
+        quantity: openingBalance.quantity,
+        rate: openingBalance.rate,
+        unit: openingBalance.units || 0,
+        amount: openingBalance.amount,
+      },
+    };
+  
+    try {
+      await addMedicine(medicineData);
+      console.log('pavan')
+    } catch (error) {
+      console.error('Error adding medicine:', error);
+      
+    }
+  };
   return (
     <>
 
@@ -56,6 +139,8 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             type="text"
             fullWidth
             variant="standard"
+            value={itemCode}
+            onChange={(e) => setItemCode(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -76,7 +161,7 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             type="text"
             fullWidth
             variant="standard"
-            value={category}
+            value={medicineCategory}
             onChange={(e) => setCategory(e.target.value)}
           />
         </Grid>
@@ -180,6 +265,8 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             fullWidth
             variant="standard"
             inputProps={{ accept: "image/*", multiple: true }}
+            value = {photos}
+            onChange ={(e)=>setPhotos(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -189,6 +276,8 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             type="text"
             fullWidth
             variant="standard"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -198,6 +287,8 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             type="text"
             fullWidth
             variant="standard"
+            value={netWeight}
+            onChange={(e) => setNetWeight(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -207,6 +298,8 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             type="text"
             fullWidth
             variant="standard"
+            value={batchNo}
+            onChange={(e) => setBatchNumber(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -218,6 +311,8 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             fullWidth
             variant="standard"
             InputLabelProps={{ shrink: true }}
+            value={expiryDate}
+            onChange={(e) => setExpiryDate(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -261,7 +356,7 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
             fullWidth
             variant="standard"
             value={priceDetails.purchasePrice}
-            onChange={(e) => setPriceDetails({ ...priceDetails, purchasePrice: e.target.value })}
+      onChange={(e) => setPriceDetails({ ...priceDetails, purchasePrice: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -422,6 +517,16 @@ const AddMedicineModal = ({ medicineName, setMedicineName }) => {
           />
         </Grid>
       </Grid>
+      
+      <Button
+          variant="contained"
+          startIcon={<Add/>}
+          color="primary"
+          sx={{ mt: 2 }}
+          onClick={handleSubmit}
+        >
+         Add Medicine
+        </Button>
     </>
   );
 };
