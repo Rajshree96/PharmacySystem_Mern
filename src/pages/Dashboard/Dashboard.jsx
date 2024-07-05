@@ -16,7 +16,7 @@ import Categories from "../../container/Medicine/Categories/Categories";
 import MedicineType from "../../container/Medicine/MedicineType/MedicineType";
 import Units from "../../container/Medicine/Units/Units";
 import AddMedicine from "../../container/Medicine/AddMedicine/AddMedicine";
-import DashboardCard from "../Dashboard/DashboardCard";
+import DashboardCard from "../Dashboard/DashboardCard.jsx";
 import logo from '../../assets/service3.png'
 
 const FireNav = styled(List)({

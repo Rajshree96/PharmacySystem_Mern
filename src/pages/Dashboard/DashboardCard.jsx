@@ -32,7 +32,7 @@ import inventry from '../../assets/inventry.png'
 import expire from '../../assets/expire.png'
 import invoice from '../../assets/invoice.png'
 import { useNavigate } from "react-router-dom";
-
+import CountUp from 'react-countup';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -68,8 +68,15 @@ const rows = [
 const styles ={
     tableCard: {
      width: 'auto',
-      height: 'auto'
+      height: 'auto',      
+    //   padding:'0px 10px 0px 10px'
     },
+    statisticTable:{
+        minWidth: 500,
+        // '@media (max-width:600px)': {
+        //   minWidth: '100%', 
+        // },
+    }
 };
 
 const DashboardCard = () => {
@@ -88,10 +95,11 @@ const classes = styles;
                                 <CardContent>
                                     <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={customer} alt="logo" height={50} width={50} />
-                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#78A75A",fontSize:"25px"}}> 15</Typography>
+                                        {/* <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#78A75A",fontSize:"25px"}}> 15</Typography> */}
+                                        <CountUp start={0} end={180} delay={0} style={{ fontWeight: '700' ,color:"#78A75A",fontSize:"25px"}}/>
                                     </Box>
                                     <Box mt='8px'>
-                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
+                                        <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }}>
                                             Total Customer
                                         </Typography>
                                         <img src={graph} alt='graph' />
@@ -107,7 +115,7 @@ const classes = styles;
                                 <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={store} alt="logo" height={50} width={50} />
-                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#EA33F7",fontSize:"25px"}}> 546</Typography>
+                                            <CountUp start={0} end={120} delay={0} style={{ fontWeight: '700' ,color:"#EA33F7",fontSize:"25px"}}/>
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '17px', width: '155px' }} >
@@ -126,7 +134,7 @@ const classes = styles;
                                 <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={medicine} alt="logo" height={50} width={50} />
-                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#2854C5",fontSize:"25px"}}> 375</Typography>
+                                            <CountUp start={0} end={70} delay={0} style={{ fontWeight: '700' ,color:"#2854C5",fontSize:"25px"}}/>                                                                                
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -145,7 +153,7 @@ const classes = styles;
                                 <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={inventry} alt="logo" height={50} width={50} />
-                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#BB271A",fontSize:"25px"}}> 285</Typography>
+                                            <CountUp start={0} end={89} delay={0} style={{ fontWeight: '700' ,color:"#BB271A",fontSize:"25px"}}/>                                                                                                                                                                
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -164,7 +172,7 @@ const classes = styles;
                                 <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={expire} alt="logo" height={50} width={50} />
-                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#8C1AF6",fontSize:"25px"}}> 895</Typography>
+                                            <CountUp start={0} end={56} delay={0} style={{ fontWeight: '700' ,color:"#8C1AF6",fontSize:"25px"}}/>                                                                                                                                                                                                        
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -183,7 +191,7 @@ const classes = styles;
                                 <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: '5px', alignItems: 'center' }}>
                                             <img src={invoice} alt="logo" height={50} width={50} />
-                                        <Typography variant="h6" sx={{ fontWeight: '700' ,color:"#F19E39",fontSize:"25px"}}> 785</Typography>
+                                            <CountUp start={0} end={69} delay={0} style={{ fontWeight: '700' ,color:"#F19E39",fontSize:"25px"}}/>                                                                                                                                                                                                                                                                                            
                                     </Box>
                                     <Box mt='8px'>
                                         <Typography gutterBottom variant="h6" component="div" sx={{ color: '#086070', fontWeight: '600', fontSize: '18px', width: '150px' }} >
@@ -313,7 +321,7 @@ const classes = styles;
                                     </Typography>
                                     <Box >
                                         <TableContainer component={Paper}>
-                                            <Table sx={{ minWidth: 500 }} aria-label="customized table">
+                                            <Table aria-label="customized table" sx={classes.statisticTable}>
                                                 <TableHead >
                                                     <TableRow >
                                                         <StyledTableCell>Medicine Name</StyledTableCell>
