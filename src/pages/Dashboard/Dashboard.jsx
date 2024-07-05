@@ -115,9 +115,9 @@ const Dashboard = () => {
             case "Add Medicine":
                 return <AddMedicine />;
             case "Add Manufacturer":
-                return <AddManufacturer/>
-                case "Add Supplier":
-                    return <AddSupplier/>
+                return <AddManufacturer />
+            case "Add Supplier":
+                return <AddSupplier />
             default:
                 return null;
         }
@@ -160,7 +160,7 @@ const Dashboard = () => {
                         <img src={logo} alt="logo" height="50px" width="50px" />
                         <Typography sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}>
                             Business Name
-                        </Typography>                        
+                        </Typography>
                     </Box>
                     <IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
                         {theme.direction === "ltr" ? <ArrowRight /> : <ArrowRight />}
