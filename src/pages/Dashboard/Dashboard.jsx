@@ -22,7 +22,7 @@ import DashboardCard from "../Dashboard/DashboardCard";
 //manufacture
 
 import AddManufacturer from "../../container/Manufacturer/AddManufacturer/AddManufacturer";
-
+import AddSupplier from "../../container/Supplier/AddSupplier/AddSupplier";
 
 
 
@@ -116,6 +116,8 @@ const Dashboard = () => {
                 return <AddMedicine />;
             case "Add Manufacturer":
                 return <AddManufacturer/>
+                case "Add Supplier":
+                    return <AddSupplier/>
             default:
                 return null;
         }

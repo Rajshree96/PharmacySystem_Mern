@@ -15,11 +15,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
-import VaccinesIcon from '@mui/icons-material/Vaccines';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import HealingIcon from '@mui/icons-material/Healing';
-import DescriptionIcon from '@mui/icons-material/Description';
 import sales from '../../assets/sales.png'
 import pie from '../../assets/pieGraph.png'
 import purchase from '../../assets/credit.png'
@@ -66,19 +61,7 @@ const rows = [
     createData('syrum', 305, 3.7, 67, 4.3),
     createData('cold tab', 356, 16.0, 49, 3.9),
 ];
-const styles ={
-    tableCard: {
-     width: 'auto',
-      height: 'auto',      
-    //   padding:'0px 10px 0px 10px'
-    },
-    statisticTable:{
-        minWidth: 500,
-        // '@media (max-width:600px)': {
-        //   minWidth: '100%', 
-        // },
-    }
-};
+
 const theme = createTheme({
     spacing: 0, 
   });
