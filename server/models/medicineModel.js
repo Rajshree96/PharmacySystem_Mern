@@ -59,7 +59,7 @@ const OpeningBalanceSchema = new mongoose.Schema({
     required: true,
   },
   unit: {
-    type: String,
+    type: Number,
     required: true,
   },
   amount: {
@@ -100,7 +100,7 @@ const MedicineSchema = new mongoose.Schema({
     required: true,
   },
   gstRate: {
-    type: Number,
+    type: String,
     required: true,
   },
   purchaseTaxIncluded: {

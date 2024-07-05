@@ -53,7 +53,7 @@ export async function loginController(req,res){
         }
         const token = generateAccessToken({...user});
         
-        return res.send(success(200,token,"user login successfully"));
+        return res.send(success(200,{token,user}));
 
     } catch (err) {
         return res.send(error(500,err.message));
