@@ -163,7 +163,11 @@ const AddMedicineModal = () => {
             variant="standard"
             value={medicineCategory}
             onChange={(e) => setCategory(e.target.value)}
-          />
+            select
+          >
+             <MenuItem value="Manufacturer 1">Category 1</MenuItem>
+            <MenuItem value="Manufacturer 2">Category 2</MenuItem>
+          </TextField> 
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -174,7 +178,11 @@ const AddMedicineModal = () => {
             variant="standard"
             value={medicineType}
             onChange={(e) => setMedicineType(e.target.value)}
-          />
+            select
+          >
+             <MenuItem value="Manufacturer 1">Medicine Type 1</MenuItem>
+            <MenuItem value="Manufacturer 2">Medicine Type 2</MenuItem>
+          </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
