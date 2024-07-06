@@ -138,10 +138,6 @@ const SignUp = () => {
 
   const addData = async (e) => {
     e.preventDefault();
-
-    // const getUserArr = localStorage.getItem("userCredential");
-    // console.log(getUserArr);
-
     const { firstName, lastName, gender, address, state, country, pinCode, email, password, confirmPassword } = inpval;
 
     if (firstName === "") {

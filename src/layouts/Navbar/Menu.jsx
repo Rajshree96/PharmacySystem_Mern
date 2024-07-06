@@ -53,7 +53,7 @@ const Menu = ({setActiveComponent}) => {
     const [ search, setSearch ] = useState(false);
     const [ setting, setSetting ] = useState(false);
     const [ logout, setLogout ] = useState(false);
-
+    
     //  Handle all menus item click and set active component  in dashboard
     const handleMenuItemClick = (component) => {
         setActiveComponent(component);

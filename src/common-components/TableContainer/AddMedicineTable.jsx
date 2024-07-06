@@ -16,6 +16,11 @@ import {
   DialogTitle,
   TextField,
   Button,
+  MenuItem,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+  Chip
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import axios from "axios";
@@ -24,7 +29,6 @@ const AddMedicineTable = () => {
   const [medicines, setMedicines] = useState([]);
   const [editingMedicine, setEditingMedicine] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-
 
   const fetchMedicines = async () => {
     try {
@@ -42,12 +46,10 @@ const AddMedicineTable = () => {
   };
 
   useEffect(() => {
-    
     fetchMedicines();
   }, []);
-
+   console.log(medicines);
   const handleVisibilityClick = (medicine) => {
-    // Handle visibility button click, e.g., show details in a modal
     console.log("Viewing details for medicine:", medicine);
   };
 
@@ -62,8 +64,20 @@ const AddMedicineTable = () => {
   };
 
   const handleEditSave = async () => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+
     try {
-      const response = await axios.put(`http://localhost:4000/api/v1/admin/medicine/${editingMedicine.itemCode}`, editingMedicine);
+      const response = await axios.put(
+        `http://localhost:4000/api/v1/admin/medicine/${editingMedicine.itemCode}`,
+        editingMedicine,
+        {
+          headers: { Authorization: `Bearer ${auth.token}` }
+        }
+      );
       console.log("Medicine updated:", response.data);
       setMedicines((prevMedicines) =>
         prevMedicines.map((med) =>
@@ -75,14 +89,23 @@ const AddMedicineTable = () => {
       console.error("Error updating medicine:", error);
     }
   };
+
   const handleDeleteClick = async (itemCode) => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+
     try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/admin/delete/${itemCode}`);
+      const response = await axios.delete(`http://localhost:4000/api/v1/admin/delete/${itemCode}`, {
+        headers: { Authorization: `Bearer ${auth.token}` }
+      });
       console.log("API Response:", response);
-  
-      if (response.data.status === "ok" || response.status === 200) {  // Check the response structure
+
+      if (response.data.status === "ok" || response.status === 200) {
         console.log("Deleted medicine with item code:", itemCode);
-        fetchMedicines();  // Fetch the updated list after deletion
+        fetchMedicines();
       } else {
         console.error("Failed to delete medicine:", response.data);
       }
@@ -90,7 +113,6 @@ const AddMedicineTable = () => {
       console.error("Error deleting medicine:", error);
     }
   };
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -103,16 +125,16 @@ const AddMedicineTable = () => {
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: "#004d40" }}>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Item Code</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Medicine Name</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Batch No.</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Expiry Date</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Category</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Medicine Type</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Brand</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Unit</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Net Weight</TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold", whiteSpace: "nowrap" }}>Action</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Item Code</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Medicine Name</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Batch No.</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Expiry Date</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Category</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Medicine Type</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Brand</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Unit</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Net Weight</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -155,20 +177,419 @@ const AddMedicineTable = () => {
       <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
         <DialogTitle>Edit Medicine</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Edit the details of the medicine below:
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="medicineName"
-            label="Medicine Name"
-            type="text"
-            fullWidth
-            value={editingMedicine?.medicineName || ''}
-            onChange={handleInputChange}
-          />
-          {/* Add other fields as needed */}
+          <DialogContentText>Edit the details of the medicine below:</DialogContentText>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="itemCode"
+                label="Item Code"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.itemCode || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="medicineName"
+                label="Medicine Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.medicineName || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="medicineCategory"
+                label="Category"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.medicineCategory || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="medicineType"
+                label="Medicine Type"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.medicineType || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="manufacturer"
+                label="Manufacturer"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.manufacturer || ''}
+                onChange={handleInputChange}
+                select
+              >
+                <MenuItem value="Manufacturer 1">Manufacturer 1</MenuItem>
+                <MenuItem value="Manufacturer 2">Manufacturer 2</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="brand"
+                label="Brand"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.brand || ''}
+                onChange={handleInputChange}
+                select
+              >
+                <MenuItem value="Brand 1">Brand 1</MenuItem>
+                <MenuItem value="Brand 2">Brand 2</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="unit"
+                label="Unit"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.unit || ''}
+                onChange={handleInputChange}
+                select
+              >
+                <MenuItem value="5">5</MenuItem>
+                <MenuItem value="12">12</MenuItem>
+                <MenuItem value="18">18</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                name="gstRate"
+                label="GST Rate"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.gstRate || ''}
+                onChange={handleInputChange}
+                select
+              >
+                <MenuItem value="5%">5%</MenuItem>
+                <MenuItem value="12%">12%</MenuItem>
+                <MenuItem value="18%">18%</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="purchaseTaxIncluded"
+                    checked={editingMedicine?.purchaseTaxIncluded || false}
+                    onChange={(e) => setEditingMedicine({ ...editingMedicine, purchaseTaxIncluded: e.target.checked })}
+                  />
+                }
+                label="Purchase Tax Included"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="salesTaxIncluded"
+                    checked={editingMedicine?.salesTaxIncluded || false}
+                    onChange={(e) => setEditingMedicine({ ...editingMedicine, salesTaxIncluded: e.target.checked })}
+                  />
+                }
+                label="Sales Tax Included"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="dense"
+                name="photos"
+                label="Product Photo"
+                type="file"
+                fullWidth
+                variant="standard"
+                inputProps={{ accept: "image/*", multiple: true }}
+                value={editingMedicine?.photos || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="dense"
+                name="description"
+                label="Description"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.description || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="dense"
+                name="netWeight"
+                label="Net Weight"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.netWeight || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="dense"
+                name="batchNo"
+                label="Batch No."
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.batchNo || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="dense"
+                name="expiryDate"
+                label="Expiry Date"
+                placeholder="MM/YYYY"
+                type="month"
+                fullWidth
+                variant="standard"
+                InputLabelProps={{ shrink: true }}
+                value={editingMedicine?.expiryDate || ''}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="dense"
+                name="ingredients"
+                label="Ingredients"
+                type="text"
+                fullWidth
+                variant="standard"
+                multiline
+                rows={4}
+                value={editingMedicine?.ingredients || ''}
+                onChange={handleInputChange}
+              />
+              <Box display="flex" flexWrap="wrap" mt={2}>
+                {editingMedicine?.ingredientList?.map((ingredient, index) => (
+                  <Chip
+                    key={index}
+                    label={ingredient}
+                    variant="outlined"
+                    style={{ margin: '4px' }}
+                  />
+                ))}
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <DialogContentText sx={{ fontWeight: '700', fontSize: '20px', color: '#086070' }}>Price Details</DialogContentText>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="purchasePrice"
+                label="Purchase Price"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.purchasePrice || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, purchasePrice: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="landingCost"
+                label="Landing Cost"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.landingCost || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, landingCost: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="mrp"
+                label="MRP"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.mrp || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, mrp: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="retailDiscount"
+                label="Retail Discount"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.retailDiscount || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, retailDiscount: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="retailPrice"
+                label="Retail Price"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.retailPrice || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, retailPrice: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="retailMargin"
+                label="Retail Margin"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.retailMargin || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, retailMargin: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="wholesalerDiscount"
+                label="Wholesaler Discount"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.wholesalerDiscount || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, wholesalerDiscount: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="wholesalerPrice"
+                label="Wholesaler Price"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.wholesalerPrice || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, wholesalerPrice: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="wholesaleMargin"
+                label="Wholesale Margin"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.wholesaleMargin || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, wholesaleMargin: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                margin="dense"
+                name="minimumStock"
+                label="Minimum Stock"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.priceDetails?.minimumStock || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, priceDetails: { ...editingMedicine.priceDetails, minimumStock: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <DialogContentText sx={{ fontWeight: '700', fontSize: '20px', color: '#086070' }}>Opening Balance</DialogContentText>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                margin="dense"
+                name="openingBalance.particular"
+                label="Opening Balance"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.openingBalance?.particular || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, openingBalance: { ...editingMedicine.openingBalance, particular: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                margin="dense"
+                name="openingBalance.quantity"
+                label="Quantity"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.openingBalance?.quantity || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, openingBalance: { ...editingMedicine.openingBalance, quantity: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                margin="dense"
+                name="openingBalance.rate"
+                label="Rate"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.openingBalance?.rate || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, openingBalance: { ...editingMedicine.openingBalance, rate: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                margin="dense"
+                name="openingBalance.units"
+                label="Units"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.openingBalance?.units || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, openingBalance: { ...editingMedicine.openingBalance, units: e.target.value } })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                margin="dense"
+                name="openingBalance.amount"
+                label="Amount"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editingMedicine?.openingBalance?.amount || ''}
+                onChange={(e) => setEditingMedicine({ ...editingMedicine, openingBalance: { ...editingMedicine.openingBalance, amount: e.target.value } })}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose} color="primary">

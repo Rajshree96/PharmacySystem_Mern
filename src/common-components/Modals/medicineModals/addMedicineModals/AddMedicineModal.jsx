@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel, Box,Button } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import { Add } from "@mui/icons-material";
 import axios from "axios";
-
+import toast, { Toaster } from 'react-hot-toast';
+import {  useNavigate } from 'react-router-dom';
 const AddMedicineModal = () => {
+  
+  const navigate= useNavigate();
   const[medicineName,setMedicineName] =useState('');
   const [itemCode,setItemCode] = useState('')
   const [medicineCategory, setCategory] = useState('');
@@ -51,29 +54,36 @@ const AddMedicineModal = () => {
     setIngredientList(list);
   };
 
-  
+
   const addMedicine = async (medicineData) => {
     try {
-      console.log(medicineData)
-      const token = localStorage.getItem('token');
+      const auth = JSON.parse(localStorage.getItem('auth'));
       const response = await axios.post('http://localhost:4000/api/v1/admin/add-medicine', medicineData,
         { 
           
           headers: {
             "content-type": "application/json",
-             "Authorization": `Bearer ${token}`
+             "Authorization": `Bearer ${auth.token}`
           }
         }
       );
+      console.log(response);
       if (response.status === 201) {
         console.log('Medicine added successfully!');
         
       } 
+      navigate("/admin/dashboard");
+      toast.success("medicine added successfully ");
+      
+      
+  
     } catch (error) {
-      console.error('Error adding medicine:', error);
+     
+      toast.error("something went wrong")
       
     }
   };
+
   const handleSubmit = async (event) => {
     
     event.preventDefault(); 
@@ -118,12 +128,14 @@ const AddMedicineModal = () => {
   
     try {
       await addMedicine(medicineData);
-      console.log('pavan')
+      
     } catch (error) {
       console.error('Error adding medicine:', error);
       
     }
   };
+  
+  
   return (
     <>
 
@@ -527,6 +539,7 @@ const AddMedicineModal = () => {
         >
          Add Medicine
         </Button>
+        <Toaster />
     </>
   );
 };
