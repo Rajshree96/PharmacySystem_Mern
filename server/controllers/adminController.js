@@ -275,68 +275,48 @@ export async function deleteManufacturerController(req,res){
 //controllers for suppliers
 
 
+export async function addSupplierController(req,res){
+try {
+    const {
+      name,
+      address,
+      state,
+      pincode,
+      country,
+      contact,
+      email,
+      website,
+      bankingDetails,
+      statutoryDetails,
+      openingBalance
+    } = req.body;
 
-export async function addSupplierController(req, res) {
-    try {
-        const {
-            name,
-            address,
-            state,
-            pincode,
-            country,
-            contact,
-            email,
-            website,
-            bankName,
-            bankAddress,
-            ifscCode,
-            accountHolderName,
-            accountNumber,
-            registrationType,
-            gstin,
-            asOnFirstDayOfFinancialYear
-        } = req.body;
+    const newSupplier = new supplierModel({
+        name,
+        address,
+        state,
+        pincode,
+        country,
+        contact,
+        email,
+        website,
+        bankingDetails,
+        statutoryDetails,
+        openingBalance
+      });
 
-        // Create a new instance of Supplier using the request body data
-        const newSupplier = new supplierModel ({
-            name,
-            address,
-            state,
-            pincode,
-            country,
-            contact,
-            email,
-            website,
-            bankingDetails: {
-                bankName,
-                bankAddress,
-                ifscCode,
-                accountHolderName,
-                accountNumber
-            },
-            statutoryDetails: {
-                registrationType,
-                gstin
-            },
-            openingBalance: {
-                asOnFirstDayOfFinancialYear
-            }
-        });
-
-        // Save the new supplier to the database
-        const savedSupplier = await newSupplier.save();
-
-        res.status(201).json(savedSupplier); // Respond with the saved supplier data
-    } catch (error) {
-        console.error('Error adding supplier:', error);
-        res.status(500).json({ error: 'Failed to add supplier' });
-    }
+    await newSupplier.save();
+    res.status(201).json({ message: 'Supplier added successfully', data: newSupplier });
+  } catch (error) {
+    console.error('Error saving manu:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
 }
 
 export async function getAllSupplierController(req,res){
     try {
         
-        const supplier = await SupplierModel.find();
+        const supplier = await supplierModel.find();
 
        
         return res.send(success(200,supplier));
