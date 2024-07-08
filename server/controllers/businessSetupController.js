@@ -13,7 +13,7 @@ export const addBusinessSetup = async (req, res) => {
                 businessName, address, pinCode, state, country, email, website, phoneNumber,
                 enableGst, stateRegistrationType, taxRate, gstin, drugLicenceNo,
                 otherTax, taxName, taxNumber, bankName, bankAddress, ifscCode,
-                accountHolderName, accountNumber
+                accountHolderName, accountNumber, financialYear, bookBeginning
             } = req.body;
 
             // Validate required fields
@@ -45,6 +45,8 @@ export const addBusinessSetup = async (req, res) => {
                     email,
                     website,
                     phoneNumber,
+                    financialYear,
+                    bookBeginning
                 },
                 statutoryDetails: {
                     enableGst,

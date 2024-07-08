@@ -14,4 +14,4 @@ medicineRouter.put('/edit/:id', checkUserLogin, isAdmin, editMedicineType);
 // Route to delete a category
 medicineRouter.delete('/delete/:id', checkUserLogin, isAdmin, deleteMedicineType);
 
-export default medicineRouter; // Corrected name
+export default medicineRouter; 
