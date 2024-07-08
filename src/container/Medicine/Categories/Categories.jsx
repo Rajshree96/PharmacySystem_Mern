@@ -11,11 +11,23 @@ import AllMedicineModals from "../../../common-components/Modals/medicineModals/
 const Categories = () => {
     const breadcrumbs = [ "Medicine", "Categories" ];
 
+    // const [ modalType, setModalType ] = useState("");
     const [ modalType, setModalType ] = useState("");
+    const [currentCategory, setCurrentCategory] = useState({ name: '' });
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
-    const handleOpenModal = (type) => {
-        setModalType(type);
-    };
+
+    const handleOpenModal = (category = null) => {
+        if (category) {
+          setCurrentCategory(category);
+          setIsEditMode(true);
+        } else {
+          setCurrentCategory({ name: '' });
+          setIsEditMode(false);
+        }
+        setModalOpen(true);
+      };
 
     const handleCloseModal = () => {
         setModalType("");
@@ -36,7 +48,7 @@ const Categories = () => {
                         </Grid>
                         <Grid container spacing={3} sx={{mb: 3}}>
                             <Grid item xs={12} sm={6} md={3}>
-                                <DynamicButton
+                                {/* <DynamicButton
                                     icon={Add}
                                     label={"Add Category"}
                                     onClick={() => handleOpenModal("add category")}
@@ -46,7 +58,7 @@ const Categories = () => {
                                         "&:hover": {bgcolor: "#004d40"},
                                         transition: "all 0.3s",
                                     }}
-                                />
+                                /> */}
                             </Grid>
                         </Grid>
                         <MedicineCategoryTable

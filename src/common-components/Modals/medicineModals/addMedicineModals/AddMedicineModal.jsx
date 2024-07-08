@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel, Box,Button } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import { Add } from "@mui/icons-material";
 import axios from "axios";
+import { getAllUnits } from "../../../../unitapi";
+import { getAllCategories } from "../../../../categoriesApi";
+import { getAllMedicineTypes } from "../../../../medicineTypeapi";
 
 const AddMedicineModal = () => {
   const[medicineName,setMedicineName] =useState('');
   const [itemCode,setItemCode] = useState('')
-  const [medicineCategory, setCategory] = useState('');
-  const [medicineType, setMedicineType] = useState('');
-  const [manufacturer, setManufacturer] = useState('');
+  const [category, setCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [medicineType, setMedicineType] = useState([]);
+  const [selectedMedicineType, setSelectedMedicineType] = useState();
+
+  const [manufacturer, setManufacturer] = useState([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState('');
+
   const [brand, setBrand] = useState('');
-  const [unit, setUnit] = useState('');
+
+  const [unit, setUnit] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState('');
+
   const [gstRate, setGstRate] = useState('');
   const[expiryDate,setExpiryDate]=useState();
   const[photos,setPhotos] = useState('');
@@ -39,8 +50,10 @@ const AddMedicineModal = () => {
     units: '',
     amount: ''
   });
+  
   const [ingredients, setIngredients] = useState('');
   const [ingredientList, setIngredientList] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -51,7 +64,97 @@ const AddMedicineModal = () => {
     setIngredientList(list);
   };
 
-  
+   useEffect(()=>{
+    fetchCategories();
+   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getAllCategories();
+      console.log("Fetched categories:", response);
+      if (Array.isArray(response)) {
+        setCategory(response);
+      } else {
+        console.error("Error: Fetched data is not an array");
+        setCategory([]);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setCategory([]);
+    }
+  };
+ 
+  useEffect(()=>{
+    fetchMedicineType();
+  },[])
+
+  const fetchMedicineType = async () => {
+    try {
+       const response = await getAllMedicineTypes();
+       console.log("Medicine Type fetched", response);
+       if(Array.isArray(response)){
+        setMedicineType(response);
+       }else{
+        console.error("Error: Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setMedicineType([]);
+    }
+  };
+
+  useEffect(()=>{
+    fetchManufecturer();
+  },[]);
+
+  const config = () => {
+    const token = localStorage.getItem("token");
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    };
+  };
+ 
+
+  const fetchManufecturer = async () => {
+    try {
+       const response = await axios.get('http://localhost:4000/api/v1/admin/getAllManufacturer', config());
+       console.log("manufactured  fetched", response.data);
+       if(Array.isArray(response.data.result)){
+        setManufacturer(response.data.result);
+       }else{
+        console.error("Error: Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching manufactures:", error);
+      setManufacturer([]);
+    }
+  };
+
+  useEffect(()=>{
+    fetchUnit();
+  },[]);
+
+  const fetchUnit = async () => {
+    try {
+      const response = await getAllUnits();
+      console.log("Fetched units:", response.data);
+      if (Array.isArray(response.data)) {
+        setUnit(response.data);
+      } else {
+        console.error("Error: Fetched data is not an array");
+        setUnit([]);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setUnit([]);
+    }
+  };
+ 
+
+
   const addMedicine = async (medicineData) => {
     try {
       console.log(medicineData)
@@ -81,11 +184,11 @@ const AddMedicineModal = () => {
     const medicineData = {
       itemCode: itemCode,
       medicineName: medicineName,
-      medicineCategory: medicineCategory,
-      medicineType: medicineType,
-      manufacturer: manufacturer,
+      medicineCategory: selectedCategory,
+      medicineType: selectedMedicineType,
+      manufacturer: selectedManufacturer,
       brand: brand,
-      unit: unit,
+      unit: selectedUnit,
       gstRate: gstRate,
       purchaseTaxIncluded: purchaseTaxIncluded,
       salesTaxIncluded: salesTaxIncluded,
@@ -161,12 +264,14 @@ const AddMedicineModal = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={medicineCategory}
-            onChange={(e) => setCategory(e.target.value)}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
             select
           >
-             <MenuItem value="Manufacturer 1">Category 1</MenuItem>
-            <MenuItem value="Manufacturer 2">Category 2</MenuItem>
+            {category.map((cat) => (
+             <MenuItem  key={cat._id} value={cat._id}>{cat.name}</MenuItem>
+            // <MenuItem value="Manufacturer 2">Category 2</MenuItem>
+            ))}
           </TextField> 
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -176,27 +281,33 @@ const AddMedicineModal = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={medicineType}
-            onChange={(e) => setMedicineType(e.target.value)}
+            value={selectedMedicineType}
+            onChange={(e) => setSelectedMedicineType(e.target.value)}
             select
           >
-             <MenuItem value="Manufacturer 1">Medicine Type 1</MenuItem>
-            <MenuItem value="Manufacturer 2">Medicine Type 2</MenuItem>
+            {medicineType.map((type) => (
+             <MenuItem  key={type._id} value={type._id}>{type.mediType}</MenuItem>
+            // <MenuItem value="Manufacturer 2">Category 2</MenuItem>
+            ))}
+             {/* <MenuItem value="Manufacturer 1">Medicine Type 1</MenuItem>
+            <MenuItem value="Manufacturer 2">Medicine Type 2</MenuItem> */}
           </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
+        <TextField
             margin="dense"
             label="Manufacturer"
             type="text"
             fullWidth
             variant="standard"
-            value={manufacturer}
-            onChange={(e) => setManufacturer(e.target.value)}
+            value={selectedManufacturer}
+            onChange={(e) => setSelectedManufacturer(e.target.value)}
             select
           >
-            <MenuItem value="Manufacturer 1">Manufacturer 1</MenuItem>
-            <MenuItem value="Manufacturer 2">Manufacturer 2</MenuItem>
+             {manufacturer.map((manu) => (
+             <MenuItem  key={manu._id} value={manu._id}>{manu.name}</MenuItem>
+            ))}
+            
           </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -221,12 +332,16 @@ const AddMedicineModal = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={unit}
-            onChange={(e) => setUnit(e.target.value)}
+            value={selectedUnit}
+            onChange={(e) => setSelectedUnit(e.target.value)}
             select
-          ><MenuItem value="5">5</MenuItem>
+          >
+            {/* <MenuItem value="5">5</MenuItem>
             <MenuItem value="12">12</MenuItem>
-            <MenuItem value="18">18</MenuItem>
+            <MenuItem value="18">18</MenuItem> */}
+            {unit.map((units) => (
+             <MenuItem  key={units._id} value={units._id}>{units.name}</MenuItem>
+            ))}
           </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>

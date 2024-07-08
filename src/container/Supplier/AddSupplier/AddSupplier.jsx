@@ -25,6 +25,8 @@ import { makeStyles } from "@mui/styles";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+// import { addSupplier } from "../../../supplierApi";
+import axios from "axios";
 
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
@@ -114,7 +116,22 @@ const AddSupplier = () => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
-
+  const [name,setName] =useState('');
+  const[address,setAddress] =useState('')
+  const[pinCode,setPinCode] = useState('')
+  const[contact,setContact] =useState('')
+  const[email,setEmail] = useState('')
+  const [website,setWebsite] = useState('')
+  const[bankName,setBankName]=useState('')
+  const[bankAddress,setBankAddress]=useState('')
+  const[ifscCode,setIfscCode]= useState('')
+  const[accountHolderName,setAccountHolderName]=useState('')
+  const[accountNumber,setAccountNumber]=useState('')
+  const[gstin,setgstin]=useState('')
+  const[openingBalance,setOpeningBalance]=useState('')
+  const[registrationType,setRegistrationType]=useState('')
+  
+  
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
     setSelectedState(""); 
@@ -133,8 +150,80 @@ const AddSupplier = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+const supplierData = {
+  name: name,
+  address:address,
+  state: selectedState,
+  pincode: pinCode,
+  country: selectedCountry,
+  contact: contact,
+  email: email,
+  website: website,
+  bankingDetails: {
+    bankName: bankName,
+    bankAddress: bankAddress,
+    ifscCode: ifscCode,
+    accountHolderName: accountHolderName,
+    accountNumber: accountNumber,
+  },
+  statutoryDetails: {
+    registrationType: registrationType,
+    gstin: gstin,
+  },
+  openingBalance: {
+    asOnFirstDayOfFinancialYear: openingBalance,
+  },
+};
 
-  return (
+
+  
+// console.log(supplierData);
+
+
+try {
+  const auth = JSON.parse(localStorage.getItem('auth'));
+  if (!auth || !auth.token) {
+    throw new Error("Authorization token not found");
+  }
+
+  const response = await axios.post(
+    'http://localhost:4000/api/v1/admin/add-supplier', 
+    supplierData,
+    { 
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${auth.token}`
+      }
+    }
+  );
+
+  if (response.status === 201) {
+    console.log("Supplier added successfully:", response.data);
+  } else {
+    console.log("Unexpected response status:", response.status);
+  }
+} catch (error) {
+  if (error.response) {
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+    console.log("Error data:", error.response.data);
+    console.log("Error status:", error.response.status);
+    console.log("Error headers:", error.response.headers);
+  } else if (error.request) {
+    // The request was made but no response was received
+    console.log("Error request:", error.request);
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    console.log("Error message:", error.message);
+  }
+  console.log("Error config:", error.config);
+}
+};
+
+  
+   return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
@@ -142,9 +231,60 @@ const AddSupplier = () => {
             <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
               Add Supplier
             </Typography>
+            {/* {successMessage && (
+              <Typography color="success" gutterBottom>
+                {successMessage}
+              </Typography>
+            )} */}
+             {/* {error && (
+              <Typography color="error" gutterBottom>
+                {error}
+              </Typography>
+            )} */}
+
             <Formik
+              // initialValues={{
+              //   name: "",
+              //   address: "",
+              //   state: "",
+              //   pinCode: "",
+              //   country: "",
+              //   contact: "",
+              //   email: "",
+              //   website: "",
+              //   bankName: "",
+              //   bankAddress: "",
+              //   ifscCode: "",
+              //   accountHolderName: "",
+              //   accountNumber: "",
+              //   gstin: "",
+              //   openingBalance: "",
+              //   registrationType: "",
+              // }}
+              // initialValues={{
+              //   name: "",
+              //   address: "",
+              //   state: "",
+              //   pinCode: "",
+              //   country: "",  
+              //   contact: "",
+              //   email: "",
+              //   website: "",
+              //   bankName: "",
+              //   bankAddress: "",
+              //   ifscCode: "",
+              //   accountHolderName: "",
+              //   accountNumber: "",
+              //   gstin: "",
+              //   openingBalance: "",
+              //   registrationType: "",
+              // }}
+             // initialValues={formData}
+              //  initialValues={FormData}
+              // validationSchema={validationSchema}
+              // onSubmit={handleSubmit}
               initialValues={{
-                name: "",
+                nameame: "",
                 address: "",
                 state: "",
                 pinCode: "",
@@ -161,13 +301,15 @@ const AddSupplier = () => {
                 openingBalance: "",
                 registrationType: "",
               }}
+              //  initialValues={formData}
               validationSchema={validationSchema}
-              onSubmit={(values) => {
+              // onSubmit={handleSubmit}
+              onSubmit={(values)=>{
                 console.log(values);
-                // Handle form submission
               }}
+            
             >
-              {({ errors, touched }) => (
+              {({ errors, touched, handleChange }) => (
                 <Form>
                   <motion.div variants={itemVariants}>
                     <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
@@ -184,6 +326,10 @@ const AddSupplier = () => {
                           variant="outlined"
                           error={touched.name && !!errors.name}
                           helperText={touched.name && errors.name}
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+
+                          
                         />
                       </Grid>
                       {/* Address */}
@@ -194,6 +340,9 @@ const AddSupplier = () => {
                           fullWidth
                           label="Address"
                           variant="outlined"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+
                         />
                       </Grid>
                       {/* Country */}
@@ -233,6 +382,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Pin Code"
                           variant="outlined"
+                          value={pinCode}
+                          onChange={(e) => setPinCode(e.target.value)}
                         />
                       </Grid>
                       {/* Contact */}
@@ -243,6 +394,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Contact"
                           variant="outlined"
+                          value={contact}
+                          onChange={(e) => setContact(e.target.value)}
                         />
                       </Grid>
                       {/* Email */}
@@ -253,6 +406,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Email"
                           variant="outlined"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </Grid>
                       {/* Website */}
@@ -263,6 +418,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Website"
                           variant="outlined"
+                          value={website}
+                          onChange={(e) => setWebsite(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -283,6 +440,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Bank Name"
                           variant="outlined"
+                          value={bankName}
+                          onChange={(e) => setBankName(e.target.value)}
                         />
                       </Grid>
                       {/* Bank Address */}
@@ -293,6 +452,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Bank Address"
                           variant="outlined"
+                          value={bankAddress}
+                          onChange={(e) => setBankAddress(e.target.value)}
                         />
                       </Grid>
                       {/* IFSC Code */}
@@ -303,6 +464,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="IFSC Code"
                           variant="outlined"
+                          value={ifscCode}
+                          onChange={(e) => setIfscCode(e.target.value)}
                         />
                       </Grid>
                       {/* Account Holder Name */}
@@ -313,6 +476,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Account Holder Name"
                           variant="outlined"
+                          value={accountHolderName}
+                          onChange={(e) => setAccountHolderName(e.target.value)}
                         />
                       </Grid>
                       {/* Account Number */}
@@ -323,6 +488,8 @@ const AddSupplier = () => {
                           fullWidth
                           label="Account Number"
                           variant="outlined"
+                          value={accountNumber}
+                          onChange={(e) => setAccountNumber(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -345,8 +512,10 @@ const AddSupplier = () => {
                           fullWidth
                           label="Registration Type"
                           variant="outlined"
-                          error={touched.registrationType && !!errors.registrationType}
-                          helperText={touched.registrationType && errors.registrationType}
+                          // error={touched.registrationType && !!errors.registrationType}
+                          // helperText={touched.registrationType && errors.registrationType}
+                          value={registrationType}
+                          onChange={(e) => setRegistrationType(e.target.value)}
                         >
                           {registrationTypes.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
@@ -366,6 +535,8 @@ const AddSupplier = () => {
                           inputProps={{ style: { textTransform: 'uppercase' } }}
                           error={touched.gstin && !!errors.gstin}
                           helperText={touched.gstin && errors.gstin}
+                          value={gstin}
+                          onChange={(e) => setgstin(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -386,13 +557,15 @@ const AddSupplier = () => {
                           fullWidth
                           label="Opening Balance"
                           variant="outlined"
+                          value={openingBalance}
+                          onChange={(e) => setOpeningBalance(e.target.value)}
                         />
                       </Grid>
                     </Grid>
                   </motion.div>
                   <Box className={classes.buttonContainer} >
                     <motion.div variants={itemVariants} >
-                      <Tooltip title="Save" >
+                      <Tooltip title="Save" placement="top">
                         <Button
                           type="submit"
                           variant="contained"
@@ -400,8 +573,12 @@ const AddSupplier = () => {
                           startIcon={<SaveIcon />}
                           className={classes.button}
                           sx={{ mr: 2 }}
+                          onClick={handleSubmit}
+                            // onClick={handleSubmit}
+                          // disabled={isLoading || isSubmitting}
                         >
                           Create
+                          {/* {isLoading ? "Creating" : "Create"} */}
                         </Button>
                       </Tooltip>
                       <Tooltip title="Cancel">

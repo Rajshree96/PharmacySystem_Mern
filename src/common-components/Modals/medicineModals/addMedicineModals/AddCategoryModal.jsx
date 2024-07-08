@@ -2,9 +2,9 @@ import React from "react";
 import { Button, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
-const AddCategoryModal = ({ categoryName, setCategoryName, isEditMode, onSave, onCancel }) => {
+const AddCategoryModal = ({ category, setCategory, isEditMode, onSave }) => {
   const handleSaveCategory = () => {
-     onSave(); // Trigger the save action directly from props
+     onSave(category); // Trigger the save action directly from props
   };
   return (
     <>
@@ -15,17 +15,19 @@ const AddCategoryModal = ({ categoryName, setCategoryName, isEditMode, onSave, o
         type="text"
         fullWidth
         variant="standard"
-        value={categoryName}
-        onChange={(e) => setCategoryName(e.target.value)}
+        value={category.name}
+        onChange={(e) => setCategory({...category, name: e.target.value})}
       />
       <Button
         variant="contained"
-        startIcon={isEditMode ? null : <Add />}
+        // startIcon={isEditMode ? null : <Add />}
+        startIcon={<Add/>}
         color="primary"
-        sx={{ mt: 2 }}
+         sx={{ mt: 2 }}
         onClick={handleSaveCategory}
       >
-        {isEditMode ? "Save" : "Add"}
+        Add
+        {/* {isEditMode ? "Save" : "Add"} */}
       </Button>
     </>
   );
