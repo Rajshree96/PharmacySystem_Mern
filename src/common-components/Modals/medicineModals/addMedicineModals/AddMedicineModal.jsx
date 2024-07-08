@@ -54,7 +54,20 @@ const AddMedicineModal = () => {
     setIngredientList(list);
   };
 
+  const fetchMedicines = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine");
+      console.log("API Response:", response.data.result);
 
+      if (Array.isArray(response.data.result)) {
+        setMedicines(response.data.result);
+      } else {
+        console.error("API response does not contain medicines array:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching medicines:", error);
+    }
+  };
   const addMedicine = async (medicineData) => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
@@ -70,10 +83,10 @@ const AddMedicineModal = () => {
       console.log(response);
       if (response.status === 201) {
         console.log('Medicine added successfully!');
-        
-      } 
-      navigate("/admin/dashboard");
+        navigate("/admin/dashboard");
       toast.success("medicine added successfully ");
+      fetchMedicines();
+      } 
       
       
   

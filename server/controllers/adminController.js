@@ -271,18 +271,13 @@ export async function addSupplierController(req, res) {
             contact,
             email,
             website,
-            bankName,
-            bankAddress,
-            ifscCode,
-            accountHolderName,
-            accountNumber,
-            registrationType,
-            gstin,
-            asOnFirstDayOfFinancialYear
-        } = req.body;
-
+            bankingDetails,
+            statutoryDetails,
+            openingBalance
+          } = req.body;
+      
         // Create a new instance of Supplier using the request body data
-        const newSupplier = new supplierModel ({
+        const newSupplier = new supplierModel({
             name,
             address,
             state,
@@ -291,21 +286,10 @@ export async function addSupplierController(req, res) {
             contact,
             email,
             website,
-            bankingDetails: {
-                bankName,
-                bankAddress,
-                ifscCode,
-                accountHolderName,
-                accountNumber
-            },
-            statutoryDetails: {
-                registrationType,
-                gstin
-            },
-            openingBalance: {
-                asOnFirstDayOfFinancialYear
-            }
-        });
+            bankingDetails,
+            statutoryDetails,
+            openingBalance
+          });
 
         // Save the new supplier to the database
         const savedSupplier = await newSupplier.save();
@@ -320,7 +304,7 @@ export async function addSupplierController(req, res) {
 export async function getAllSupplierController(req,res){
     try {
         
-        const supplier = await SupplierModel.find();
+        const supplier = await supplierModel.find();
 
        
         return res.send(success(200,supplier));
