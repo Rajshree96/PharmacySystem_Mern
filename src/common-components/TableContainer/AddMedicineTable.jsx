@@ -47,8 +47,12 @@ const AddMedicineTable = () => {
 
   useEffect(() => {
     fetchMedicines();
+    
   }, []);
-   console.log(medicines);
+
+  const handleAddMedicine = (newMedicine) => {
+    setMedicines([...medicines, newMedicine]); // Update state with new medicine
+  };
   const handleVisibilityClick = (medicine) => {
     console.log("Viewing details for medicine:", medicine);
   };

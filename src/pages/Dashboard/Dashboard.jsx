@@ -23,6 +23,7 @@ import DashboardCard from "../Dashboard/DashboardCard";
 
 import AddManufacturer from "../../container/Manufacturer/AddManufacturer/AddManufacturer";
 import AddSupplier from "../../container/Supplier/AddSupplier/AddSupplier";
+import ManageSupplier from "../../container/Supplier/ManageSupplier/ManageSupplier";
 
 
 
@@ -115,9 +116,11 @@ const Dashboard = () => {
             case "Add Medicine":
                 return <AddMedicine />;
             case "Add Manufacturer":
-                return <AddManufacturer/>
-                case "Add Supplier":
-                    return <AddSupplier/>
+                return <AddManufacturer />
+            case "Add Supplier":
+                return <AddSupplier />
+            case "Manage Supplier":
+                return <ManageSupplier />
             default:
                 return null;
         }
@@ -160,7 +163,7 @@ const Dashboard = () => {
                         <img src={logo} alt="logo" height="50px" width="50px" />
                         <Typography sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}>
                             Business Name
-                        </Typography>                        
+                        </Typography>
                     </Box>
                     <IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
                         {theme.direction === "ltr" ? <ArrowRight /> : <ArrowRight />}

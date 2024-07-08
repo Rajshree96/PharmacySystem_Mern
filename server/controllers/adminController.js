@@ -147,60 +147,42 @@ export async function deleteMedicineController(req, res) {
 
 
 export async function addManufacturerController(req, res) {
+    
     try {
         const {
-            name,
-            address,
-            state,
-            pincode,
-            country,
-            contact,
-            email,
-            website,
-            bankName,
-            bankAddress,
-            ifscCode,
-            accountHolderName,
-            accountNumber,
-            registrationType,
-            gstin,
-            asOnFirstDayOfFinancialYear
+          name,
+          address,
+          state,
+          pincode,
+          country,
+          contact,
+          email,
+          website,
+          bankingDetails,
+          statutoryDetails,
+          openingBalance
         } = req.body;
-
-       
+    
         const newManufacturer = new manufacturerModel({
-            name,
-            address,
-            state,
-            pincode,
-            country,
-            contact,
-            email,
-            website,
-            bankingDetails: {
-                bankName,
-                bankAddress,
-                ifscCode,
-                accountHolderName,
-                accountNumber
-            },
-            statutoryDetails: {
-                registrationType,
-                gstin
-            },
-            openingBalance: {
-                asOnFirstDayOfFinancialYear
-            }
+          name,
+          address,
+          state,
+          pincode,
+          country,
+          contact,
+          email,
+          website,
+          bankingDetails,
+          statutoryDetails,
+          openingBalance
         });
-
-       
-        const savedManufacturer = await newManufacturer.save();
-
-        res.status(201).json(savedManufacturer);
-    } catch (error) {
-        console.error('Error adding manufacturer:', error);
-        res.status(500).json({ error: 'Failed to add manufacturer' });
-    }
+    
+        await newManufacturer.save();
+        res.status(201).json({ message: 'Manufacturer added successfully', data: newManufacturer });
+      } catch (error) {
+        console.error('Error saving manufacturer:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+      }
 }
 
 export async function getAllManufacturerController(req,res){

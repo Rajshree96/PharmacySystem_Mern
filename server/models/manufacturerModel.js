@@ -75,12 +75,12 @@ const ManufacturerSchema = new Schema({
   email: {
     type: String,
     required: true,
-    match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+   
   },
   website: {
     type: String,
     required: true,
-    match: [/^https?:\/\/.+\..+/, 'Please fill a valid website URL'],
+   
   },
   bankingDetails: {
     type: BankingDetailsSchema,

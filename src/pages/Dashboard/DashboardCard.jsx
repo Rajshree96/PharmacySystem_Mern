@@ -93,8 +93,8 @@ const useStyles = makeStyles ({
     cardTypography: {
         color: '#086070',
         fontWeight: 700,
-        // fontSize: '18px',
-        width: '150px',
+        fontSize: '17px',
+        // width: '150px',
         '@media(max-width(600))':{
             width:"auto"
         }
@@ -118,7 +118,7 @@ const useStyles = makeStyles ({
     },
     graphCard:{
         maxWidth: 'auto',
-        height:'450px'
+        height:'450px',       
     },
     saleBox: {
         display: 'grid',
@@ -127,14 +127,24 @@ const useStyles = makeStyles ({
         alignItems: 'center',
     },
     saleCard:{
-        display:'flex',     
+        display:'flex',
+        maxWidth: 'auto',
+        height:'130px' ,        
     },
     saleBoxIcon:{
         display:'flex',
         justifyContent:'end',
         alignItems:'end'
-    }
+    },
+    mobCard: {
+        display: 'block',
+        '@media (max-width: 600px)': {
+            display: 'none',
+        },
+    },
+   
 });
+
 const DashboardCard = () => {
     const classes = useStyles();
     // const handleCard =()=>{
@@ -154,7 +164,6 @@ const DashboardCard = () => {
                 { img: invoice, end: 69, color: "#F19E39", title: "Total Invoice" }
                 ].map((item, index) => (
                     <Grid item lg={2} md={3} sm={4} xs={12} key={index}>
-                        <Box className={classes.cardBox}>
                             <Card className={classes.card}>
                                 <CardContent>
                                     <Box className={classes.countUpBox}>
@@ -169,7 +178,6 @@ const DashboardCard = () => {
                                     </Box>
                                 </CardContent>
                             </Card>
-                        </Box>
                     </Grid>
                 ))}
             </Grid>
@@ -202,8 +210,8 @@ const DashboardCard = () => {
             </Grid>
 
             {/* Statistics Grids */}
-            <Grid container spacing={4} mt='1rem'>
-                <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid container spacing={4} mt='1rem' >
+                <Grid item lg={6} md={6} sm={12} xs={12} className={classes.mobCard}>
                     <Card className={classes.graphCard} >
                         <CardContent>
                             <Box>
@@ -216,7 +224,7 @@ const DashboardCard = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item lg={6} md={6} sm={12} xs={12}>
+                <Grid item lg={6} md={6} sm={12} xs={12} className={classes.mobCard}>
                     <Card className={classes.graphCard}>
                         <CardContent>
                                 <Typography variant='h6' style={{ color: 'grey' }}>Statistics</Typography>
@@ -233,7 +241,7 @@ const DashboardCard = () => {
 
             {/* Data Table Grids */}
             <Grid container spacing={4} mt='1rem'>
-                <Grid item lg={6} md={6} sm={12} xs={12}>
+                <Grid item lg={6} md={6} sm={12} xs={12} className={classes.mobCard}>
                     <Card className={classes.tableCard}>
                         <CardContent>
                             <Box>
@@ -269,7 +277,7 @@ const DashboardCard = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item lg={6} md={6} sm={12} xs={12}>
+                <Grid item lg={6} md={6} sm={12} xs={12} className={classes.mobCard}>
                     <Card className={classes.tableCard}>
                         <CardContent>
                             <Box>
