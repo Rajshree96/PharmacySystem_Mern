@@ -29,6 +29,7 @@ import DashboardCard from "../Dashboard/DashboardCard";
 import AddManufacturer from "../../container/Manufacturer/AddManufacturer/AddManufacturer";
 import AddSupplier from "../../container/Supplier/AddSupplier/AddSupplier";
 import ManageSupplier from "../../container/Supplier/ManageSupplier/ManageSupplier";
+import ManageManufacturer from "../../container/Manufacturer/ManageManufacturer/ManageManufacturer";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -120,6 +121,8 @@ const Dashboard = () => {
         return <AddMedicine />;
       case "Add Manufacturer":
         return <AddManufacturer />;
+         case "Manage Manufacturer":
+        return <ManageManufacturer />;
       case "Add Supplier":
         return <AddSupplier />;
       case "Manage Supplier":
