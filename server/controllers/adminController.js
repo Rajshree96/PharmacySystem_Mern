@@ -1,6 +1,8 @@
 import medicineModel from "../models/medicineModel.js";
 import manufacturerModel from "../models/manufacturerModel.js";
 import supplierModel from "../models/supplierModel.js";
+import manufacturerLedgerModel from "../models/manufacturerLedgerModel.js";
+import supplierLedgerModel from "../models/supplierLedgerModel.js";
 import { error,success } from "../utills/responseWrapper.js";
 
 
@@ -384,3 +386,208 @@ export async function deleteSupplierController(req,res){
 }
 
 
+//  Controller  related to manufacturer Ledger Controller
+
+
+export async function addManufacturerLedgerController(req,res){
+    try {
+        const { manufacturerName, dateFrom, dateTo, date, voucherType, voucherNo, debit, credit } = req.body;
+
+        const latestEntry = await manufacturerLedgerModel.findOne({ manufacturerName })
+          .sort({ date: -1 });      
+        let previousClosingBalance = latestEntry ? latestEntry.closingBalance : 0;
+        let closingBalance = previousClosingBalance + credit - debit;
+        
+        // Create a new ledger entry
+        const newLedgerEntry = new manufacturerLedgerModel({
+          manufacturerName,
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          date: date,
+          voucherType,
+          voucherNo,
+          debit,
+          credit,
+          closingBalance
+        });
+    
+        // Save the new ledger entry to the database
+        await newLedgerEntry.save();
+    
+        // Send the new ledger entry as the response
+        res.status(201).json(newLedgerEntry);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+}
+
+export async function getAllManufacturerLedgerController(req,res){
+    try {
+        
+        const manufacturerLedger = await manufacturerLedgerModel.find();
+
+       
+        return res.send(success(200,manufacturerLedger));
+    } catch (err) {
+        
+        return res.send(error(500, err.message));
+    }
+}
+
+export async function updateManufacturerLedgerController(req,res){
+    try{
+        const {  ...updateData } = req.body;
+            const _id = req.params;
+    
+            
+            if (!_id ) {
+                return res.send(error(400, "_id  is required."));
+            }
+    
+           
+            const updatedManufacturerLedger= manufacturerLedgerModel.findByIdAndUpdate(
+                { _id },
+                updateData,
+                { new: true }
+            );
+    
+           
+            if (!updatedManufacturerLedger ) {
+                return res.send(error(404, "supplier not found."));
+            }
+    
+            
+            return res.send(success(200,  updatedManufacturerLedger ));
+        } catch (err) {
+            
+            return res.send(error(500, err.message));
+        }
+}
+
+export async function deleteManufacturerLedgerController(req,res){
+    try {
+       
+        const { _id } = req.params;
+
+        
+        if (!_id) {
+            return res.send(error(400, "_id is required."));
+        }
+
+        
+        const deletedManufacturerLedger = await manufacturerLedgerModel.findByIdAndDelete({ _id });
+
+        
+        if (!deletedManufacturerLedger ) {
+            return res.send(error(404, "Manufacturer Ledger  not found."));
+        }
+
+        return res.send(success(200, deletedManufacturerLedger  ));
+    } catch (err) {
+        
+        return res.send(error(500, err.message));
+    }
+}
+
+// controllers related to supplier ledger 
+
+
+export async function addSupplierLedgerController(req,res){
+    try {
+        const { supplierName, dateFrom, dateTo, date, voucherType, voucherNo, debit, credit } = req.body;
+
+        const latestEntry = await supplierLedgerModel.findOne({ supplierName })
+          .sort({ date: -1 });      
+        let previousClosingBalance = latestEntry ? latestEntry.closingBalance : 0;
+        let closingBalance = previousClosingBalance + credit - debit;
+        
+        // Create a new ledger entry
+        const newLedgerEntry = new supplierLedgerModel({
+          supplierName,
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          date: date,
+          voucherType,
+          voucherNo,
+          debit,
+          credit,
+          closingBalance
+        });
+    
+        // Save the new ledger entry to the database
+        await newLedgerEntry.save();
+    
+        // Send the new ledger entry as the response
+        res.status(201).json(newLedgerEntry);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+}
+
+export async function getAllSupplierLedgerController(req,res){
+    try {
+        
+        const supplierLedger = await supplierLedgerModel.find();
+
+       
+        return res.send(success(200,supplierLedger));
+    } catch (err) {
+        
+        return res.send(error(500, err.message));
+    }
+}
+
+export async function updateSupplierLedgerController(req,res){
+    try{
+        const {  ...updateData } = req.body;
+            const _id = req.params;
+    
+            
+            if (!_id ) {
+                return res.send(error(400, "_id  is required."));
+            }
+    
+           
+            const updatedSupplierLedger= supplierLedgerModel.findByIdAndUpdate(
+                { _id },
+                updateData,
+                { new: true }
+            );
+    
+           
+            if (!updatedSupplierLedger ) {
+                return res.send(error(404, "supplier not found."));
+            }
+    
+            
+            return res.send(success(200,  updatedSupplierLedger ));
+        } catch (err) {
+            
+            return res.send(error(500, err.message));
+        }
+}
+
+export async function deleteSupplierLedgerController(req,res){
+    try {
+       
+        const { _id } = req.params;
+
+        
+        if (!_id) {
+            return res.send(error(400, "_id is required."));
+        }
+
+        
+        const deletedSupplierLedger = await supplierLedgerModel.findByIdAndDelete({ _id });
+
+        
+        if (!deletedSupplierLedger ) {
+            return res.send(error(404, "supplier  Ledger  not found."));
+        }
+
+        return res.send(success(200, deletedSupplierLedger ));
+    } catch (err) {
+        
+        return res.send(error(500, err.message));
+    }
+}

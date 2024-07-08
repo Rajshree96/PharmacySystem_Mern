@@ -25,6 +25,7 @@ import { makeStyles } from "@mui/styles";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
@@ -133,11 +134,14 @@ const AddSupplier = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
+  const breadcrumbs = [ "Supplier", "Add Supplier" ];
+
 
   return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
+        <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <motion.div initial="hidden" animate="visible" variants={containerVariants}>
             <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
               Add Supplier
