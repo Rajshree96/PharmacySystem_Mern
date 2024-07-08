@@ -23,10 +23,11 @@ const AddMedicineTypeModal = ({ onClose, isEditMode, initialCategory }) => {
   };
 
   const getConfig = () => {
-    const token = localStorage.getItem('token');
+    const auth = JSON.parse(localStorage.getItem('auth'));
+
     return {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${auth.token}`
       }
     };
   };

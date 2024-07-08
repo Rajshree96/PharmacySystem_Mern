@@ -158,6 +158,8 @@ function SetUpBusiness() {
         ifscCode: "",
         accountHolderName: "",
         accountNumber: "",
+        financialYear:"",
+        bookBeginning:""
     });
 
     const handleCountryChange = (val) => {
