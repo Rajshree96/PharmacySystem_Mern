@@ -28,7 +28,6 @@ import {
     CreditCard,
     FileUpload,
     DateRange,
-    
 } from "@mui/icons-material";
 
 import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
@@ -49,7 +48,8 @@ const FinancialYearSelector = () => {
     const [ isSelectingYears, setIsSelectingYears ] = useState(false);
 
     const currentYear = new Date().getFullYear();
-    const yearOptions = Array.from(new Array(20), (val, index) => currentYear - index);
+    // const yearOptions = Array.from(new Array(20), (val, index) => currentYear - index);
+    const yearOptions = Array.from(new Array(100), (val, index) => currentYear - 50 + index);
 
     const handleStartYearChange = (event) => {
         const selectedYear = event.target.value;
@@ -77,20 +77,19 @@ const FinancialYearSelector = () => {
                 <TextField
                     label="Financial Year"
                     fullWidth
-                    // name="financialYear" 
+                    // name="financialYear"
                     value={financialYear}
                     InputProps={{
                         readOnly: true,
-                        startAdornment: <DateRange/>
+                        startAdornment: <DateRange />,
                     }}
                     onClick={() => setIsSelectingYears(true)}
                 />
-               
             </Grid>
             {isSelectingYears && (
                 <>
                     {/* Start Year */}
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={5} lg={6}>
                         <FormControl fullWidth className={classes.formControl}>
                             <InputLabel id="start-year-label">Start Year</InputLabel>
                             <Select
@@ -109,7 +108,7 @@ const FinancialYearSelector = () => {
                         </FormControl>
                     </Grid>
                     {/* End Year */}
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={5} lg={6}>
                         <FormControl fullWidth className={classes.formControl}>
                             <InputLabel id="end-year-label">End Year</InputLabel>
                             <Select
@@ -208,9 +207,9 @@ function SetUpBusiness() {
                     </Typography>
 
                     {/* Business Information */}
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} gutterBottom sx={{mt: 1}}>
                         {/* Business Logo */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 type="file"
                                 label="Business Logo"
@@ -222,7 +221,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Business Name */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Business Name"
                                 fullWidth
@@ -233,7 +232,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Address */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Address"
                                 fullWidth
@@ -244,7 +243,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Pin Code */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Pin Code"
                                 fullWidth
@@ -255,24 +254,19 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Country */}
-                        <Grid item xs={12} sm={6} md={4}>
-                            
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl fullWidth label>
                                 <CountryDropdown
                                     value={selectedCountry}
                                     onChange={handleCountryChange}
                                     label="Country"
                                     classes="country-dropdown"
-                                    showFlags
-                                    flagComponent={({country}) => (
-                                        <Flag code={country} style={{width: "24px", marginRight: "8px"}} />
-                                    )}
                                     style={{padding: "16.5px 14px", marginTop: "8px"}} // Adjust padding to align with other fields
                                 />
                             </FormControl>
                         </Grid>
                         {/* State */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl fullWidth>
                                 <RegionDropdown
                                     country={selectedCountry}
@@ -285,7 +279,7 @@ function SetUpBusiness() {
                             </FormControl>
                         </Grid>
                         {/* Email */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Email Id"
                                 fullWidth
@@ -296,7 +290,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Website */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Website"
                                 fullWidth
@@ -307,7 +301,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Phone Number */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Phone number"
                                 fullWidth
@@ -318,10 +312,22 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Finance Details */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl fullWidth>
                                 <FinancialYearSelector financialYear={formData.financialYear} />
                             </FormControl>
+                        </Grid>
+                        {/* Book Begning From */}
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <TextField
+                                label="Book Beginning From"
+                                type="date"
+                                name="bookBeginning"
+                                InputLabelProps={{shrink: true}}
+                                value={formData.bookBeginning}
+                                onChange={handleInputChange}
+                                fullWidth
+                            />
                         </Grid>
                     </Grid>
 
@@ -331,14 +337,14 @@ function SetUpBusiness() {
                     </Typography>
                     <Grid container spacing={3}>
                         {/* Enable GST */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControlLabel
                                 control={<Switch checked={formData.enableGst} onChange={handleGstChange} />}
                                 label="Enable GST"
                             />
                         </Grid>
                         {/* State */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="State"
                                 fullWidth
@@ -351,7 +357,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Registration Type */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl fullWidth>
                                 <InputLabel>Registration Type</InputLabel>
                                 <Select
@@ -368,7 +374,7 @@ function SetUpBusiness() {
                             </FormControl>
                         </Grid>
                         {/* GSTIN */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="GSTIN"
                                 fullWidth
@@ -381,7 +387,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Tax Rate */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Tax Rate"
                                 fullWidth
@@ -393,7 +399,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Drug Licence */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Drug Licence No"
                                 fullWidth
@@ -404,8 +410,10 @@ function SetUpBusiness() {
                                 disabled={!formData.enableGst}
                             />
                         </Grid>
+                    </Grid>
+                    <Grid container spacing={3} gutterBottom sx={{mt: 3}}>
                         {/* Other Tax */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -422,7 +430,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Other Tax Name */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Other Tax Name"
                                 fullWidth
@@ -434,7 +442,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Other Tax Number */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Other Tax Number"
                                 fullWidth
@@ -450,8 +458,8 @@ function SetUpBusiness() {
                     <Typography variant="h6" gutterBottom sx={{mt: 3}}>
                         Bank Details
                     </Typography>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6} md={4}>
+                    <Grid container spacing={3} gutterBottom sx={{mt: 1}}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Bank Name"
                                 fullWidth
@@ -462,7 +470,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Bank Address */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Bank Address"
                                 fullWidth
@@ -473,7 +481,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* IFSC Code */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="IFSC Code"
                                 fullWidth
@@ -484,7 +492,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Account Holder Name */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Account Holder Name"
                                 fullWidth
@@ -495,7 +503,7 @@ function SetUpBusiness() {
                             />
                         </Grid>
                         {/* Account Number */}
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <TextField
                                 label="Account Number"
                                 fullWidth
@@ -508,8 +516,8 @@ function SetUpBusiness() {
                     </Grid>
                     {/* Save Button */}
                     <Grid container spacing={3} sx={{mt: 3}}>
-                        <Grid item xs={12}>
-                            <Button variant="contained" color="primary" fullWidth>
+                        <Grid item xs={12} lg={1}>
+                            <Button variant="contained" color="primary" className="btn-design" fullWidth>
                                 Save
                             </Button>
                         </Grid>
