@@ -16,63 +16,95 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  tableCellClasses,
 } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import editButton from "../../../common-components/ButtonContainer/EditButton";
+import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#086070",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    // backgroundColor: theme.palette.action.hover,
+  },
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+const createData = (name, calories, fat, carbs, protein) => {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+  createData('Eclair', 262, 16.0, 24, 6.0),
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
 
 const ManageSupplier = () => {
   const [suppliers, setSuppliers] = useState([]);
+  const breadcrumbs = [ "Supplier", "Manage Supplier" ];
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
+        <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Typography variant="h4" gutterBottom>
             Manage Supplier
           </Typography>
           <Divider sx={{ my: 2 }} />          
-        <TableContainer component={Paper} sx={{ mt: 4 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>S.no</TableCell>
-                <TableCell>Supplier Name</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>State</TableCell>
-                <TableCell>Contact Number</TableCell>
-                <TableCell>Registration Type</TableCell>
-                <TableCell>GSTIN</TableCell>
-                <TableCell>Opening Balance</TableCell>
-                <TableCell>Account Number</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {suppliers.map((supplier, index) => (
-                <TableRow key={index}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{supplier.supplierName}</TableCell>
-                  <TableCell>{supplier.address}</TableCell>
-                  <TableCell>{supplier.state}</TableCell>
-                  <TableCell>{supplier.contactNumber}</TableCell>
-                  <TableCell>{supplier.registrationType}</TableCell>
-                  <TableCell>{supplier.gstin}</TableCell>
-                  <TableCell>{supplier.openingBalance}</TableCell>
-                  <TableCell>{supplier.accountNumber}</TableCell>
-                  <TableCell>
-                    <Button color="primary" size="small">
-                      View
-                    </Button>
-                    <Button color="secondary" size="small">
-                      Edit
-                    </Button>
-                    <Button color="error" size="small">
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>S.no</StyledTableCell>
+            <StyledTableCell>Supplier Name</StyledTableCell>
+            <StyledTableCell>Address</StyledTableCell>
+            <StyledTableCell>State</StyledTableCell>
+            <StyledTableCell>Contact Number</StyledTableCell>
+            <StyledTableCell>Registration Type</StyledTableCell>
+            <StyledTableCell>GSTIN</StyledTableCell>
+            <StyledTableCell>Opening Balance</StyledTableCell>
+            <StyledTableCell>Account Number</StyledTableCell>            
+            <StyledTableCell>Action</StyledTableCell>
+
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <StyledTableRow key={row.name}>
+              <StyledTableCell>{row.calories}</StyledTableCell>
+              <StyledTableCell component="th" scope="row">
+                {row.name}
+              </StyledTableCell>
+              <StyledTableCell>{row.fat}</StyledTableCell>
+              <StyledTableCell>{row.carbs}</StyledTableCell>
+              <StyledTableCell>{row.protein}</StyledTableCell>
+              <StyledTableCell>{row.protein}</StyledTableCell>
+              <StyledTableCell>{row.protein}</StyledTableCell>
+              <StyledTableCell>{row.protein}</StyledTableCell>
+              <StyledTableCell>{row.protein}</StyledTableCell>
+              <StyledTableCell>
+                <editButton/>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
         </Paper>
 
       </Box>
