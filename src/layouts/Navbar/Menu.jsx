@@ -721,7 +721,7 @@ const Menu = ({setActiveComponent}) => {
                 </ListItemButton>
                 {setting &&
                     settings.map((item) => (
-                        <Link to="/setupbusiness" style={{textDecoration: "none"}}>
+                        <Link to="/admin/setupbusiness" style={{textDecoration: "none"}}>
                             <ListItemButton key={item.label} sx={{pl: 6, minHeight: 32, color: "white"}}>
                                 <ListItemText
                                     primary={item.label}
