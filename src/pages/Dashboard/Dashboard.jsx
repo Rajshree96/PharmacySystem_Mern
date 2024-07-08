@@ -27,9 +27,13 @@ import DashboardCard from "../Dashboard/DashboardCard";
 //manufacture
 
 import AddManufacturer from "../../container/Manufacturer/AddManufacturer/AddManufacturer";
+import ManageManufacturer from "../../container/Manufacturer/ManageManufacturer/ManageManufacturer";
+import ManufacturerLedger from "../../container/Manufacturer/ManufacturerLedger/ManufacturerLedger";
+
+//Supplier
 import AddSupplier from "../../container/Supplier/AddSupplier/AddSupplier";
 import ManageSupplier from "../../container/Supplier/ManageSupplier/ManageSupplier";
-import ManageManufacturer from "../../container/Manufacturer/ManageManufacturer/ManageManufacturer";
+import SupplierLedger from "../../container/Supplier/SupplierLedger/SupplierLedger";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -123,10 +127,14 @@ const Dashboard = () => {
         return <AddManufacturer />;
          case "Manage Manufacturer":
         return <ManageManufacturer />;
+        case "Manufacturer Ledger":
+          return <ManufacturerLedger />;
       case "Add Supplier":
         return <AddSupplier />;
       case "Manage Supplier":
         return <ManageSupplier />;
+        case "Supplier Ledger":
+          return <SupplierLedger />;
       default:
         return null;
     }
