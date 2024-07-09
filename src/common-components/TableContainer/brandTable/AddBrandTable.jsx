@@ -2,7 +2,10 @@ import React, {useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 import {makeStyles} from "@mui/styles";
+import EditButton from "../../ButtonContainer/EditButton";
+import DeleteButton from "../../ButtonContainer/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     table: {
@@ -14,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tableHeaderCell: {
         fontWeight: "bold",
-        backgroundColor: "#f5f5f5",
+        color: "white !important",
     },
 }));
 
@@ -40,8 +43,8 @@ const AddBrandTable = () => {
     return (
         <TableContainer component={Paper} className={classes.tableContainer}>
             <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
+                <TableHead >
+                    <TableRow className="table-design" >
                         <TableCell className={classes.tableHeaderCell}>Brand Name</TableCell>
                         <TableCell className={classes.tableHeaderCell}>Manufacturer</TableCell>
                         <TableCell className={classes.tableHeaderCell}>Action</TableCell>
@@ -53,13 +56,8 @@ const AddBrandTable = () => {
                             <TableCell>{row.brandName}</TableCell>
                             <TableCell>{row.manufacturer}</TableCell>
                             <TableCell>
-                                <IconButton onClick={() => handleEdit(row.id)}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton onClick={() => handleDelete(row.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                                
+                                <EditButton label={"edit"} icon={EditIcon} sx={{mr: 1, color: "#1976d2"}} />
+                                <DeleteButton label={"delete"} icon={DeleteIcon} sx={{mr: 1, color: "red  "}} />
                             </TableCell>
                         </TableRow>
                     ))}
