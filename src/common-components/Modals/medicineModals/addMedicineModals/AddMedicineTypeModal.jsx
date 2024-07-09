@@ -32,6 +32,8 @@ const AddMedicineTypeModal = ({ onClose, isEditMode, initialCategory }) => {
     };
   };
 
+ 
+
   return (
     <>
       <TextField

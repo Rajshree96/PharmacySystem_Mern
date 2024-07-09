@@ -99,13 +99,13 @@ const AllMedicineModals = ({ open, handleClose, formType , style}) => {
           </Box>
         )}
       </DialogContent>
-      {/* <DialogActions>
+      {/* { <DialogActions>
         {!success ? (
           <Button onClick={handleSubmit} variant="contained" color="primary">Add</Button>
         ) : (
           <Button onClick={handleDialogClose} variant="contained" color="primary">Close</Button>
         )}
-      </DialogActions> */}
+      </DialogActions> } */}
     </Dialog>
   );
 };

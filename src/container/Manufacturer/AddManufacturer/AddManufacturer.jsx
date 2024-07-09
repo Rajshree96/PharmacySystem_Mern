@@ -26,6 +26,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
   return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -181,6 +182,25 @@ const AddManufacturer = () => {
       );
       if (response.status === 201) {
         console.log("Manufacturer added successfully:", response.data);
+        setSelectedCountry("");
+        setSelectedState("");
+  setName('')
+  setAddress('')
+  setPinCode('')
+  setContact('')
+  setEmail('')
+  setWebsite('')
+  setBankName('')
+  setBankAddress('')
+  setIfscCode('')
+  setAccountHolderName('')
+  setAccountNumber('')
+  setgstin('')
+  setOpeningBalance('')
+  setRegistrationType('')
+  toast.success("manufacturer added successfully");
+
+
       } 
     } catch (error) {
       console.log("Error adding manufacturer:", error);
@@ -199,6 +219,7 @@ const AddManufacturer = () => {
 
   return (
     <Container maxWidth="lg">
+      <Toaster/>
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
           <motion.div initial="hidden" animate="visible" variants={containerVariants}>

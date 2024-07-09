@@ -14,6 +14,7 @@ const AddMedicine = () => {
     const [ modalType, setModalType ] = useState("");
 
     const handleOpenModal = (type) => {
+        console.log('add medicine modal open successfully')
         setModalType(type);
     };
 

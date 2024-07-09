@@ -26,7 +26,7 @@ import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import axios from 'axios';
-
+import toast, { Toaster } from 'react-hot-toast';
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
   return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -190,6 +190,29 @@ const AddSupplier = () => {
       );
       if (response.status === 201) {
         console.log("Supplier added successfully:", response.data);
+        
+        
+        setSelectedCountry("");
+        setSelectedState("");
+  setName('')
+  setAddress('')
+  setPinCode('')
+  setContact('')
+  setEmail('')
+  setWebsite('')
+  setBankName('')
+  setBankAddress('')
+  setIfscCode('')
+  setAccountHolderName('')
+  setAccountNumber('')
+  setgstin('')
+  setOpeningBalance('')
+  setRegistrationType('')
+  toast.success("supplier added successfully");
+
+
+
+  
       } 
     } catch (error) {
       console.log("Error adding supplier:", error);
@@ -198,6 +221,7 @@ const AddSupplier = () => {
 
   return (
     <Container maxWidth="lg">
+      <Toaster/>
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
         <BreadcrumbContainer breadcrumbs={breadcrumbs} />
