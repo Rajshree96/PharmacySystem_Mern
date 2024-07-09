@@ -42,8 +42,8 @@ const AddBrand = () => {
                                     onClick={() => handleOpenModal("add brand")}
                                     // onClick={() => navigate("/form/addunit")}
                                     sx={{
-                                        bgcolor: "#00816b",
-                                        "&:hover": {bgcolor: "#004d40"},
+                                        bgcolor: "#086070",
+                                        "&:hover": {bgcolor: "#095561"},
                                         transition: "all 0.3s",
                                     }}
                                 />

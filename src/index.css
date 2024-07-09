@@ -10,12 +10,12 @@
 .btn-design,.table-design{
     background-color: #086070 !important;
     /* color: #086070; */
-    transition: "all 0.3s",
+    transition: "all 0.3s";
 
 }
 .btn-design:hover{
     background-color: #095561 !important;
-    transition: "all 0.3s",
+    transition: "all 0.3s";
 }
 .btn-design-green{
     background-color: #00796b !important;
