@@ -21,14 +21,14 @@ adminRouter.delete('/delete/:itemCode',checkUserLogin,isAdmin, deleteMedicineCon
 //routes related to manufacturer
 adminRouter.post('/add-manufacturer',checkUserLogin,isAdmin, addManufacturerController);
 adminRouter.get('/getAllManufacturer',checkUserLogin,isAdmin, getAllManufacturerController);
-adminRouter.put('/manufactuer/:_id',checkUserLogin,isAdmin,updateManufacturerController);
-adminRouter.delete('/manufacturer/:_id',checkUserLogin,isAdmin,deleteManufacturerController);
+adminRouter.put('/update/manufacturer/:_id',checkUserLogin,isAdmin,updateManufacturerController);
+adminRouter.delete('/delete/manufacturer/:_id',checkUserLogin,isAdmin,deleteManufacturerController);
 
 //routes related to suppliers
 adminRouter.post('/add-supplier',checkUserLogin,isAdmin, addSupplierController);
 adminRouter.get('/getAllSupplier',checkUserLogin,isAdmin, getAllSupplierController);
-adminRouter.put('/supplier/:_id',checkUserLogin,isAdmin,updateSupplierController);
-adminRouter.delete('/supplier/:_id',checkUserLogin,isAdmin,deleteSupplierController);
+adminRouter.put('/update/supplier/:_id',checkUserLogin,isAdmin,updateSupplierController);
+adminRouter.delete('/delete/supplier/:_id',checkUserLogin,isAdmin,deleteSupplierController);
 
 //routes related to manufacturer ledger
 adminRouter.post('/add-manufacturerLedger',checkUserLogin,isAdmin, addManufacturerLedgerController);

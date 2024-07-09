@@ -1,4 +1,3 @@
-// Import necessary packages and components
 import React, { useState } from "react";
 import {
   Box,
@@ -13,7 +12,6 @@ import {
   Divider,
   createTheme,
   FormControl,
-  // Breadcrumbs,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import SaveIcon from "@mui/icons-material/Save";
@@ -26,11 +24,8 @@ import { makeStyles } from "@mui/styles";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
-
-// import { addSupplier } from "../../../supplierApi";
-import axios from "axios";
-
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+import axios from 'axios';
 
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
@@ -135,7 +130,7 @@ const AddSupplier = () => {
   const[openingBalance,setOpeningBalance]=useState('')
   const[registrationType,setRegistrationType]=useState('')
   
-  
+
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
     setSelectedState(""); 
@@ -154,93 +149,63 @@ const AddSupplier = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
-
+  const breadcrumbs = [ "Supplier", "Add Supplier" ];
   const handleSubmit = async (e) => {
     e.preventDefault();
-const supplierData = {
-  name: name,
-  address:address,
-  state: selectedState,
-  pincode: pinCode,
-  country: selectedCountry,
-  contact: contact,
-  email: email,
-  website: website,
-  bankingDetails: {
-    bankName: bankName,
-    bankAddress: bankAddress,
-    ifscCode: ifscCode,
-    accountHolderName: accountHolderName,
-    accountNumber: accountNumber,
-  },
-  statutoryDetails: {
-    registrationType: registrationType,
-    gstin: gstin,
-  },
-  openingBalance: {
-    asOnFirstDayOfFinancialYear: openingBalance,
-  },
-};
+    const manufacturerData = {
+      name: name,
+      address: address,
+      state: selectedState,
+      pincode: pinCode,
+      country: selectedCountry,
+      contact: contact,
+      email: email,
+      website: website,
+      bankingDetails: {
+        bankName: bankName,
+        bankAddress: bankAddress,
+        ifscCode: ifscCode,
+        accountHolderName: accountHolderName,
+        accountNumber: accountNumber,
+      },
+      statutoryDetails: {
+        registrationType: registrationType,
+        gstin: gstin,
+      },
+      openingBalance: {
+        asOnFirstDayOfFinancialYear: openingBalance,
+      },
+    };
 
-// const breadcrumbs = ["Supplier", "Add Supplier"];
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.post('http://localhost:4000/api/v1/admin/add-supplier', 
+        manufacturerData,
+        { 
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      if (response.status === 201) {
+        console.log("Supplier added successfully:", response.data);
+      } 
+    } catch (error) {
+      console.log("Error adding supplier:", error);
+    } 
+  };
 
-
-  
-// console.log(supplierData);
-
-
-try {
-  const auth = JSON.parse(localStorage.getItem('auth'));
-  if (!auth || !auth.token) {
-    throw new Error("Authorization token not found");
-  }
-
-  const response = await axios.post(
-    'http://localhost:4000/api/v1/admin/add-supplier', 
-    supplierData,
-    { 
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${auth.token}`
-      }
-    }
-  );
-
-  if (response.status === 201) {
-    console.log("Supplier added successfully:", response.data);
-  } else {
-    console.log("Unexpected response status:", response.status);
-  }
-} catch (error) {
-  if (error.response) {
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx
-    console.log("Error data:", error.response.data);
-    console.log("Error status:", error.response.status);
-    console.log("Error headers:", error.response.headers);
-  } else if (error.request) {
-    // The request was made but no response was received
-    console.log("Error request:", error.request);
-  } else {
-    // Something happened in setting up the request that triggered an Error
-    console.log("Error message:", error.message);
-  }
-  console.log("Error config:", error.config);
-}
-};
-const breadcrumbs = ["Supplier", "Add Supplier"];
-
-  
-   return (
+  return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
         {/* <BreadcrumbContainer breadcrumbs={breadcrumbs} /> */}
+        <BreadcrumbContainer  breadcrumbs={breadcrumbs}/>
           <motion.div initial="hidden" animate="visible" variants={containerVariants}>
             <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
              Supplier
             </Typography>
-        <BreadcrumbContainer  breadcrumbs={breadcrumbs}/>
             {/* {successMessage && (
               <Typography color="success" gutterBottom>
                 {successMessage}
@@ -252,9 +217,49 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
               </Typography>
             )} */}
 
-            <Formik        
+            <Formik
+              // initialValues={{
+              //   name: "",
+              //   address: "",
+              //   state: "",
+              //   pinCode: "",
+              //   country: "",
+              //   contact: "",
+              //   email: "",
+              //   website: "",
+              //   bankName: "",
+              //   bankAddress: "",
+              //   ifscCode: "",
+              //   accountHolderName: "",
+              //   accountNumber: "",
+              //   gstin: "",
+              //   openingBalance: "",
+              //   registrationType: "",
+              // }}
+              // initialValues={{
+              //   name: "",
+              //   address: "",
+              //   state: "",
+              //   pinCode: "",
+              //   country: "",  
+              //   contact: "",
+              //   email: "",
+              //   website: "",
+              //   bankName: "",
+              //   bankAddress: "",
+              //   ifscCode: "",
+              //   accountHolderName: "",
+              //   accountNumber: "",
+              //   gstin: "",
+              //   openingBalance: "",
+              //   registrationType: "",
+              // }}
+             // initialValues={formData}
+              //  initialValues={FormData}
+              // validationSchema={validationSchema}
+              // onSubmit={handleSubmit}
               initialValues={{
-                nameame: "",
+                name: "",
                 address: "",
                 state: "",
                 pinCode: "",
@@ -271,15 +276,13 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                 openingBalance: "",
                 registrationType: "",
               }}
-              //  initialValues={formData}
               validationSchema={validationSchema}
-              // onSubmit={handleSubmit}
-              onSubmit={(values)=>{
+              onSubmit={(values) => {
                 console.log(values);
+                // Handle form submission
               }}
-            
             >
-              {({ errors, touched, handleChange }) => (
+              {({ errors, touched }) => (
                 <Form>
                   <motion.div variants={itemVariants}>
                     <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
@@ -298,8 +301,6 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                           helperText={touched.name && errors.name}
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-
-                          
                         />
                       </Grid>
                       {/* Address */}
@@ -312,7 +313,6 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                           variant="outlined"
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
-
                         />
                       </Grid>
                       {/* Country */}
@@ -323,6 +323,7 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                             onChange={handleCountryChange}
                             label="Country"
                             className={classes.textFieldStyle}
+                            
                           />
                         </FormControl>
                       </Grid>
@@ -482,8 +483,8 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                           fullWidth
                           label="Registration Type"
                           variant="outlined"
-                          // error={touched.registrationType && !!errors.registrationType}
-                          // helperText={touched.registrationType && errors.registrationType}
+                          error={touched.registrationType && !!errors.registrationType}
+                          helperText={touched.registrationType && errors.registrationType}
                           value={registrationType}
                           onChange={(e) => setRegistrationType(e.target.value)}
                         >
@@ -535,7 +536,7 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                   </motion.div>
                   <Box className={classes.buttonContainer} >
                     <motion.div variants={itemVariants} >
-                      <Tooltip title="Save" placement="top">
+                      <Tooltip title="Save" >
                         <Button
                           type="submit"
                           variant="contained"
@@ -544,12 +545,10 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
                           // className={classes.button}
                           sx={{ mr: 2 }}
                           onClick={handleSubmit}
-                          className="btn-design-green"
                             // onClick={handleSubmit}
                           // disabled={isLoading || isSubmitting}
                         >
                           Create
-                          {/* {isLoading ? "Creating" : "Create"} */}
                         </Button>
                       </Tooltip>
                       <Tooltip title="Cancel">
@@ -578,3 +577,11 @@ const breadcrumbs = ["Supplier", "Add Supplier"];
 };
 
 export default AddSupplier;
+
+
+
+
+
+
+
+

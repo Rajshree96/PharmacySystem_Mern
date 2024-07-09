@@ -50,9 +50,7 @@ const AddMedicineTable = () => {
     
   }, []);
 
-  const handleAddMedicine = (newMedicine) => {
-    setMedicines([...medicines, newMedicine]); // Update state with new medicine
-  };
+  
   const handleVisibilityClick = (medicine) => {
     console.log("Viewing details for medicine:", medicine);
   };

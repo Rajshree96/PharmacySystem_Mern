@@ -1,4 +1,3 @@
-
 import React, { useState,useEffect} from "react";
 import { DialogContentText, TextField, Grid, MenuItem, Checkbox, FormControlLabel, Box,Button } from "@mui/material";
 import Chip from '@mui/material/Chip';
@@ -121,7 +120,7 @@ const AddMedicineModal = () => {
 
     return {
       headers: {
-        Authorization: `Bearer ${auth.token}`,
+        Authorization:` Bearer ${auth.token}`,
         'Content-Type': 'application/json'
       },
     };
