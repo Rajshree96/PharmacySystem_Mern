@@ -39,6 +39,14 @@ const setUpBusinessSchema = new mongoose.Schema({
         type:String,
         required: true,
      },
+     financialYear: {
+       type:String,
+        required:true
+    },
+    bookBeginning: {
+        type: Date,
+        required: true,
+    },
      },
      statutoryDetails:{
         enableGst:{
@@ -96,6 +104,7 @@ const setUpBusinessSchema = new mongoose.Schema({
             type: Number,
             required: true,
         },
+        
     },
 }, {timestamps: true});
 

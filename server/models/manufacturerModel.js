@@ -5,23 +5,22 @@ const Schema = mongoose.Schema;
 const BankingDetailsSchema = new Schema({
   bankName: {
     type: String,
-    required: true,
+   
   },
   bankAddress: {
-    type: String,
-    required: true,
+    type: String,   
   },
   ifscCode: {
     type: String,
-    required: true,
+    
   },
   accountHolderName: {
     type: String,
-    required: true,
+    
   },
   accountNumber: {
     type: String,
-    required: true,
+    
   },
 });
 
@@ -42,7 +41,7 @@ const StatutoryDetailsSchema = new Schema({
 const OpeningBalanceSchema = new Schema({
   asOnFirstDayOfFinancialYear: {
     type: Number,
-    required: true,
+    
   },
 });
 
@@ -54,7 +53,7 @@ const ManufacturerSchema = new Schema({
   },
   address: {
     type: String,
-    required: true,
+    
   },
   state: {
     type: String,
@@ -62,7 +61,7 @@ const ManufacturerSchema = new Schema({
   },
   pincode: {
     type: String,
-    required: true,
+    
   },
   country: {
     type: String,
@@ -70,29 +69,29 @@ const ManufacturerSchema = new Schema({
   },
   contact: {
     type: String,
-    required: true,
+    
   },
   email: {
     type: String,
-    required: true,
-    match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+    
+   
   },
   website: {
     type: String,
-    required: true,
-    match: [/^https?:\/\/.+\..+/, 'Please fill a valid website URL'],
+   
+   
   },
   bankingDetails: {
     type: BankingDetailsSchema,
-    required: true,
+    
   },
   statutoryDetails: {
     type: StatutoryDetailsSchema,
-    required: true,
+   
   },
   openingBalance: {
     type: OpeningBalanceSchema,
-    required: true,
+   
   },
   createdAt: {
     type: Date,

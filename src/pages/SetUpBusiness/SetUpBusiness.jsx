@@ -31,7 +31,7 @@ import {
 } from "@mui/icons-material";
 
 import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
-import Flag from "react-world-flags";
+// import Flag from "react-world-flags";
 import {makeStyles} from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -158,6 +158,8 @@ function SetUpBusiness() {
         ifscCode: "",
         accountHolderName: "",
         accountNumber: "",
+        financialYear:"",
+        bookBeginning:""
     });
 
     const handleCountryChange = (val) => {

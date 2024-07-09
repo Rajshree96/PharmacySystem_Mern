@@ -34,6 +34,7 @@ import ManufacturerLedger from "../../container/Manufacturer/ManufacturerLedger/
 import AddSupplier from "../../container/Supplier/AddSupplier/AddSupplier";
 import ManageSupplier from "../../container/Supplier/ManageSupplier/ManageSupplier";
 import SupplierLedger from "../../container/Supplier/SupplierLedger/SupplierLedger";
+import AddBrand from "../../container/Brand/AddBrand";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -127,8 +128,10 @@ const Dashboard = () => {
         return <AddManufacturer />;
       case "Manage Manufacturer":
         return <ManageManufacturer />;
-      case "Manufacturer Ledger":
-        return <ManufacturerLedger />;
+        case "Manufacturer Ledger":
+          return <ManufacturerLedger />;
+      case "Add Brand":
+        return <AddBrand/>;
       case "Add Supplier":
         return <AddSupplier />;
       case "Manage Supplier":

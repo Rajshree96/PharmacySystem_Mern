@@ -12,7 +12,7 @@ import {
   Modal,
   Button,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Add } from "@mui/icons-material";
 import { addCategory, getAllCategories, editCategory, deleteCategory } from "../../categoriesApi";
 import AddCategoryModal from "../Modals/medicineModals/addMedicineModals/AddCategoryModal";
 const MedicineCategoryTable = () => {
@@ -44,48 +44,91 @@ const MedicineCategoryTable = () => {
   const handleDeleteCategory = async (id) => {
     try {
       await deleteCategory(id);
-      const updatedCategories = categories.filter((category) => category._id !== id);
-      setCategories(updatedCategories);
-      console.log("Category deleted successfully with ID:", id);
+      await fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
     }
   };
 
-  const handleEditCategory = (category) => {
-    setCurrentCategory(category);
-    setIsEditMode(true);
+  const handleOpenModal = (category = null) => {
+    if (category) {
+      setCurrentCategory(category);
+      setIsEditMode(true);
+    } else {
+      setCurrentCategory({ name: "" });
+      setIsEditMode(false);
+    }
     setModalOpen(true);
   };
 
-  const handleAddCategory = () => {
-    setCurrentCategory({ name: '' });
-    setIsEditMode(false);
-    setModalOpen(true);
-  };
-
-  const handleSaveCategory = async () => {
+  const handleSaveCategory = async (categoryToSave) => {
     try {
       if (isEditMode) {
-        await editCategory(currentCategory._id, currentCategory);
-        const updatedCategories = categories.map((category) =>
-          category._id === currentCategory._id ? currentCategory : category
-        );
-        setCategories(updatedCategories);
-        console.log("Category edited successfully with ID:", currentCategory._id);
+        await editCategory(categoryToSave._id, { name: categoryToSave.name });
       } else {
-        const response = await addCategory(currentCategory);
-        setCategories([...categories, response.category]);
-        console.log("Category added successfully:", response.category);
+        await addCategory({ name: categoryToSave.name });
       }
       setModalOpen(false);
+      await fetchCategories();
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error saving category:", error);
     }
   };
+  // const handleEditCategory = (category) => {
+  //   setCurrentCategory(category);
+  //   setIsEditMode(true);
+  //   setModalOpen(true);
+  // };
+
+  // const handleAddCategory = () => {
+  //   setCurrentCategory({ name: '' });
+  //   setIsEditMode(false);
+  //   setModalOpen(true);
+  // };
+
+  // const handleSaveCategory = async () => {
+  //   try {
+  //     if (isEditMode) {
+  //       await editCategory(currentCategory._id, currentCategory);
+  //       const updatedCategories = categories.map((category) =>
+  //         category._id === currentCategory._id ? currentCategory : category
+  //       );
+  //       setCategories(updatedCategories);
+  //       console.log("Category edited successfully with ID:", currentCategory._id);
+  //     } else {
+  //       const response = await addCategory(currentCategory);
+  //       setCategories([...categories, response.category]);
+  //       console.log("Category added successfully:", response.category);
+  //     }
+  //     setModalOpen(false);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   return (
     <Box sx={{ overflowX: "auto" }}>
+       <Button
+         variant="contained"
+        startIcon={<Add/>}
+        onClick={() => handleOpenModal()}
+        //  sx={{ mt: 2 }}
+        icon={Add}
+        label={"Add Category"}
+        // onClick={() => handleOpenModal()}
+        // onClick={() => navigate("/form/addcategory")}
+        // onClick={() => handleOpenModal()}
+
+        sx={{
+          bgcolor: "#00816b",
+          "&:hover": { bgcolor: "#004d40" },
+          transition: "all 0.3s",
+          mb: 4,
+          pt:1
+        }}
+      >
+        Add Category
+      </Button>
       <TableContainer component={Paper} elevation={3}>
         <Table>
           <TableHead>
@@ -101,7 +144,7 @@ const MedicineCategoryTable = () => {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{category.name}</TableCell>
                 <TableCell>
-                  <IconButton color="primary" onClick={() => handleEditCategory(category)}>
+                  <IconButton color="primary" onClick={() => handleOpenModal(category)}>
                     <Edit />
                   </IconButton>
                   <IconButton color="error" onClick={() => handleDeleteCategory(category._id)}>
@@ -130,14 +173,18 @@ const MedicineCategoryTable = () => {
           }}
         >
           <AddCategoryModal
-            categoryName={currentCategory.name}
-            setCategoryName={(name) => setCurrentCategory({ ...currentCategory, name })}
+            // categoryName={currentCategory.name}
+            // setCategoryName={(name) => setCurrentCategory({ ...currentCategory, name })}
+            // isEditMode={isEditMode}
+            // onSave={handleSaveCategory} // Directly pass handleSaveCategory
+            // onCancel={() => {
+            //   setModalOpen(false);
+            //   setCurrentCategory({ name: '' });
+            category={currentCategory}
+            setCategory={setCurrentCategory}
+            onSave={handleSaveCategory}
             isEditMode={isEditMode}
-            onSave={handleSaveCategory} // Directly pass handleSaveCategory
-            onCancel={() => {
-              setModalOpen(false);
-              setCurrentCategory({ name: '' });
-            }}
+            
           />
         </Box>
       </Modal>
