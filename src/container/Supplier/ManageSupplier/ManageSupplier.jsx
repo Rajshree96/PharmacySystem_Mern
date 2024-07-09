@@ -174,8 +174,7 @@ const ManageSupplier = () => {
                           label="delete"
                           icon={Delete}
                           onClick={() => handleDeleteClick(suppliers._id)}
-                        />
-                        
+                        />  
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>
