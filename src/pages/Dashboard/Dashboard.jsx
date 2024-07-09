@@ -126,7 +126,7 @@ const Dashboard = () => {
         return <AddMedicine />;
       case "Add Manufacturer":
         return <AddManufacturer />;
-         case "Manage Manufacturer":
+      case "Manage Manufacturer":
         return <ManageManufacturer />;
         case "Manufacturer Ledger":
           return <ManufacturerLedger />;
@@ -136,8 +136,8 @@ const Dashboard = () => {
         return <AddSupplier />;
       case "Manage Supplier":
         return <ManageSupplier />;
-        case "Supplier Ledger":
-          return <SupplierLedger />;
+      case "Supplier Ledger":
+        return <SupplierLedger />;
       default:
         return null;
     }
