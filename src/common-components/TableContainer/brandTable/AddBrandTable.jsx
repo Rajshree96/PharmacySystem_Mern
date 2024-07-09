@@ -8,9 +8,7 @@ import EditButton from "../../ButtonContainer/EditButton";
 import DeleteButton from "../../ButtonContainer/DeleteButton";
 
 const useStyles = makeStyles((theme) => ({
-    table: {
-        minWidth: 650,
-    },
+   
     tableContainer: {
         marginTop: theme.spacing(3),
         maxHeight: 440,
@@ -42,7 +40,7 @@ const AddBrandTable = () => {
 
     return (
         <TableContainer component={Paper} className={classes.tableContainer}>
-            <Table className={classes.table} aria-label="simple table">
+            <Table aria-label="simple table">
                 <TableHead >
                     <TableRow className="table-design" >
                         <TableCell className={classes.tableHeaderCell}>Brand Name</TableCell>
@@ -56,8 +54,8 @@ const AddBrandTable = () => {
                             <TableCell>{row.brandName}</TableCell>
                             <TableCell>{row.manufacturer}</TableCell>
                             <TableCell>
-                                <EditButton label={"edit"} icon={EditIcon} sx={{mr: 1, color: "#1976d2"}} />
-                                <DeleteButton label={"delete"} icon={DeleteIcon} sx={{mr: 1, color: "red  "}} />
+                                <EditButton label={"edit"}  icon={EditIcon} sx={{mr: 1, color: "#1976d2"}} onClick={() => handleEdit(row.id)}/>
+                                <DeleteButton label={"delete"} icon={DeleteIcon} sx={{mr: 1, color: "red  "}} onClick={() => handleDelete(row.id)}/>
                             </TableCell>
                         </TableRow>
                     ))}
