@@ -43,7 +43,7 @@ const sales = [
   { label: "GUI Sale" },
   { label: "Sale Return" },
 ];
-const customers = [{ label: "Add Customer" }, { label: "Manage Customer" }];
+const customers = [{ label: "Add Customer" }, { label: "Manage Customer" },{ label: "Customer Ledger" }];
 const accounts = [
   { label: "Payment In" },
   { label: "Payment Out" },
@@ -525,6 +525,7 @@ const Menu = ({ setActiveComponent }) => {
             <ListItemButton
               key={item.label}
               sx={{ pl: 6, minHeight: 32, color: "white" }}
+              onClick={() => handleMenuItemClick(item.label)}
             >
               <ListItemText
                 primary={item.label}

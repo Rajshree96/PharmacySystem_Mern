@@ -54,16 +54,16 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
-const ManageSupplier = () => {
-  const [suppliers, setSuppliers] = useState([]);
-  const breadcrumbs = ["Supplier", "Manage Supplier"];
+const ManageCustomer = () => {
+  const [customers, setCustomers] = useState([]);
+  const breadcrumbs = ["Customer", "Manage Customer"];
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
-           Supplier
+             Customer
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Divider sx={{ my: 2 }} />
@@ -72,7 +72,7 @@ const ManageSupplier = () => {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>S.no</StyledTableCell>
-                  <StyledTableCell>Supplier Name</StyledTableCell>
+                  <StyledTableCell>Customer Name</StyledTableCell>
                   <StyledTableCell>Address</StyledTableCell>
                   <StyledTableCell>State</StyledTableCell>
                   <StyledTableCell>Contact Number</StyledTableCell>
@@ -129,4 +129,4 @@ const ManageSupplier = () => {
   );
 };
 
-export default ManageSupplier;
+export default ManageCustomer;
