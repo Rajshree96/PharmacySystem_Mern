@@ -259,46 +259,42 @@ export async function deleteManufacturerController(req,res){
 //controllers for suppliers
 
 
+export async function addSupplierController(req,res){
+try {
+    const {
+      name,
+      address,
+      state,
+      pincode,
+      country,
+      contact,
+      email,
+      website,
+      bankingDetails,
+      statutoryDetails,
+      openingBalance
+    } = req.body;
 
-export async function addSupplierController(req, res) {
-    try {
-        const {
-            name,
-            address,
-            state,
-            pincode,
-            country,
-            contact,
-            email,
-            website,
-            bankingDetails,
-            statutoryDetails,
-            openingBalance
-          } = req.body;
-      
-        // Create a new instance of Supplier using the request body data
-        const newSupplier = new supplierModel({
-            name,
-            address,
-            state,
-            pincode,
-            country,
-            contact,
-            email,
-            website,
-            bankingDetails,
-            statutoryDetails,
-            openingBalance
-          });
+    const newSupplier = new supplierModel({
+        name,
+        address,
+        state,
+        pincode,
+        country,
+        contact,
+        email,
+        website,
+        bankingDetails,
+        statutoryDetails,
+        openingBalance
+      });
 
-        // Save the new supplier to the database
-        const savedSupplier = await newSupplier.save();
-
-        res.status(201).json(savedSupplier); // Respond with the saved supplier data
-    } catch (error) {
-        console.error('Error adding supplier:', error);
-        res.status(500).json({ error: 'Failed to add supplier' });
-    }
+    await newSupplier.save();
+    res.status(201).json({ message: 'Supplier added successfully', data: newSupplier });
+  } catch (error) {
+    console.error('Error saving manu:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
 }
 
 export async function getAllSupplierController(req,res){
