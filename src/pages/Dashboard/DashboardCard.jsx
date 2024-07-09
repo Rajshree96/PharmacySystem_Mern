@@ -157,10 +157,8 @@ const useStyles = makeStyles({
         alignItems: 'center',
         width: '100%',
         height: '300px', // adjust this value as needed
-    },
-    pieChart: {
         position: 'relative',
-    },
+    },   
     legend: {
         display: 'grid',
         justifyContent: 'center',
