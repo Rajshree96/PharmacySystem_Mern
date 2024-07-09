@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -22,6 +22,7 @@ import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import ViewButton from "../../../common-components/ButtonContainer/ViewButton";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,21 +43,75 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const createData = (name, calories, fat, carbs, protein) => {
-  return { name, calories, fat, carbs, protein };
-};
+// const createData = (name, calories, fat, carbs, protein) => {
+//   return { name, calories, fat, carbs, protein };
+// };
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+// const rows = [
+//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+//   createData("Eclair", 262, 16.0, 24, 6.0),
+//   createData("Cupcake", 305, 3.7, 67, 4.3),
+//   createData("Gingerbread", 356, 16.0, 49, 3.9),
+// ];
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const breadcrumbs = ["Customer", "Manage Customer"];
+
+  const fetchCustomer = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
+        {
+          headers: { Authorization: `Bearer ${auth.token}`}
+         }
+      );
+      console.log("API Response:", response.data);
+
+      if (Array.isArray(response.data)) {
+        setCustomers(response.data);
+      } else {
+        console.error("API response does not contain cutomer array:", response.data.result);
+      }
+    } catch (error) {
+      console.error("Error fetching manufacturer:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomer();
+    
+  }, []);
+  // console.log("customer data",customers);
+
+  const handleDeleteClick = async (_id) => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+
+    try {
+      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+        headers: { Authorization: `Bearer ${auth.token}` }
+      });
+      console.log("API Response:", response);
+
+      if (response.data.status === "ok" || response.status === 200) {
+        console.log("Deleted customer with _id code:", _id);
+        fetchCustomer();
+      } else {
+        console.error("Failed to delete customer:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting customer:", error);
+    }
+  };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -84,19 +139,20 @@ const ManageCustomer = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell>{row.calories}</StyledTableCell>
+                {/* console.log(customers) */}
+              {customers.map((customers,index) => (
+                  <StyledTableRow key={customers._id}>
+                    <StyledTableCell>{index+1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {row.name}
+                      {customers.customerDetails.name}
                     </StyledTableCell>
-                    <StyledTableCell>{row.fat}</StyledTableCell>
-                    <StyledTableCell>{row.carbs}</StyledTableCell>
-                    <StyledTableCell>{row.protein}</StyledTableCell>
-                    <StyledTableCell>{row.protein}</StyledTableCell>
-                    <StyledTableCell>{row.protein}</StyledTableCell>
-                    <StyledTableCell>{row.protein}</StyledTableCell>
-                    <StyledTableCell>{row.protein}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.address}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.statutoryDetails.stateRegistrationType}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.statutoryDetails.gstin}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.openingBalance.asOnFirstDayOfFinancialYear}</StyledTableCell>
+                    <StyledTableCell>{customers.customerDetails.bankDetails.accountNumber}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
@@ -115,6 +171,8 @@ const ManageCustomer = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
+                          onClick={() => handleDeleteClick(customers._id)}
+
                         />
                       </Box>
                     </StyledTableCell>
