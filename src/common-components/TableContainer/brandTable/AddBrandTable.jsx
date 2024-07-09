@@ -23,8 +23,8 @@ const AddBrandTable = () => {
     const classes = useStyles();
 
     const [ rows, setRows ] = useState([
-        {id: 1, brandName: "Brand A", manufacturer: "Manufacturer A"},
-        {id: 2, brandName: "Brand B", manufacturer: "Manufacturer B"},
+        {id: 1, brandName: "Brand A", manufacturer: "Manufacturer Manufacturer Manufacturer A"},
+        {id: 2, brandName: "Brand B", manufacturer: "Manufacturer Manufacturer Manufacturer B"},
         // Add more rows as needed
     ]);
 

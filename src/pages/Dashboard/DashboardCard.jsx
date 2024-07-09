@@ -65,7 +65,7 @@ const rows = [
 
 
 const theme = createTheme({
-    spacing: 0,
+    spacing: 15,
 });
 
 const useStyles = makeStyles({
