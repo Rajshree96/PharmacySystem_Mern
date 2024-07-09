@@ -40,8 +40,8 @@ const setUpBusinessSchema = new mongoose.Schema({
         required: true,
      },
      financialYear: {
-        type: String,
-        required: true,
+       type:String,
+        required:true
     },
     bookBeginning: {
         type: Date,

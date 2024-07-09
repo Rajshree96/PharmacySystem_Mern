@@ -1,79 +1,49 @@
-import path from 'path';
+import multer from 'multer';
 import SetUpBusiness from '../models/setUpBusinessModel.js';
-import upload from '../config/multerConfig.js';
+import path from 'path'
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+});
+
+const upload = multer({ storage: storage });
 
 export const addBusinessSetup = async (req, res) => {
-    upload(req, res, async (err) => {
-        if (err) {
-            return res.status(400).json({ message: 'Error uploading file', error: err });
+  try {
+    upload.single('businessLogo')(req, res, async (err) => {
+      if (err instanceof multer.MulterError) {
+        return res.status(400).json({ message: "File upload error", error: err.message });
+      } else if (err) {
+        return res.status(500).json({ message: "Unknown error", error: err.message });
+      }
+
+      try {
+        const businessSetupData = JSON.parse(req.body.businessSetupData);
+
+        if (req.file) {
+          businessSetupData.businessInfo.businessLogo = req.file.path;
         }
 
-        try {
-            const {
-                businessName, address, pinCode, state, country, email, website, phoneNumber,
-                enableGst, stateRegistrationType, taxRate, gstin, drugLicenceNo,
-                otherTax, taxName, taxNumber, bankName, bankAddress, ifscCode,
-                accountHolderName, accountNumber, financialYear, bookBeginning
-            } = req.body;
+        const newBusinessSetup = new SetUpBusiness(businessSetupData);
+        const savedBusinessSetup = await newBusinessSetup.save();
 
-            // Validate required fields
-            const requiredFields = [
-                'businessName', 'address', 'pinCode', 'state', 'country', 'email', 'phoneNumber',
-                'enableGst', 'stateRegistrationType', 'bankName', 'ifscCode', 'accountHolderName', 'accountNumber'
-            ];
-
-            for (let field of requiredFields) {
-                if (!req.body[field]) {
-                    return res.status(400).json({ message: `${field} is required` });
-                }
-            }
-
-            const businessLogo = req.file ? path.join('uploads', req.file.filename) : null;
-            if (!businessLogo) {
-                return res.status(400).json({ message: 'businessLogo is required' });
-            }
-
-            // Create a new instance of SetUpBusiness model
-            const newBusinessSetup = new SetUpBusiness({
-                businessInfo: {
-                    businessLogo,
-                    businessName,
-                    address,
-                    pinCode,
-                    state,
-                    country,
-                    email,
-                    website,
-                    phoneNumber,
-                    financialYear,
-                    bookBeginning
-                },
-                statutoryDetails: {
-                    enableGst,
-                     stateRegistrationType,
-                    taxRate,
-                    gstin,
-                     drugLicenceNo,
-                    otherTax,
-                    taxName,
-                    taxNumber,
-                },
-                bankDetails: {
-                    bankName,
-                    bankAddress,
-                    ifscCode,
-                    accountHolderName,
-                    accountNumber,
-                },
-            });
-
-            // Save the new business setup to database
-            await newBusinessSetup.save();
-            res.status(201).json({ message: 'Business setup created successfully', businessSetup: newBusinessSetup });
-
-        } catch (error) {
-            console.error('Error creating business setup:', error);
-            res.status(400).json({ message: 'Error creating business setup', error });
-        }
+        res.status(201).json({
+          message: "Business setup created successfully",
+          businessSetup: savedBusinessSetup
+        });
+      } catch (error) {
+        console.error('Error processing business setup:', error);
+        res.status(400).json({ message: "Error processing business setup", error: error.message });
+      }
     });
+  } catch (error) {
+    console.error('Error in addBusinessSetup:', error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
