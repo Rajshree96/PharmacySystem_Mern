@@ -35,7 +35,8 @@ const MedicinTypeTable = () => {
   const fetchMedicineTypes = async () => {
     try {
       const response = await getAllMedicineTypes();
-      setMedicineTypes(response);
+       setMedicineTypes(response);
+      // console.log("MedcineType Response", response);
     } catch (error) {
       console.error("Error fetching medicine types:", error);
       setMedicineTypes([]);

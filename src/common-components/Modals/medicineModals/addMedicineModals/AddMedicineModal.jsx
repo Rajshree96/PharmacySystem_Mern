@@ -10,6 +10,7 @@ import { getAllMedicineTypes } from "../../../../medicineTypeapi";
 
 import toast, { Toaster } from 'react-hot-toast';
 import {  useNavigate } from 'react-router-dom';
+import { getAllBrand } from "../../../../brandApi";
 const AddMedicineModal = () => {
   
   const navigate= useNavigate();
@@ -23,8 +24,10 @@ const AddMedicineModal = () => {
   const [manufacturer, setManufacturer] = useState([]);
   const [selectedManufacturer, setSelectedManufacturer] = useState('');
 
-  const [brand, setBrand] = useState('');
+  const [brand, setBrand] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState('');
 
+  
   const [unit, setUnit] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState('');
 
@@ -114,10 +117,11 @@ const AddMedicineModal = () => {
   },[]);
 
   const config = () => {
-    const token = localStorage.getItem("token");
+    const auth = JSON.parse(localStorage.getItem('auth'));
+
     return {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${auth.token}`,
         'Content-Type': 'application/json'
       },
     };
@@ -143,6 +147,7 @@ const AddMedicineModal = () => {
     fetchUnit();
   },[]);
 
+  
   const fetchUnit = async () => {
     try {
       const response = await getAllUnits();
@@ -156,6 +161,26 @@ const AddMedicineModal = () => {
     } catch (error) {
       console.error("Error fetching categories:", error);
       setUnit([]);
+    }
+  };
+  
+  useEffect(()=>{
+    fetchBrand();
+  },[]);
+
+  const fetchBrand = async () => {
+    try {
+      const response = await getAllBrand();
+      console.log("Fetched Brand:", response.data);
+      if (Array.isArray(response.data)) {
+        setBrand(response.data);
+      } else {
+        console.error("Error: Fetched data is not an array");
+        setBrand([]);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setBrand([]);
     }
   };
  
@@ -201,7 +226,7 @@ const AddMedicineModal = () => {
       medicineCategory: selectedCategory,
       medicineType: selectedMedicineType,
       manufacturer: selectedManufacturer,
-      brand: brand,
+      brand: selectedBrand,
       unit: selectedUnit,
       gstRate: gstRate,
       purchaseTaxIncluded: purchaseTaxIncluded,
@@ -333,12 +358,15 @@ const AddMedicineModal = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
+            value={selectedBrand}
+            onChange={(e) => setSelectedBrand(e.target.value)}
             select
           >
-            <MenuItem value="Brand 1">Brand 1</MenuItem>
-            <MenuItem value="Brand 2">Brand 2</MenuItem>
+             {brand.map((brands) => (
+             <MenuItem  key={brands._id} value={brands._id}>{brands.brand}</MenuItem>
+            ))}
+            {/* <MenuItem value="Brand 1">Brand 1</MenuItem>
+            <MenuItem value="Brand 2">Brand 2</MenuItem> */}
           </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>

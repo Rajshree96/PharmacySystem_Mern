@@ -5,10 +5,11 @@ import axios from 'axios';
 const API_URL = 'http://localhost:4000/api/v1/admin';
 
 const config = () => {
-    const token = localStorage.getItem("token");
+    const auth = JSON.parse(localStorage.getItem('auth'));
+
     return {
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${auth.token}`,
             'Content-Type': 'application/json'
         },
     };
