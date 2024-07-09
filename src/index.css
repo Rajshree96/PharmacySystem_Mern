@@ -5,14 +5,15 @@
     font-family: 'Poppins', sans-serif;
     scroll-behavior: smooth
 }
+
 /* for all form buttons */
-.btn-design{
-    background-color: #00816b !important;
+.btn-design,.table-design{
+    background-color: #086070 !important;
     /* color: #086070; */
     transition: "all 0.3s",
 
 }
 .btn-design:hover{
-    background-color: #004d40;
+    background-color: #095561 !important;
     transition: "all 0.3s",
 }

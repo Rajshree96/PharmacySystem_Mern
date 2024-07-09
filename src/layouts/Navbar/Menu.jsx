@@ -299,6 +299,7 @@ const Menu = ({ setActiveComponent }) => {
             <ListItemButton
               key={item.label}
               sx={{ pl: 6, minHeight: 32, color: "white" }}
+              onClick={() => handleMenuItemClick(item.label)} // handle menus item click
             >
               <ListItemText
                 primary={item.label}

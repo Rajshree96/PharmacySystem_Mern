@@ -5,11 +5,14 @@ import Login from "./pages/auth/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import SetUpBusiness from "./pages/SetUpBusiness/SetUpBusiness";
 import AdminRoute from "./component/routes/adminRoutes";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+const theme = createTheme();
 
 function App() {
   return (
     <>
+    <ThemeProvider theme={theme}>
       <Router>
         <Routes>
           <Route path="/" element={<SignUp />} />
@@ -21,6 +24,7 @@ function App() {
           {/* <Route path="/form/:formType" element={<DynamicMedicineForm />} /> */}
         </Routes>
       </Router>
+    </ThemeProvider>
     </>
   );
 }
