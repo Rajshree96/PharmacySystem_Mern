@@ -16,7 +16,8 @@ const config = () => {
 export const addbrand = async (brandData) => {
   try {
     const response = await axios.post(`${API_URL}/add`, brandData, config());
-    return response.data;
+    return response;
+    
   } catch (error) {
     console.error('Error adding unit:', error.response || error.message);
     throw error;
