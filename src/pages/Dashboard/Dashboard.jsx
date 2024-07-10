@@ -36,6 +36,11 @@ import ManageSupplier from "../../container/Supplier/ManageSupplier/ManageSuppli
 import SupplierLedger from "../../container/Supplier/SupplierLedger/SupplierLedger";
 import AddBrand from "../../container/Brand/AddBrand";
 
+//Customer
+import AddCustomer from "../../container/Customer/AddCustomer/AddCustomer";
+import ManageCustomer from "../../container/Customer/ManageCustomer/ManageCustomer";
+import CustomerLedger from "../../container/Customer/CustomerLedger/CustomerLedger";
+
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
     paddingLeft: 24,
@@ -55,7 +60,7 @@ const drawerWidth = 270;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    //padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -138,6 +143,12 @@ const Dashboard = () => {
         return <ManageSupplier />;
       case "Supplier Ledger":
         return <SupplierLedger />;
+        case "Add Customer":
+          return <AddCustomer />;
+        case "Manage Customer":
+          return <ManageCustomer />;
+        case "Customer Ledger":
+          return <CustomerLedger />;
       default:
         return null;
     }

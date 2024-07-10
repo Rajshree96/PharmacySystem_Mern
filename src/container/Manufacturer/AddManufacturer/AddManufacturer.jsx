@@ -26,7 +26,11 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import axios from "axios";
+
 import toast, { Toaster } from 'react-hot-toast';
+import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+
+
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
   return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -217,6 +221,8 @@ const AddManufacturer = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
+const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
+
   return (
     <Container maxWidth="lg">
       <Toaster/>
@@ -224,8 +230,9 @@ const AddManufacturer = () => {
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
           <motion.div initial="hidden" animate="visible" variants={containerVariants}>
             <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
-              Add Manufacturer
+               Manufacturer
             </Typography>
+        <BreadcrumbContainer  breadcrumbs={breadcrumbs}/>
             <Formik
               initialValues={{
                 name: "",
@@ -511,7 +518,8 @@ const AddManufacturer = () => {
                           variant="contained"
                           color="success"
                           startIcon={<SaveIcon />}
-                          className={classes.button}
+                          // className={classes.button}
+                          className="btn-design-green"
                           sx={{ mr: 2 }}
                           onClick ={handleSubmit}
                         >
@@ -524,7 +532,8 @@ const AddManufacturer = () => {
                           variant="outlined"
                           // color="secondary"
                           startIcon={<CancelIcon />}
-                          className={classes.button}
+                          // className={classes.button}
+                          className="btn-design"
                           style={{backgroundColor:'#086070',color:'white'}}
                         >
                           Cancel

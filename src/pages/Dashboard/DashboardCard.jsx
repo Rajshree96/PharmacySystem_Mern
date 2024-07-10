@@ -65,7 +65,7 @@ const rows = [
 
 
 const theme = createTheme({
-    spacing: 0,
+    spacing: 15,
 });
 
 const useStyles = makeStyles({
@@ -152,12 +152,12 @@ const useStyles = makeStyles({
     //     height: '100%',
     // },
     pieChart: {
-        display: 'flex',
+        display: 'grid',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
         height: '300px', // adjust this value as needed
-        position: 'relative',
+        // position: 'relative',
     },   
     legend: {
         display: 'grid',

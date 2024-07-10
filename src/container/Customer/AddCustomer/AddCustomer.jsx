@@ -1,3 +1,4 @@
+// Import necessary packages and components
 import React, { useState } from "react";
 import {
   Box,
@@ -25,8 +26,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
   return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -35,7 +35,7 @@ const responsiveMargin = (minMargin, maxMargin) => {
   return `calc(${minMargin}px + (${maxMargin} - ${minMargin}) * ((100vw - 320px) / (1280 - 320)))`;
 };
 const responsivePadding = (minPadding, maxPadding) => {
-  return `calc(${minPadding}px + (${maxPadding} - ${minPadding}) * ((100vw - 320px) / (1280 - 320)))`;
+  return` calc(${minPadding}px + (${maxPadding} - ${minPadding}) * ((100vw - 320px) / (1280 - 320)))`;
 };
 const responsiveHeight = (minHeight, maxHeight) => {
   return `calc(${minHeight}px + (${maxHeight} - ${minHeight}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -111,25 +111,10 @@ const validationSchema = Yup.object().shape({
 });
 
 // Main component
-const AddSupplier = () => {
+const AddCustomer = () => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
-  const [name,setName] =useState('');
-  const[address,setAddress] =useState('')
-  const[pinCode,setPinCode] = useState('')
-  const[contact,setContact] =useState('')
-  const[email,setEmail] = useState('')
-  const [website,setWebsite] = useState('')
-  const[bankName,setBankName]=useState('')
-  const[bankAddress,setBankAddress]=useState('')
-  const[ifscCode,setIfscCode]= useState('')
-  const[accountHolderName,setAccountHolderName]=useState('')
-  const[accountNumber,setAccountNumber]=useState('')
-  const[gstin,setgstin]=useState('')
-  const[openingBalance,setOpeningBalance]=useState('')
-  const[registrationType,setRegistrationType]=useState('')
-  
 
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
@@ -149,139 +134,19 @@ const AddSupplier = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
-  const breadcrumbs = [ "Supplier", "Add Supplier" ];
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const manufacturerData = {
-      name: name,
-      address: address,
-      state: selectedState,
-      pincode: pinCode,
-      country: selectedCountry,
-      contact: contact,
-      email: email,
-      website: website,
-      bankingDetails: {
-        bankName: bankName,
-        bankAddress: bankAddress,
-        ifscCode: ifscCode,
-        accountHolderName: accountHolderName,
-        accountNumber: accountNumber,
-      },
-      statutoryDetails: {
-        registrationType: registrationType,
-        gstin: gstin,
-      },
-      openingBalance: {
-        asOnFirstDayOfFinancialYear: openingBalance,
-      },
-    };
+  const breadcrumbs = [ "Customer", "Add Customer" ];
 
-    try {
-      const auth = JSON.parse(localStorage.getItem('auth'));
-      const response = await axios.post('http://localhost:4000/api/v1/admin/add-supplier', 
-        manufacturerData,
-        { 
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${auth.token}`
-          }
-        }
-      );
-      if (response.status === 201) {
-        console.log("Supplier added successfully:", response.data);
-        
-        
-        setSelectedCountry("");
-        setSelectedState("");
-  setName('')
-  setAddress('')
-  setPinCode('')
-  setContact('')
-  setEmail('')
-  setWebsite('')
-  setBankName('')
-  setBankAddress('')
-  setIfscCode('')
-  setAccountHolderName('')
-  setAccountNumber('')
-  setgstin('')
-  setOpeningBalance('')
-  setRegistrationType('')
-  toast.success("supplier added successfully");
-
-
-
-  
-      } 
-    } catch (error) {
-      console.log("Error adding supplier:", error);
-    } 
-  };
 
   return (
     <Container maxWidth="lg">
-      <Toaster/>
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
-        {/* <BreadcrumbContainer breadcrumbs={breadcrumbs} /> */}
-        <BreadcrumbContainer  breadcrumbs={breadcrumbs}/>
-          <motion.div initial="hidden" animate="visible" variants={containerVariants}>
-            <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
-             Supplier
+        <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
+               Customer
             </Typography>
-            {/* {successMessage && (
-              <Typography color="success" gutterBottom>
-                {successMessage}
-              </Typography>
-            )} */}
-             {/* {error && (
-              <Typography color="error" gutterBottom>
-                {error}
-              </Typography>
-            )} */}
-
+        <BreadcrumbContainer breadcrumbs={breadcrumbs} />
+          <motion.div initial="hidden" animate="visible" variants={containerVariants}>           
             <Formik
-              // initialValues={{
-              //   name: "",
-              //   address: "",
-              //   state: "",
-              //   pinCode: "",
-              //   country: "",
-              //   contact: "",
-              //   email: "",
-              //   website: "",
-              //   bankName: "",
-              //   bankAddress: "",
-              //   ifscCode: "",
-              //   accountHolderName: "",
-              //   accountNumber: "",
-              //   gstin: "",
-              //   openingBalance: "",
-              //   registrationType: "",
-              // }}
-              // initialValues={{
-              //   name: "",
-              //   address: "",
-              //   state: "",
-              //   pinCode: "",
-              //   country: "",  
-              //   contact: "",
-              //   email: "",
-              //   website: "",
-              //   bankName: "",
-              //   bankAddress: "",
-              //   ifscCode: "",
-              //   accountHolderName: "",
-              //   accountNumber: "",
-              //   gstin: "",
-              //   openingBalance: "",
-              //   registrationType: "",
-              // }}
-             // initialValues={formData}
-              //  initialValues={FormData}
-              // validationSchema={validationSchema}
-              // onSubmit={handleSubmit}
               initialValues={{
                 name: "",
                 address: "",
@@ -309,9 +174,8 @@ const AddSupplier = () => {
               {({ errors, touched }) => (
                 <Form>
                   <motion.div variants={itemVariants}>
-                    <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
-                      <BusinessIcon className={classes.sectionIcon} /> Supplier Details
-                    </Typography>
+                    
+                    
                     {/* name */}
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6} md={3}>
@@ -323,8 +187,6 @@ const AddSupplier = () => {
                           variant="outlined"
                           error={touched.name && !!errors.name}
                           helperText={touched.name && errors.name}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
                         />
                       </Grid>
                       {/* Address */}
@@ -335,8 +197,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Address"
                           variant="outlined"
-                          value={address}
-                          onChange={(e) => setAddress(e.target.value)}
                         />
                       </Grid>
                       {/* Country */}
@@ -347,7 +207,6 @@ const AddSupplier = () => {
                             onChange={handleCountryChange}
                             label="Country"
                             className={classes.textFieldStyle}
-                            
                           />
                         </FormControl>
                       </Grid>
@@ -377,8 +236,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Pin Code"
                           variant="outlined"
-                          value={pinCode}
-                          onChange={(e) => setPinCode(e.target.value)}
                         />
                       </Grid>
                       {/* Contact */}
@@ -389,8 +246,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Contact"
                           variant="outlined"
-                          value={contact}
-                          onChange={(e) => setContact(e.target.value)}
                         />
                       </Grid>
                       {/* Email */}
@@ -401,8 +256,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Email"
                           variant="outlined"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </Grid>
                       {/* Website */}
@@ -413,8 +266,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Website"
                           variant="outlined"
-                          value={website}
-                          onChange={(e) => setWebsite(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -435,8 +286,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Bank Name"
                           variant="outlined"
-                          value={bankName}
-                          onChange={(e) => setBankName(e.target.value)}
                         />
                       </Grid>
                       {/* Bank Address */}
@@ -447,8 +296,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Bank Address"
                           variant="outlined"
-                          value={bankAddress}
-                          onChange={(e) => setBankAddress(e.target.value)}
                         />
                       </Grid>
                       {/* IFSC Code */}
@@ -459,8 +306,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="IFSC Code"
                           variant="outlined"
-                          value={ifscCode}
-                          onChange={(e) => setIfscCode(e.target.value)}
                         />
                       </Grid>
                       {/* Account Holder Name */}
@@ -471,8 +316,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Account Holder Name"
                           variant="outlined"
-                          value={accountHolderName}
-                          onChange={(e) => setAccountHolderName(e.target.value)}
                         />
                       </Grid>
                       {/* Account Number */}
@@ -483,8 +326,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Account Number"
                           variant="outlined"
-                          value={accountNumber}
-                          onChange={(e) => setAccountNumber(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -509,8 +350,6 @@ const AddSupplier = () => {
                           variant="outlined"
                           error={touched.registrationType && !!errors.registrationType}
                           helperText={touched.registrationType && errors.registrationType}
-                          value={registrationType}
-                          onChange={(e) => setRegistrationType(e.target.value)}
                         >
                           {registrationTypes.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
@@ -530,8 +369,6 @@ const AddSupplier = () => {
                           inputProps={{ style: { textTransform: 'uppercase' } }}
                           error={touched.gstin && !!errors.gstin}
                           helperText={touched.gstin && errors.gstin}
-                          value={gstin}
-                          onChange={(e) => setgstin(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -552,8 +389,6 @@ const AddSupplier = () => {
                           fullWidth
                           label="Opening Balance"
                           variant="outlined"
-                          value={openingBalance}
-                          onChange={(e) => setOpeningBalance(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -568,9 +403,7 @@ const AddSupplier = () => {
                           startIcon={<SaveIcon />}
                           // className={classes.button}
                           sx={{ mr: 2 }}
-                          onClick={handleSubmit}
-                            // onClick={handleSubmit}
-                          // disabled={isLoading || isSubmitting}
+                          className="btn-design-green"
                         >
                           Create
                         </Button>
@@ -582,8 +415,8 @@ const AddSupplier = () => {
                           // color="secondary"
                           startIcon={<CancelIcon />}
                           // className={classes.button}
-                          className="btn-design"
                           style={{backgroundColor:'#086070',color:'white'}}
+                          className="btn-design"
                         >
                           Cancel
                         </Button>
@@ -600,12 +433,4 @@ const AddSupplier = () => {
   );
 };
 
-export default AddSupplier;
-
-
-
-
-
-
-
-
+export default AddCustomer;
