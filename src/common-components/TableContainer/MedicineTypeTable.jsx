@@ -30,7 +30,7 @@ const MedicinTypeTable = () => {
 
   useEffect(() => {
     fetchMedicineTypes();
-  }, []);
+  }, [medicineTypes]);
 
   const fetchMedicineTypes = async () => {
     try {

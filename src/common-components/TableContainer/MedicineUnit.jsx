@@ -22,9 +22,7 @@ const MedicineTable = () => {
   const [currentUnit, setCurrentUnit] = useState({});
   const [modalMode, setModalMode] = useState("add"); // State to manage modal mode (add or edit)
 
-  useEffect(() => {
-    fetchUnits();
-  }, []);
+ 
 
   const fetchUnits = async () => {
     try {
@@ -41,7 +39,9 @@ const MedicineTable = () => {
       setUnits([]); // Set to empty array to avoid errors
     }
   };
-
+  useEffect(() => {
+    fetchUnits();
+  }, [units]);
   const handleDeleteUnit = async (id) => {
     try {
       await deleteUnit(id);

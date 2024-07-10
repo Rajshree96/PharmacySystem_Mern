@@ -8,11 +8,8 @@ import { getAllCategories } from "../../../../categoriesApi";
 import { getAllMedicineTypes } from "../../../../medicineTypeapi";
 
 import toast, { Toaster } from 'react-hot-toast';
-import {  useNavigate } from 'react-router-dom';
 import { getAllBrand } from "../../../../brandApi";
-const AddMedicineModal = () => {
-  const [medicines, setMedicines] = useState([]);
-  const navigate= useNavigate();
+const AddMedicineModal = ({ setSuccess }) => {
   const[medicineName,setMedicineName] =useState('');
   const [itemCode,setItemCode] = useState('')
   const [category, setCategory] = useState([]);
@@ -200,10 +197,9 @@ const AddMedicineModal = () => {
       );
       console.log(response);
       if (response.data.statusCode === 201) {
-        console.log('Medicine added successfully!');
-        setMedicines([...medicines, response.data.result]);
       toast.success("medicine added successfully ");
       } 
+      
 
     } catch (error) {
      
@@ -212,6 +208,11 @@ const AddMedicineModal = () => {
     }
   };
 
+  const handleAddMedicine = () => {
+    setTimeout(() => {     
+      setSuccess(true);
+    }, 300);
+  };
   const handleSubmit = async (event) => {
     
     event.preventDefault(); 
@@ -256,6 +257,7 @@ const AddMedicineModal = () => {
   
     try {
       await addMedicine(medicineData);
+      handleAddMedicine();
       
     } catch (error) {
       console.error('Error adding medicine:', error);
@@ -263,25 +265,8 @@ const AddMedicineModal = () => {
     }
   };
   
-  const fetchMedicines = async () => {
-    try {
-      const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine");
-      console.log("API Response:", response.data.result);
-
-      if (Array.isArray(response.data.result)) {
-        setMedicines(response.data.result);
-      } else {
-        console.error("API response does not contain medicines array:", response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching medicines:", error);
-    }
-  };
  
-  useEffect(() => {
-    fetchMedicines();
-    
-  }, []);
+ 
   return (
     <>
 

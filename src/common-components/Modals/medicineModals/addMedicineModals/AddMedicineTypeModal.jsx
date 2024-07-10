@@ -5,9 +5,8 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:4000/api/v1/medicine-type';
 
-const AddMedicineTypeModal = ({ onClose, isEditMode, initialCategory }) => {
+const AddMedicineTypeModal = ({ onClose, isEditMode, initialCategory,setSuccess }) => {
   const [medicineTypeName, setMedicineTypeName] = useState(initialCategory?.mediType || "");
-
   const handleSaveMedicineType = async () => {
     try {
       if (isEditMode && initialCategory?._id) {
@@ -15,7 +14,8 @@ const AddMedicineTypeModal = ({ onClose, isEditMode, initialCategory }) => {
       } else {
         await axios.post(`${API_URL}/add`, { mediType: medicineTypeName }, getConfig());
       }
-      onClose(true); // Close modal after successful save
+      handleAddType();
+      // onClose(true); // Close modal after successful save
     } catch (error) {
       console.error("Error saving medicine type:", error);
       // alert("Error saving medicine type");
@@ -32,7 +32,12 @@ const AddMedicineTypeModal = ({ onClose, isEditMode, initialCategory }) => {
     };
   };
 
- 
+  const handleAddType = () => {
+    setTimeout(() => {
+      
+      setSuccess(true);
+    }, 300);
+  };
 
   return (
     <>

@@ -20,7 +20,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-
+import { useEffect } from "react";
+import axios from "axios"
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#086070",
@@ -54,7 +55,7 @@ const rows = [
 
 const ManufacturerLedger = () => {
   const [manufacturer, setmanufacturer] = useState([]);
-  const [manufacturerName, setManufacturerName] = useState('');
+  // const [manufacturerName, setManufacturerName] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
 
@@ -66,6 +67,23 @@ const ManufacturerLedger = () => {
     setToDate(event.target.value);
   };
   const breadcrumbs = ["Manufacturer", " Manufacturer Ledger"];
+  const fetchManufecturer = async () => {
+    try {
+       const response = await axios.get('http://localhost:4000/api/v1/admin/getAllManufacturer', config());
+       console.log("manufactured  fetched", response.data);
+       if(Array.isArray(response.data.result)){
+        setmanufacturer(response.data.result);
+       }else{
+        console.error("Error: Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching manufactures:", error);
+      setmanufacturer([]);
+    }
+  };
+  useEffect(()=>{
+    fetchManufecturer();
+  },[manufacturer]);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -108,13 +126,14 @@ const ManufacturerLedger = () => {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={manufacturerName}
-                onChange={(e) => setManufacturerName(e.target.value)}
+                value={manufacturer}
+                onChange={(e) => setmanufacturer(e.target.value)}
                 select
                 sx={{width:'50%'}}                
               >
-                <MenuItem value="Manufacturer Name 1">Manufacturer Name 1</MenuItem>
-                <MenuItem value="Manufacturer Name 2">Manufacturer Name 2</MenuItem>
+                {manufacturer.map((manu) => (
+             <MenuItem  key={manu._id} value={manu._id}>{manu.name}</MenuItem>
+            ))}
               </TextField>
               </Box>
             </Grid>

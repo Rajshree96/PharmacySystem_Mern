@@ -29,11 +29,11 @@ const AllMedicineModals = ({ open, handleClose, formType, style }) => {
   const renderForm = () => {
     switch (formType) {
       case 'add category':
-        return <AddCategoryModal categoryName={categoryName} setCategoryName={setCategoryName} />;
+        return <AddCategoryModal categoryName={categoryName} setCategoryName={setCategoryName}   setSuccess={setSuccess}/>;
       case 'add medicine':
-        return <AddMedicineModal medicineName={medicineName} setMedicineName={setMedicineName} />;
+        return <AddMedicineModal medicineName={medicineName} setMedicineName={setMedicineName}  setSuccess={setSuccess} />;
       case 'add medicinetype':
-        return <AddMedicineTypeModal medicineTypeName={medicineTypeName} setMedicineTypeName={setMedicineTypeName} />;
+        return <AddMedicineTypeModal medicineTypeName={medicineTypeName} setMedicineTypeName={setMedicineTypeName} setSuccess={setSuccess} />;
       case 'add units':
         return <AddUnitsModal unitName={unitName} setUnitName={setUnitName} setSuccess={setSuccess} />;
       default:

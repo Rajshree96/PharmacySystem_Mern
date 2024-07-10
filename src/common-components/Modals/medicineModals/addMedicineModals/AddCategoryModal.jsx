@@ -2,10 +2,18 @@ import React from "react";
 import { Button, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
-const AddCategoryModal = ({ category, setCategory, isEditMode, onSave }) => {
+const AddCategoryModal = ({ category, setCategory, isEditMode, onSave ,setSuccess}) => {
   const handleSaveCategory = () => {
      onSave(category); // Trigger the save action directly from props
+     handleAddCategory();
   };
+
+  const handleAddCategory = () => {
+    setTimeout(() => {
+      setSuccess(true);
+    }, 300);
+  };
+
   return (
     <>
       <TextField
