@@ -10,7 +10,8 @@ const BrandSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Manufacturer', // Reference to the Manufacturer model
         required: true,
-    }
+}
+
 });
 
 // Define a pre-save hook to ensure the manufactureId exists in the Manufacturer model

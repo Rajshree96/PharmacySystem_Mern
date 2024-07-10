@@ -10,6 +10,7 @@ import businessSetupRoutes from './routes/businessSetupRoutes.js';
 import medicineRouter from "./routes/medicineTypeRoutes.js";
 import brandRoutes from "./routes/brandRoutes.js";
 import cutomerRouter from "./routes/cutomerRoutes.js";
+import purchaseRoute from "./routes/purchaseRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -30,6 +31,7 @@ app.use('/api/v1/business-setup', businessSetupRoutes);
 app.use('/api/v1/medicine-type', medicineRouter);
 app.use("/api/v1/brand", brandRoutes);
 app.use("/api/v1/cutomer", cutomerRouter);
+app.use("/api/v1/purchase", purchaseRoute);
 
 
 const port = process.env.PORT || 4000;
