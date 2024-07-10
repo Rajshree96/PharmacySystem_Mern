@@ -136,7 +136,7 @@ const Dashboard = () => {
         case "Manufacturer Ledger":
           return <ManufacturerLedger />;
       case "Add Brand":
-        return <AddBrand/>;
+        return <AddBrand />;
       case "Add Supplier":
         return <AddSupplier />;
       case "Manage Supplier":

@@ -3,14 +3,19 @@ import Brand from "../models/BrandModal.js";
 // Add a Brand
 export const addBrand = async (req, res) => {
     const { brand, manufactureId } = req.body;
-
+     console.log("frontend data", req.body);
     try {
-        const newBrand = await Brand.create({ brand, manufactureId });
+        const newBrand = (await Brand.create({ brand, manufactureId }));
+        console.log("new brand", newBrand)
+
         return res.status(201).json(newBrand);
+
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
+
 };
+
 
 // Get all Brands
 export const getAllBrands = async (req, res) => {

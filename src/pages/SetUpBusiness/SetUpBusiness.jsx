@@ -33,6 +33,7 @@ import {
 import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
 // import Flag from "react-world-flags";
 import {makeStyles} from "@mui/styles";
+import { addBusinessSetup } from "../../setBusinessApi";
 
 const useStyles = makeStyles({
     formControl: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles({
     },
 });
 
-const FinancialYearSelector = () => {
+const FinancialYearSelector = ({onChange}) => {
     const classes = useStyles();
     const [ startYear, setStartYear ] = useState("");
     const [ endYear, setEndYear ] = useState("");
@@ -50,6 +51,15 @@ const FinancialYearSelector = () => {
     const currentYear = new Date().getFullYear();
     // const yearOptions = Array.from(new Array(20), (val, index) => currentYear - index);
     const yearOptions = Array.from(new Array(100), (val, index) => currentYear - 50 + index);
+
+    const updateFinancialYear = (start, end) => {
+        if (start && end) {
+            setFinancialYear(`${start}-${end}`);
+            setIsSelectingYears(false);
+            onChange({ target: { name: 'financialYear', value: `${start}-${end}` } });
+
+        }
+    };
 
     const handleStartYearChange = (event) => {
         const selectedYear = event.target.value;
@@ -63,12 +73,7 @@ const FinancialYearSelector = () => {
         updateFinancialYear(startYear, selectedYear);
     };
 
-    const updateFinancialYear = (start, end) => {
-        if (start && end) {
-            setFinancialYear(`${start}-${end}`);
-            setIsSelectingYears(false);
-        }
-    };
+    
 
     return (
         <Grid container spacing={2}>
@@ -174,12 +179,15 @@ function SetUpBusiness() {
     };
 
     const handleInputChange = (event) => {
-        const {name, value} = event.target;
+        const { name, value } = event.target;
         setFormData((prevState) => ({
             ...prevState,
-            [name]: value,
+            // businessInfo: {
+                ...prevState,
+                [name]: value,
+            // },
         }));
-    };
+      };
 
     const handleGstChange = (event) => {
         setFormData((prevState) => ({
@@ -195,6 +203,85 @@ function SetUpBusiness() {
         }));
     };
 
+    const handleFileChange = (event) => {
+        setFormData((prevState) => ({
+          ...prevState,
+          businessLogo: event.target.files[0],
+        }));
+      };
+
+      const handleFinancialYearChange = (event) => {
+        const {name, value} = event.target;
+        setFormData((prevState) => ({
+            ...prevState,
+            // businessInfo: {
+                ...prevState.businessInfo,
+                [name]: value,
+            // }
+            
+        }));
+    };
+
+
+    const handleSubmit = async (event) => {
+         event.preventDefault();
+        
+        // const form = new FormData();
+
+        // Append business info
+        const bussinessSetupData={
+        businessInfo: {
+            businessLogo: formData.businessLogo, // This should be handled separately if it's a file
+            businessName: formData.businessName,
+            address: formData.address,
+            pinCode: formData.pinCode,
+            state: selectedState,
+            country: selectedCountry,
+            email: formData.email,
+            website: formData.website || '',
+            phoneNumber: formData.phoneNumber,
+            financialYear: formData.financialYear,
+            bookBeginning: formData.bookBeginning
+        },
+        statutoryDetails: {
+            enableGst: formData.enableGst,
+            stateRegistrationType: formData.registrationType,
+            taxRate: formData.taxRate || '',
+            gstin: formData.gstin || '',
+            drugLicenceNo: formData.drugLicenceNo || '',
+            otherTax: formData.otherTax,
+            taxName: formData.otherTaxName || '',
+            taxNumber: formData.otherTaxNumber || '',
+            state: selectedStatutoryState
+        },
+        bankDetails: {
+            bankName: formData.bankName,
+            bankAddress: formData.bankAddress || '',
+            ifscCode: formData.ifscCode,
+            accountHolderName: formData.accountHolderName,
+            accountNumber: formData.accountNumber
+        }
+    
+    };
+    const form = new FormData();
+    if (formData.businessLogo) {
+        form.append('businessLogo', formData.businessLogo);
+    }
+    form.append('businessSetupData', JSON.stringify(bussinessSetupData));
+
+        try {
+            const response = await addBusinessSetup(form);
+            console.log('Business setup added successfully:', response);
+            // Handle success (e.g., show a success message, redirect, etc.)
+        } catch (error) {
+            console.error('Error adding business setup:', error);
+            // Handle error (e.g., show an error message)
+        }
+    
+        // console.log("form data", form);
+    
+    };
+    console.log("form data",formData)
     return (
         <Container maxWidth="lg" sx={{mt: 5, mb: 5}}>
             <motion.div initial={{opacity: 0, y: -50}} animate={{opacity: 1, y: 0}} transition={{duration: 0.5}}>
@@ -218,8 +305,8 @@ function SetUpBusiness() {
                                 fullWidth
                                 name="businessLogo"
                                 InputProps={{startAdornment: <FileUpload />}}
-                                value={formData.businessLogo}
-                                onChange={handleInputChange}
+                                // value={formData.businessLogo}
+                                onChange={handleFileChange}
                             />
                         </Grid>
                         {/* Business Name */}
@@ -316,7 +403,8 @@ function SetUpBusiness() {
                         {/* Finance Details */}
                         <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl fullWidth>
-                                <FinancialYearSelector financialYear={formData.financialYear} />
+                                <FinancialYearSelector 
+                                onChange={handleFinancialYearChange}/>
                             </FormControl>
                         </Grid>
                         {/* Book Begning From */}
@@ -519,7 +607,7 @@ function SetUpBusiness() {
                     {/* Save Button */}
                     <Grid container spacing={3} sx={{mt: 3}}>
                         <Grid item xs={12} lg={1}>
-                            <Button variant="contained" color="primary" className="btn-design" fullWidth>
+                            <Button variant="contained" color="primary" className="btn-design" fullWidth onClick={handleSubmit}>
                                 Save
                             </Button>
                         </Grid>
