@@ -173,9 +173,7 @@ const AddCustomer = () => {
             >
               {({ errors, touched }) => (
                 <Form>
-                  <motion.div variants={itemVariants}>
-                    
-                    
+                  <motion.div variants={itemVariants}>                                        
                     {/* name */}
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6} md={3}>
@@ -394,7 +392,7 @@ const AddCustomer = () => {
                     </Grid>
                   </motion.div>
                   <Box className={classes.buttonContainer} >
-                    <motion.div variants={itemVariants} >
+                    <motion.div variants={itemVariants} > 
                       <Tooltip title="Save" >
                         <Button
                           type="submit"
