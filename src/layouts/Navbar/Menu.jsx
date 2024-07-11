@@ -32,9 +32,9 @@ const suppliers = [
   { label: "Supplier Ledger" },
 ];
 const purchases = [
-  { label: "Purchase" },
-  { label: "Manage Purchase" },
-  { label: "Purchase Peturn" },
+  { label: "Purchase Order" },
+  { label: "Manage Purchase Order" },
+  { label: "Purchase Return" },
 ];
 const sales = [
   { label: "Sale Invoice" },
@@ -413,6 +413,7 @@ const Menu = ({ setActiveComponent }) => {
             <ListItemButton
               key={item.label}
               sx={{ pl: 6, minHeight: 32, color: "white" }}
+              onClick={() => handleMenuItemClick(item.label)}
             >
               <ListItemText
                 primary={item.label}

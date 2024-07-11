@@ -2,12 +2,8 @@ import React, { useState } from "react";
 import { styled, useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Avatar, Card, CardContent, Grid } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import { Card, CardContent, Grid } from "@mui/material";
 import graph from "../../assets/graph.png";
-import image1 from "../../assets/img1.png";
-import dumy from "../../assets/dumy.png";
-import circle from '../../assets/circleGraph.jpeg';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -30,6 +26,8 @@ import { useNavigate } from "react-router-dom";
 import CountUp from 'react-countup';
 import { makeStyles } from '@mui/styles';
 import { PieChart } from "react-minimal-pie-chart";
+import { Bar } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -158,7 +156,7 @@ const useStyles = makeStyles({
         width: '100%',
         height: '300px', // adjust this value as needed
         // position: 'relative',
-    },   
+    },
     legend: {
         display: 'grid',
         justifyContent: 'center',
@@ -189,6 +187,34 @@ const DashboardCard = () => {
         { value: 90, color: "#78A75A", title: "Stock Report", img: stock },
         { value: 30, color: "#0000F5", title: "Day Book", img: day }
     ];
+    const data = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [
+            {
+                label: 'Monthly Progress',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Monthly Progress',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: '#086070',
+                borderColor: '#086070',
+                borderWidth: 1,
+            },
+        ],
+    };
+    const options = {
+        responsive: true,
+        // maintainAspectRatio: false,
+        // scales: {
+        //   y: {
+        //     beginAtZero: true,
+        //   },
+        // },
+    };
     // const handleCard =()=>{
     //     console.log("medicine")
     //     return(<AddMedicine/>)
@@ -216,7 +242,9 @@ const DashboardCard = () => {
                                         <Typography gutterBottom variant="p" component="div" className={classes.cardTypography}>
                                             {item.title}
                                         </Typography>
-                                        <img src={graph} alt='graph' />
+
+                                        
+                                        {/* <img src={graph} alt='graph' /> */}
                                     </Box>
                                 </CardContent>
                             </Card>
@@ -231,30 +259,12 @@ const DashboardCard = () => {
                             <Box>
                                 <Card >
                                     <CardContent className={classes.saleCard}>
-                                        <Grid item md={8} sm={8} className={classes.saleBox}>
+                                        <Grid item md={12} sm={12} className={classes.saleBox}>
                                             <img src={item.img} alt="logo" height={50} width={50} />
                                             <Typography gutterBottom variant="h6" component="div" style={{ color: item.color, fontWeight: '600', fontSize: '19px' }}>
                                                 {item.title}
                                             </Typography>
-                                        </Grid>
-                                        <Grid item md={4} sm={8} className={classes.saleBoxIcon}>
-                                            {/* <img src={pie} alt='graph' height={50} width={50} /> */}
-                                            <PieChart
-                                                data={[{ title: item.title, value: item.value, color: item.color }]}
-                                                label={({ dataEntry }) => `${dataEntry.value}%`}
-                                                // label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}%`}
-                                                labelStyle={{
-                                                    fontSize: '20px',
-                                                    fontColor: 'white',
-                                                    fontWeight: '800',
-                                                    fill: 'white',
-                                                }}
-                                                paddingAngle={5}
-                                                animate={true}
-                                                animationDuration={1000}
-                                                style={{ height: '50px', width: '50px' }}
-                                            />
-                                        </Grid>
+                                        </Grid>                                       
                                     </CardContent>
                                 </Card>
                             </Box>
@@ -267,12 +277,12 @@ const DashboardCard = () => {
                     <Grid item lg={6} md={6} sm={12} xs={12} className={classes.mobCard}>
                         <Card className={classes.graphCard} >
                             <CardContent>
-                                <Box>
-                                    <Typography variant='h6' style={{ color: 'grey' }}>Statistics</Typography>
-                                    <Typography gutterBottom variant="h6" component="div" style={{ color: 'black', fontWeight: '700', fontSize: '25px' }}>
-                                        Monthly Progress Report
-                                    </Typography>
-                                    <img src={dumy} alt='graph' className={classes.graphImage} />
+                                <Typography variant='h6' style={{ color: 'grey' }}>Statistics</Typography>
+                                <Typography gutterBottom variant="h6" component="div" style={{ color: 'black', fontWeight: '700', fontSize: '25px' }}>
+                                    Monthly Progress Report
+                                </Typography>
+                                <Box className={classes.pieChart}>
+                                    <Bar data={data} options={options} />
                                 </Box>
                             </CardContent>
                         </Card>

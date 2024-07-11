@@ -22,6 +22,8 @@ import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import ViewButton from "../../../common-components/ButtonContainer/ViewButton";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
+import EditButton from "../../../common-components/ButtonContainer/EditButton";
+import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -114,7 +116,7 @@ const ManageCustomer = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
@@ -162,18 +164,19 @@ const ManageCustomer = () => {
                           label="View"
                           icon={Visibility}
                         />
-                        <ViewButton
+                         <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
                         />
-                        <ViewButton
+                        <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
                           onClick={() => handleDeleteClick(customers._id)}
 
                         />
+                        
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>

@@ -40,6 +40,9 @@ import AddBrand from "../../container/Brand/AddBrand";
 import AddCustomer from "../../container/Customer/AddCustomer/AddCustomer";
 import ManageCustomer from "../../container/Customer/ManageCustomer/ManageCustomer";
 import CustomerLedger from "../../container/Customer/CustomerLedger/CustomerLedger";
+import PurchaseOrder from "../../container/Purchase/PurchaseOrder/PurchaseOrder";
+import ManagePurchaseOrder from "../../container/Purchase/ManagePurchaseOrder/ManagePurchaseOrder";
+import PurchaseReturn from "../../container/Purchase/PurchaseReturn/PurchaseReturn";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -133,8 +136,8 @@ const Dashboard = () => {
         return <AddManufacturer />;
       case "Manage Manufacturer":
         return <ManageManufacturer />;
-        case "Manufacturer Ledger":
-          return <ManufacturerLedger />;
+      case "Manufacturer Ledger":
+        return <ManufacturerLedger />;
       case "Add Brand":
         return <AddBrand />;
       case "Add Supplier":
@@ -143,12 +146,18 @@ const Dashboard = () => {
         return <ManageSupplier />;
       case "Supplier Ledger":
         return <SupplierLedger />;
-        case "Add Customer":
-          return <AddCustomer />;
-        case "Manage Customer":
-          return <ManageCustomer />;
-        case "Customer Ledger":
-          return <CustomerLedger />;
+      case "Add Customer":
+        return <AddCustomer />;
+      case "Manage Customer":
+        return <ManageCustomer />;
+      case "Customer Ledger":
+        return <CustomerLedger />;
+      case "Purchase Order":
+        return <PurchaseOrder />;
+      case "Manage Purchase Order":
+      return <ManagePurchaseOrder />;
+      case "Purchase Return":
+      return <PurchaseReturn />;
       default:
         return null;
     }

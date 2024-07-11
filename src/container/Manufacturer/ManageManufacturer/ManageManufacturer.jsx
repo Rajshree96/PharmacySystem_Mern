@@ -24,6 +24,8 @@ import { Edit, Delete, Visibility } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import { useEffect } from "react";
 import axios from "axios";
+import EditButton from "../../../common-components/ButtonContainer/EditButton";
+import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#086070",
@@ -144,7 +146,7 @@ const ManageManufacturer = () => {
 
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
@@ -192,17 +194,16 @@ const ManageManufacturer = () => {
                           label="View"
                           icon={Visibility}
                         />
-                        <ViewButton
+                         <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
-                          onClick={() => handleEditClick(manufacturer)}
                         />
-                        <ViewButton
+                        <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(manufacturer._id)}
+                          onClick={() => handleDeleteClick(suppliers._id)}
                         />
                       </Box>
               </StyledTableCell>
