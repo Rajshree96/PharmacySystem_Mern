@@ -77,7 +77,7 @@ const ManageSupplier = () => {
       );
       console.log("API Response:", response.data.result);
 
-      if (Array.isArray(response.data.result)) {
+      if (Array.isArray(response.data)) {
         setSuppliers(response.data.result);
       } else {
         console.error("API response does not contain supplier array:", response.data);

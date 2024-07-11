@@ -8,11 +8,8 @@ import { getAllCategories } from "../../../../categoriesApi";
 import { getAllMedicineTypes } from "../../../../medicineTypeapi";
 
 import toast, { Toaster } from 'react-hot-toast';
-import {  useNavigate } from 'react-router-dom';
 import { getAllBrand } from "../../../../brandApi";
-const AddMedicineModal = () => {
-  
-  const navigate= useNavigate();
+const AddMedicineModal = ({ setSuccess }) => {
   const[medicineName,setMedicineName] =useState('');
   const [itemCode,setItemCode] = useState('')
   const [category, setCategory] = useState([]);
@@ -199,15 +196,11 @@ const AddMedicineModal = () => {
         }
       );
       console.log(response);
-      if (response.status === 201) {
-        console.log('Medicine added successfully!');
-        
-      } 
-      navigate("/admin/dashboard");
+      if (response.data.statusCode === 201) {
       toast.success("medicine added successfully ");
+      } 
       
-      
-  
+
     } catch (error) {
      
       toast.error("something went wrong")
@@ -215,6 +208,11 @@ const AddMedicineModal = () => {
     }
   };
 
+  const handleAddMedicine = () => {
+    setTimeout(() => {     
+      setSuccess(true);
+    }, 300);
+  };
   const handleSubmit = async (event) => {
     
     event.preventDefault(); 
@@ -259,6 +257,7 @@ const AddMedicineModal = () => {
   
     try {
       await addMedicine(medicineData);
+      handleAddMedicine();
       
     } catch (error) {
       console.error('Error adding medicine:', error);
@@ -266,7 +265,8 @@ const AddMedicineModal = () => {
     }
   };
   
-  
+ 
+ 
   return (
     <>
 

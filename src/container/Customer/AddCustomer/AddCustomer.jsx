@@ -26,6 +26,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+import axios from "axios";
 
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
@@ -115,7 +116,20 @@ const AddCustomer = () => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
-
+  const [name,setName] =useState('');
+  const[address,setAddress] =useState('')
+  const[pinCode,setPinCode] = useState('')
+  const[contact,setContact] =useState('')
+  const[email,setEmail] = useState('')
+  const [website,setWebsite] = useState('')
+  const[bankName,setBankName]=useState('')
+  const[bankAddress,setBankAddress]=useState('')
+  const[ifscCode,setIfscCode]= useState('')
+  const[accountHolderName,setAccountHolderName]=useState('')
+  const[accountNumber,setAccountNumber]=useState('')
+  const[gstin,setGstin]=useState('')
+  const[openingBalance,setOpeningBalance]=useState('')
+  const[registrationType,setRegistrationType]=useState('')
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
     setSelectedState(""); 
@@ -135,7 +149,53 @@ const AddCustomer = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
   const breadcrumbs = [ "Customer", "Add Customer" ];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const customerDetails = {
+      customerDetails: {
+        name: name,
+        address: address,
+        state: selectedState,
+        pinCode: pinCode,
+        country: selectedCountry,
+        contact: contact,
+        email: email,
+        website: website,
+        bankDetails: {
+          bankName: bankName,
+          bankAddress: bankAddress,
+          ifscCode: ifscCode,
+          accountHolderName: accountHolderName,
+          accountNumber: accountNumber,
+        },
+        statutoryDetails: {
+          stateRegistrationType: registrationType,
+          gstin: gstin,
+        },
+        openingBalance: {
+          asOnFirstDayOfFinancialYear: openingBalance,
+        },
+      },
+    };
 
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.post('http://localhost:4000/api/v1/cutomer/add', 
+        customerDetails,
+        { 
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      if (response.status === 201) {
+        console.log("customer added successfully:", response.data);
+      } 
+    } catch (error) {
+      console.log("Error adding customer:", error);
+    } 
+  };
 
   return (
     <Container maxWidth="lg">
@@ -185,6 +245,8 @@ const AddCustomer = () => {
                           variant="outlined"
                           error={touched.name && !!errors.name}
                           helperText={touched.name && errors.name}
+                          value={name}
+                          onChange={(e)=> setName(e.target.value)}
                         />
                       </Grid>
                       {/* Address */}
@@ -195,6 +257,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Address"
                           variant="outlined"
+                          value={address}
+                          onChange={(e)=> setAddress(e.target.value)}
                         />
                       </Grid>
                       {/* Country */}
@@ -234,6 +298,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Pin Code"
                           variant="outlined"
+                          value={pinCode}
+                          onChange={(e)=> setPinCode(e.target.value)}
                         />
                       </Grid>
                       {/* Contact */}
@@ -244,6 +310,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Contact"
                           variant="outlined"
+                          value={contact}
+                          onChange={(e)=>setContact(e.target.value)}
                         />
                       </Grid>
                       {/* Email */}
@@ -254,6 +322,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Email"
                           variant="outlined"
+                          value={email}
+                          onChange={(e)=>setEmail(e.target.value)}
                         />
                       </Grid>
                       {/* Website */}
@@ -264,6 +334,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Website"
                           variant="outlined"
+                          value={website}
+                          onChange={(e) => setWebsite(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -284,6 +356,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Bank Name"
                           variant="outlined"
+                          value={bankName}
+                          onChange={(e) => setBankName(e.target.value)}
                         />
                       </Grid>
                       {/* Bank Address */}
@@ -294,6 +368,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Bank Address"
                           variant="outlined"
+                          value={bankAddress}
+                          onChange={(e) => setBankAddress(e.target.value)}
                         />
                       </Grid>
                       {/* IFSC Code */}
@@ -304,6 +380,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="IFSC Code"
                           variant="outlined"
+                          value={ifscCode}
+                          onChange={(e) => setIfscCode(e.target.value)}
                         />
                       </Grid>
                       {/* Account Holder Name */}
@@ -314,6 +392,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Account Holder Name"
                           variant="outlined"
+                          value={accountHolderName}
+                          onChange={(e) => setAccountHolderName(e.target.value)}
                         />
                       </Grid>
                       {/* Account Number */}
@@ -324,6 +404,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Account Number"
                           variant="outlined"
+                          value={accountNumber}
+                          onChange={(e) => setAccountNumber(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -348,6 +430,8 @@ const AddCustomer = () => {
                           variant="outlined"
                           error={touched.registrationType && !!errors.registrationType}
                           helperText={touched.registrationType && errors.registrationType}
+                          value={registrationType}
+                          onChange={(e) => setRegistrationType(e.target.value)}
                         >
                           {registrationTypes.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
@@ -367,6 +451,8 @@ const AddCustomer = () => {
                           inputProps={{ style: { textTransform: 'uppercase' } }}
                           error={touched.gstin && !!errors.gstin}
                           helperText={touched.gstin && errors.gstin}
+                          value={gstin}
+                          onChange={(e) => setGstin(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -387,6 +473,8 @@ const AddCustomer = () => {
                           fullWidth
                           label="Opening Balance"
                           variant="outlined"
+                          value={openingBalance}
+                          onChange={(e) => setOpeningBalance(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -400,6 +488,7 @@ const AddCustomer = () => {
                           color="success"
                           startIcon={<SaveIcon />}
                           // className={classes.button}
+                          onClick={handleSubmit}
                           sx={{ mr: 2 }}
                           className="btn-design-green"
                         >

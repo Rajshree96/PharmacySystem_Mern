@@ -23,7 +23,7 @@ const MedicineCategoryTable = () => {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [categories]);
 
   const fetchCategories = async () => {
     try {
@@ -70,6 +70,7 @@ const MedicineCategoryTable = () => {
       }
       setModalOpen(false);
       await fetchCategories();
+      
     } catch (error) {
       console.error("Error saving category:", error);
     }

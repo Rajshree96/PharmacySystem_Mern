@@ -48,7 +48,7 @@ const AddMedicineTable = () => {
   useEffect(() => {
     fetchMedicines();
     
-  }, []);
+  }, [medicines]);
 
   
   const handleVisibilityClick = (medicine) => {
@@ -127,6 +127,7 @@ const AddMedicineTable = () => {
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: "#004d40" }}>
+            <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Sno.</TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Item Code</TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Medicine Name</TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Batch No.</TableCell>
@@ -141,8 +142,9 @@ const AddMedicineTable = () => {
           </TableHead>
           <TableBody>
             {Array.isArray(medicines) && medicines.length > 0 ? (
-              medicines.map((medicine) => (
+              medicines.map((medicine,index) => (
                 <TableRow key={medicine._id}>
+                  <TableCell>{index+1}</TableCell>
                   <TableCell>{medicine.itemCode}</TableCell>
                   <TableCell>{medicine.medicineName}</TableCell>
                   <TableCell>{medicine.batchNo}</TableCell>

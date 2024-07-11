@@ -3,7 +3,7 @@ import { TextField, Grid, MenuItem, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { addUnit, editUnit } from "../../../../unitapi";
 
-const AddUnitsModal = ({ unitData, onSave, onClose }) => {
+const AddUnitsModal = ({ unitData, onSave, setSuccess }) => {
   const [formalName, setFormalName] = useState('');
   const [type, setType] = useState('Single');
   const [symbol, setSymbol] = useState('');
@@ -14,24 +14,15 @@ const AddUnitsModal = ({ unitData, onSave, onClose }) => {
 
   useEffect(() => {
     if (unitData) {
-      setFormalName(unitData.name); // Set initial form values when editing
+      setFormalName(unitData.name);
       setType(unitData.type);
       setSymbol(unitData.symbol);
       setIsEditMode(true);
     } else {
       setIsEditMode(false);
-      resetForm(); // Reset form values when adding a new unit
+      resetForm();
     }
   }, [unitData]);
-
-  const setFormValues = (unitData) => {
-    setFormalName(unitData.name || '');
-    setType(unitData.type || 'Single');
-    setSymbol(unitData.symbol || '');
-    setPrimaryUnit(unitData.primaryUnit || '');
-    setConversion(unitData.conversion || '');
-    setSecondaryUnit(unitData.secondaryUnit || '');
-  };
 
   const resetForm = () => {
     setFormalName('');
@@ -40,6 +31,12 @@ const AddUnitsModal = ({ unitData, onSave, onClose }) => {
     setPrimaryUnit('');
     setConversion('');
     setSecondaryUnit('');
+  };
+
+  const handleAddUnit = () => {
+    setTimeout(() => {
+      setSuccess(true);
+    }, 300);
   };
 
   const handleSaveUnit = async () => {
@@ -53,17 +50,14 @@ const AddUnitsModal = ({ unitData, onSave, onClose }) => {
     };
 
     try {
-      let response;
       if (isEditMode) {
-        response = await editUnit(unitData._id, unitToUpdate);
+        await editUnit(unitData._id, unitToUpdate);
       } else {
-        response = await addUnit(unitToUpdate);
+        await addUnit(unitToUpdate);
       }
-      onSave(response.data); // Notify parent component with the newly added/updated unit data
-      onClose(); // Close the modal
+      handleAddUnit();
     } catch (error) {
       console.error(isEditMode ? "Error editing unit:" : "Error adding unit:", error);
-      // Handle error as needed
     }
   };
 
@@ -106,7 +100,6 @@ const AddUnitsModal = ({ unitData, onSave, onClose }) => {
             onChange={(e) => setFormalName(e.target.value)}
           />
         </Grid>
-
         {type === 'Compounded' && (
           <>
             <Grid item xs={12} sm={6}>
@@ -154,14 +147,6 @@ const AddUnitsModal = ({ unitData, onSave, onClose }) => {
       >
         {isEditMode ? "Save" : "Add Unit"}
       </Button>
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        sx={{ mt: 3, ml: 2 }}
-        onClick={onClose}
-      >
-        Cancel
-      </Button> */}
     </>
   );
 };
