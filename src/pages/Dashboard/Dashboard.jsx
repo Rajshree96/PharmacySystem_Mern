@@ -44,6 +44,16 @@ import PurchaseOrder from "../../container/Purchase/PurchaseOrder/PurchaseOrder"
 import ManagePurchaseOrder from "../../container/Purchase/ManagePurchaseOrder/ManagePurchaseOrder";
 import PurchaseReturn from "../../container/Purchase/PurchaseReturn/PurchaseReturn";
 
+//Sales
+import SalesEstimate from "../../container/Sales/SalesEstimate/SalesEstimate";
+import ManageSalesEstimate from "../../container/Sales/ManageSalesEstimate/ManageSalesEstimate";
+import SalesInvoice from "../../container/Sales/SalesInvoice/SalesInvoice";
+import ManageSalesInvoice from "../../container/Sales/ManageSalesInvoice/ManageSalesInvoice";
+import DeliveryChallan from "../../container/Sales/DeliveryChallan/DeliveryChallan";
+import PosSale from "../../container/Sales/POS_Sale/PosSale";
+import GuiSale from "../../container/Sales/GUI_Sale/GuiSale";
+import SalesReturn from "../../container/Sales/SalesReturn/SalesReturn";
+
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
     paddingLeft: 24,
@@ -158,6 +168,22 @@ const Dashboard = () => {
       return <ManagePurchaseOrder />;
       case "Purchase Return":
       return <PurchaseReturn />;
+      case "Sales Estimate":
+        return <SalesEstimate />;
+      case "Manage Sales Estimate":
+      return <ManageSalesEstimate />;
+      case "Sales Invoice":
+      return <SalesInvoice />;
+      case "Manage Sales Invoice":
+      return <ManageSalesInvoice />;
+      case "Delivery Challan":
+      return <DeliveryChallan />;
+      case "POS Sale":
+      return <PosSale />;
+      case "GUI Sale":
+      return <GuiSale />;
+      case "Sales Return":
+      return <SalesReturn />;
       default:
         return null;
     }

@@ -23,7 +23,6 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
-import PurchasePayment from "./PurchasePayment";
 
 const initialRow = {
   sno: "",
@@ -32,7 +31,7 @@ const initialRow = {
   qty: "",
   freeQty: "",
   mrp: "",
-  unitCost: "",
+  retailPrice: "",
   discount1: "",
   discount2: "",
   taxableValue: "",
@@ -71,22 +70,13 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100 }}>
               Qty
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
-              Free Qty
-            </TableCell>
+            </TableCell>            
             <TableCell sx={{ border: "1px solid grey", width: 100 }}>
               MRP
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100 }}>
-              Unit Cost
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
-              Discount1
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
-              Discount 2
-            </TableCell>
+              Retail Price
+            </TableCell>           
             <TableCell sx={{ border: "1px solid grey", width: 100 }}>
               Taxable Value
             </TableCell>
@@ -137,12 +127,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.qty} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.freeQty} fullWidth size="small" />
-              </TableCell>
+              </TableCell>             
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
@@ -151,18 +136,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.unitCost} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.discount1} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.discount2} fullWidth size="small" />
-              </TableCell>
+                <TextField value={row.retailPrice} fullWidth size="small" />
+              </TableCell>             
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
@@ -200,11 +175,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               </TableCell>
             </TableRow>
           ))}
-         
+          
           <TableRow>
             <TableCell
               sx={{ border: "1px solid grey" }}
-              colSpan={9}
+              colSpan={6}
               align="right"
             >
               Total
@@ -231,8 +206,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
   );
 }
 
-function PurchaseOrder() {
-  const breadcrumbs = ["Purchase", "Add Purchase"];
+function SalesEstimate() {
+  const breadcrumbs = ["Sales", "Sales Estimate"];
   const [tables, setTables] = useState([
     {
       id: Date.now(),
@@ -295,7 +270,7 @@ function PurchaseOrder() {
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
           <Typography variant="h4" gutterBottom>
-            Purchase
+          Sales
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
@@ -310,15 +285,12 @@ function PurchaseOrder() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Invoice No." fullWidth />
-            </Grid>
+              <TextField label="Estimate No." fullWidth />
+            </Grid>           
             <Grid item xs={3}>
-              <TextField label="Supplier Invoice No." fullWidth />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField select label="Supplier Name" fullWidth>
-                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
-                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
+              <TextField select label="Customer Name" fullWidth>
+                <MenuItem value="CustomerName1">CustomerName1</MenuItem>
+                <MenuItem value="CustomerName2">CustomerName2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
@@ -450,7 +422,6 @@ function PurchaseOrder() {
               Save & Print
             </Button>
 
-            <PurchasePayment />
           </Grid>
         </Grid>
       </Paper>
@@ -458,4 +429,4 @@ function PurchaseOrder() {
   );
 }
 
-export default PurchaseOrder;
+export default SalesEstimate;
