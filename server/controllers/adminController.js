@@ -571,3 +571,34 @@ export async function deleteSupplierLedgerController(req,res){
         return res.send(error(500, err.message));
     }
 }
+
+
+//supplier ledger controller
+
+export async function  getSupplierLedgerController(req,res){
+    try {
+        const { supplierName,fromDate,toDate } = req.query;
+    
+        if(!supplierName || !fromDate || !toDate){
+            return res.status(404).send("all fields are required");
+        }
+        const query = {
+          date: {
+            $gte: new Date(fromDate),
+            $lte: new Date(toDate),
+          },
+        };
+    
+        
+        if (supplierName) {
+          query.supplierName = supplierName;
+        }
+    
+       
+        const purchases = await Purchase.find(query);
+        
+        res.json(purchases);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+}

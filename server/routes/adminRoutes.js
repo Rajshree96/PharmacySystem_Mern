@@ -6,6 +6,7 @@ import { addManufacturerController, addManufacturerLedgerController, addMedicine
     deleteSupplierLedgerController, 
     getAllManufacturerController, getAllManufacturerLedgerController, getAllMedicineController, getAllSupplierController, 
     getAllSupplierLedgerController, 
+    getSupplierLedgerController, 
     updateManufacturerController, updateManufacturerLedgerController, updateMedicineController, updateSupplierController, 
     updateSupplierLedgerController
 } 
@@ -43,5 +44,8 @@ adminRouter.get('/getAllSupplierLedger',checkUserLogin,isAdmin, getAllSupplierLe
 adminRouter.put('/supplierLedger/:_id',checkUserLogin,isAdmin,updateSupplierLedgerController);
 adminRouter.delete('/supplierLedger/:_id',checkUserLogin,isAdmin,deleteSupplierLedgerController);
 
+// get data for supplier Ledger 
+
+adminRouter.get('/getsupplierLedger',checkUserLogin,isAdmin,getSupplierLedgerController);
 
 export default adminRouter;
