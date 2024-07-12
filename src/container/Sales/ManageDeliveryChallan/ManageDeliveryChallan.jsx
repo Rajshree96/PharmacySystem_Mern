@@ -45,9 +45,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const ManageSalesInvoice = () => {
+const ManageDeliveryChallan = () => {
   const [customers, setCustomers] = useState([]);
-  const breadcrumbs = ["Sales", "Manage Sales Invoice"];
+  const breadcrumbs = ["Sales", "Manage Delivery Challan"];
 
   const fetchCustomer = async () => {
     try {
@@ -117,7 +117,7 @@ const ManageSalesInvoice = () => {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell>Invoice No.</StyledTableCell>
+                  <StyledTableCell>Challan No.</StyledTableCell>
                   <StyledTableCell>Customer Name</StyledTableCell>
                   <StyledTableCell>Place of Supply</StyledTableCell>
                   <StyledTableCell>Due Date</StyledTableCell>
@@ -172,4 +172,4 @@ const ManageSalesInvoice = () => {
   );
 };
 
-export default ManageSalesInvoice;
+export default ManageDeliveryChallan;

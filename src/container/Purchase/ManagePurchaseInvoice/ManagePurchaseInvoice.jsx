@@ -47,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const ManagePurchaseOrder = () => {
   const [customers, setCustomers] = useState([]);
-  const breadcrumbs = ["Purchase", "Manage Purchase"];
+  const breadcrumbs = ["Purchase", "Manage Purchase Invoice"];
 
   const fetchCustomer = async () => {
     try {

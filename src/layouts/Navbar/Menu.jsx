@@ -32,8 +32,8 @@ const suppliers = [
   { label: "Supplier Ledger" },
 ];
 const purchases = [
-  { label: "Purchase Order" },
-  { label: "Manage Purchase Order" },
+  { label: "Purchase Invoice" },
+  { label: "Manage Purchase Invoice" },
   { label: "Purchase Return" },
 ];
 const sales = [
@@ -42,6 +42,7 @@ const sales = [
   { label: "Sales Invoice" },
   { label: "Manage Sales Invoice" },
   { label: "Delivery Challan" },
+  { label: "Manage Delivery Challan" },
   { label: "POS Sale" },
   { label: "GUI Sale" },
   { label: "Sales Return" },

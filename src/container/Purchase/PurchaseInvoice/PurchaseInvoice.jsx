@@ -232,7 +232,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
 }
 
 function PurchaseOrder() {
-  const breadcrumbs = ["Purchase", "Add Purchase"];
+  const breadcrumbs = ["Purchase", "Purchase Invoice"];
   const [tables, setTables] = useState([
     {
       id: Date.now(),
