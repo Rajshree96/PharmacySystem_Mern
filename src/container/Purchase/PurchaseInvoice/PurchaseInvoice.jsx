@@ -17,6 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Modal,
 } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
@@ -24,6 +25,17 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
 import PurchasePayment from "./PurchasePayment";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 
 const initialRow = {
   sno: "",
@@ -60,46 +72,46 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               S.no
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Item Code
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Product Name
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Qty
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Free Qty
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               MRP
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Unit Cost
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Discount1
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
-              Discount 2
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Discount2
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Taxable Value
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               CGST
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               SGST
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               IGST
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Total Value
             </TableCell>
           </TableRow>
@@ -200,14 +212,38 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               </TableCell>
             </TableRow>
           ))}
-         
+
           <TableRow>
             <TableCell
-              sx={{ border: "1px solid grey" }}
-              colSpan={9}
+              sx={{ border: "1px solid grey", fontWeight: 700, fontSize: '15px' }}
+              colSpan={1}
               align="right"
             >
               Total
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              {calculateTotal("qty")}
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
             </TableCell>
             <TableCell sx={{ border: "1px solid grey" }}>
               {calculateTotal("taxableValue")}
@@ -244,6 +280,9 @@ function PurchaseOrder() {
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [charges, setCharges] = useState([]);
+  const [totalCharges, setTotalCharges] = useState(0);
+  const [currentCharge, setCurrentCharge] = useState('');
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -267,27 +306,41 @@ function PurchaseOrder() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
   };
-  const handleAddOtherCharge = () => {
-    setOtherCharges([...otherCharges, ""]);
-  };
+  // const handleAddOtherCharge = () => {
+  //   setOtherCharges([...otherCharges, ""]);
+  // };
 
-  const handleOtherChargeChange = (index, value) => {
-    const updatedCharges = [...otherCharges];
-    updatedCharges[index] = value;
-    setOtherCharges(updatedCharges);
-  };
+  // const handleOtherChargeChange = (index, value) => {
+  //   const updatedCharges = [...otherCharges];
+  //   updatedCharges[index] = value;
+  //   setOtherCharges(updatedCharges);
+  // };
 
   const resumeRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleAddCharge = () => {
+    const charge = parseFloat(currentCharge);
+    if (!isNaN(charge)) {
+      setCharges([...charges, charge]);
+      setTotalCharges(totalCharges + charge);
+      setCurrentCharge('');
+    }
+    setOpen(false);
+  };
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -396,33 +449,42 @@ function PurchaseOrder() {
           <Grid item md={4} xs={4}>
             <Button
               variant="contained"
-              onClick={handleAddOtherCharge}
+              onClick={handleOpen}
               sx={{ mb: 2 }}
               startIcon={<AddCircle />}
               className="btn-design"
             >
               Add Other Charges
             </Button>
-            {otherCharges.map((charge, index) => (
-              <TextField
-                key={index}
-                value={charge}
-                onChange={(e) => handleOtherChargeChange(index, e.target.value)}
-                fullWidth
-                sx={{ mb: 2 }}
-                label={`Other Charge ${index + 1}`}
-              />
-            ))}
+            <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
+              <Grid container spacing={1} sx={style} maxWidth="xl">
+                <Grid item md={12} xs={12} >
+                  <Typography variant="h6" sx={{fontWeight:700}}> Other Charges</Typography>
+                  <TextField                    
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    label="Other Charges"
+                    value={currentCharge}
+                    onChange={(e) => setCurrentCharge(e.target.value)}
+                  />
+                  <Button className="btn-design" sx={{color:'white', mt:2}}  onClick={handleAddCharge}>Add</Button>
+                </Grid>
+              </Grid>
+            </Modal>           
             <TextField label="Narration" fullWidth multiline rows={3} />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
-              style={{ display: "grid", justifyContent: "center", gap: "15px" }}
-            >
+              style={{ display: "grid", justifyContent: "center", gap: "15px" }} >            
               <TextField label="Gross Amount" fullWidth />
               <TextField label="GST Amount" fullWidth />
-              <TextField label="Other Charge" fullWidth />
+              <TextField label="Other Charge" 
+               value={totalCharges}
+               InputProps={{
+                 readOnly: true,
+               }}
+              fullWidth />
               <TextField label="Net Amount" fullWidth />
             </Box>
           </Grid>

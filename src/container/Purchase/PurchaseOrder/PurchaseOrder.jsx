@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import PurchaseOrderPayment from "./PurchaseOrderPayment";
 
 const style = {
   position: "absolute",
@@ -82,13 +83,22 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Qty
-            </TableCell>         
+            </TableCell> 
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Free Qty
+            </TableCell>                 
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               MRP
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Retail Price
-            </TableCell>           
+              Unit Cost
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Discount1
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Discount2
+            </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Taxable Value
             </TableCell>
@@ -139,17 +149,32 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.qty} fullWidth size="small" />
-              </TableCell>            
+              </TableCell>     
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.freeQty} fullWidth size="small" />
+              </TableCell>        
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.mrp} fullWidth size="small" />
-              </TableCell>  
+              </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.retailPrice} fullWidth size="small" />
-              </TableCell>                            
+                <TextField value={row.unitCost} fullWidth size="small" />
+              </TableCell>
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.discount1} fullWidth size="small" />
+              </TableCell>
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.discount2} fullWidth size="small" />
+              </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
@@ -207,7 +232,16 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
-            </TableCell> 
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
             </TableCell>            
@@ -233,8 +267,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
   );
 }
 
-function SalesInvoice() {
-  const breadcrumbs = ["Sales", "Sales Invoice"];
+function PurchaseOrder() {
+  const breadcrumbs = ["Purchase", "Purchase Order"];
   const [tables, setTables] = useState([
     {
       id: Date.now(),
@@ -314,7 +348,7 @@ function SalesInvoice() {
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
           <Typography variant="h4" gutterBottom>
-          Sales
+          Purchase
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
@@ -329,12 +363,12 @@ function SalesInvoice() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Estimate No." fullWidth />
+              <TextField label="Order No." fullWidth />
             </Grid>           
             <Grid item xs={3}>
-              <TextField select label="Customer Name" fullWidth>
-                <MenuItem value="CustomerName1">CustomerName1</MenuItem>
-                <MenuItem value="CustomerName2">CustomerName2</MenuItem>
+              <TextField select label="Supplier Name" fullWidth>
+                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
+                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
@@ -430,8 +464,7 @@ function SalesInvoice() {
                     value={currentCharge}
                     onChange={(e) => setCurrentCharge(e.target.value)}
                   />
-                  <Button className="btn-design" sx={{color:'white', mt:2}} 
-                  onClick={handleAddCharge}>Add</Button>
+                  <Button className="btn-design" sx={{color:'white', mt:2}}  onClick={handleAddCharge}>Add</Button>
                 </Grid>
               </Grid>
             </Modal>   
@@ -444,12 +477,11 @@ function SalesInvoice() {
             >
               <TextField label="Gross Amount" fullWidth />
               <TextField label="GST Amount" fullWidth />
-              <TextField label="Other Charge" 
-              fullWidth 
-              value={totalCharges}
-              InputProps={{
-                readOnly: true,
-              }} />
+              <TextField label="Other Charge" fullWidth
+               value={totalCharges}
+               InputProps={{
+                 readOnly: true,
+               }} />
               <TextField label="Net Amount" fullWidth />
             </Box>
           </Grid>
@@ -477,13 +509,7 @@ function SalesInvoice() {
               Save & Print
             </Button>
 
-            <Button
-              variant="contained"
-              className="btn-design"
-              // onClick={handlePrint}
-            >
-              Save & Receipt
-            </Button>
+            <PurchaseOrderPayment/>
 
           </Grid>
         </Grid>
@@ -492,4 +518,4 @@ function SalesInvoice() {
   );
 }
 
-export default SalesInvoice;
+export default PurchaseOrder;
