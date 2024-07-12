@@ -49,7 +49,7 @@ const AddMedicineTable = () => {
     fetchMedicines();
     
   }, [medicines]);
-
+ console.log(medicines);
   
   const handleVisibilityClick = (medicine) => {
     console.log("Viewing details for medicine:", medicine);
@@ -149,10 +149,10 @@ const AddMedicineTable = () => {
                   <TableCell>{medicine.medicineName}</TableCell>
                   <TableCell>{medicine.batchNo}</TableCell>
                   <TableCell>{medicine.expiryDate}</TableCell>
-                  <TableCell>{medicine.medicineCategory}</TableCell>
-                  <TableCell>{medicine.medicineType}</TableCell>
-                  <TableCell>{medicine.brand}</TableCell>
-                  <TableCell>{medicine.unit}</TableCell>
+                  <TableCell>{medicine.medicineCategory.name}</TableCell>
+                  <TableCell>{medicine.medicineType.mediType}</TableCell>
+                  <TableCell>{medicine.brand.brand}</TableCell>
+                  <TableCell>{medicine.unit.name}</TableCell>
                   <TableCell>{medicine.netWeight}</TableCell>
                   <TableCell>
                     <IconButton color="success" onClick={() => handleVisibilityClick(medicine)}>
