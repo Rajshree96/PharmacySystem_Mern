@@ -11,6 +11,10 @@ import medicineRouter from "./routes/medicineTypeRoutes.js";
 import brandRoutes from "./routes/brandRoutes.js";
 import cutomerRouter from "./routes/cutomerRoutes.js";
 import purchaseRoute from "./routes/purchaseRoutes.js";
+import paymentRouter from "./routes/paymentRoutes.js";
+import purchaseRouter from "./routes/purchaseReturnRoutes.js";
+import bankRouter from "./routes/bankRoutes.js";
+import cashRouter from "./routes/cashRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -32,6 +36,10 @@ app.use('/api/v1/medicine-type', medicineRouter);
 app.use("/api/v1/brand", brandRoutes);
 app.use("/api/v1/cutomer", cutomerRouter);
 app.use("/api/v1/purchase", purchaseRoute);
+app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/purchase-retrun", purchaseRouter);
+app.use("/api/v1/bank", bankRouter);
+app.use("/api/v1/cash", cashRouter);
 
 
 const port = process.env.PORT || 4000;
