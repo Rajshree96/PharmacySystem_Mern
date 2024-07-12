@@ -2,37 +2,26 @@ import mongoose from "mongoose";
 // import supplierModel from "./supplierModel.js";
 // import medicineModel from "./medicineModel.js";
 
-const purchaseModalSchema = new mongoose.Schema({
+const salesEstimateSchema  = new mongoose.Schema({
     date:{
         type:Date,
         default: Date.now(),
         // required:true,
     },
-    invoiceNumber:{
+    EstimateNo:{
         type:String,
         unique:true
         // required:true,
 
     },
-    supplierInvoiceNo:{
-        type:String,
-        unique:true,
-        // required:true,
-    },
-    suuplierName:{
-    //  type:mongoose.Schema.Types.ObjectId,
-    //  ref:"Supplier",
+    customerName:{
+     type:mongoose.Schema.Types.ObjectId,
+      ref:"Customer",
     //  required:true,
-    type:String,
-    // required:true,
-
     },
     placeOfSupply:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Supplier",
-        // required:true,
-        type:String,
-        // required:true,
+         type:mongoose.Schema.Types.ObjectId,
+        ref:"Supplier",
     },
     paymentTerm:{
         type:Date,
@@ -47,7 +36,7 @@ const purchaseModalSchema = new mongoose.Schema({
    transPortDetails:{
     ReceiptNo:{
         type:String,
-        // required:true,
+        //  required:true,
     },
     dispatchedThrough:{
         type:String,
@@ -84,25 +73,17 @@ const purchaseModalSchema = new mongoose.Schema({
 
    purchaseTable:{
     itemCode:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Medicine",
-        // required:true,
-        type:String,
+         type:mongoose.Schema.Types.ObjectId,
+         ref:"Medicine",
         // required:true,
 
     },
     productName:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Medicine",
-        // required:true,
-        type:String,
+         type:mongoose.Schema.Types.ObjectId,
+         ref:"Medicine",
         // required:true,
     },
     quantity:{
-        type:Number,
-        // required:true,
-    },
-    freeQuantity:{
         type:Number,
         // required:true,
     },
@@ -110,17 +91,10 @@ const purchaseModalSchema = new mongoose.Schema({
         type:Number,
         // required:true
     },
-    unitCost:{
-        type:String,
-        // required:true,
-    },
-    discount1:{
-        type:String,
-        // required:true,
-    },
-    discount2:{
-       type:String,
-    //    reuired:true,
+     retailPrice:{
+        type:Number,
+     },
+
     },
     taxableValue:{
         type:Number,
@@ -142,7 +116,7 @@ const purchaseModalSchema = new mongoose.Schema({
         type:Number,
         // required:true,
     },
-   },
+   
 
    amounts:{
     grossAmount:{
@@ -165,14 +139,7 @@ const purchaseModalSchema = new mongoose.Schema({
    Narration:{
     type:String,
    },
-   paymentStatus:{
-    type:String,
-    enum:["Success", "Failure"],
-    default:"Failure",
-    
-
-   }
 },{timestamps:true})
 
-const PurchaseModal = mongoose.model("PurchaseModal", purchaseModalSchema);
-export default PurchaseModal;
+const SalesEstimate = mongoose.model("SalesEstimate", salesEstimateSchema);
+export default SalesEstimate;
