@@ -231,8 +231,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
   );
 }
 
-function PurchaseReturn() {
-  const breadcrumbs = ["Purchase", "Purchase Return"];
+function SalesReturn() {
+  const breadcrumbs = ["Sales", "Sales Return"];
   const [tables, setTables] = useState([
     {
       id: Date.now(),
@@ -382,4 +382,4 @@ function PurchaseReturn() {
   );
 }
 
-export default PurchaseReturn;
+export default SalesReturn;

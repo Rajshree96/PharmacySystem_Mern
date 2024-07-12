@@ -23,6 +23,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import PurchasePayment from "./PurchasePayment";
 
 const initialRow = {
   sno: "",
@@ -199,8 +200,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               </TableCell>
             </TableRow>
           ))}
-          <TableRow>     
-          </TableRow>
+         
           <TableRow>
             <TableCell
               sx={{ border: "1px solid grey" }}
@@ -231,8 +231,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
   );
 }
 
-function PurchaseReturn() {
-  const breadcrumbs = ["Purchase", "Purchase Return"];
+function PurchaseOrder() {
+  const breadcrumbs = ["Purchase", "Purchase Invoice"];
   const [tables, setTables] = useState([
     {
       id: Date.now(),
@@ -299,12 +299,6 @@ function PurchaseReturn() {
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
-          <Grid item xs={3}>
-              <TextField select label="Supplier Name" fullWidth>
-                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
-                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
-              </TextField>
-            </Grid>
             <Grid item xs={3}>
               <TextField
                 label="Date"
@@ -316,8 +310,17 @@ function PurchaseReturn() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Debit Note No." fullWidth />
-            </Grid>            
+              <TextField label="Invoice No." fullWidth />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField label="Supplier Invoice No." fullWidth />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField select label="Supplier Name" fullWidth>
+                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
+                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
+              </TextField>
+            </Grid>
             <Grid item xs={3}>
               <TextField label="Place of Supply" fullWidth />
             </Grid>
@@ -338,30 +341,41 @@ function PurchaseReturn() {
                 value={dueDate}
                 InputProps={{ readOnly: true }}
               />
-            </Grid>            
-          </Grid>
-          {/* Billing Address */}
-          <Grid container spacing={2} sx={{mt:1}}>
-          <Grid item md={3} xs={3}>
-              <TextField label="Billing Address" fullWidth />
-            </Grid>
-            <Grid item md={3} xs={3}>
-              <TextField label="Select purchase" 
-              select
-              fullWidth >
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid item md={3} xs={3}>
-              <TextField label="Reason for Return" fullWidth />
             </Grid>
           </Grid>
         </Box>
         <Divider sx={{ my: 2 }} />
-    
+
+        {/* Transport Details */}
+        <Box sx={{ p: 2, mb: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Transport Details
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid item md={4} xs={4}>
+              <TransportDetails />
+            </Grid>
+            <Grid item md={4} xs={4}>
+              <TextField label="Billing Address" fullWidth />
+            </Grid>
+            <Grid item md={4} xs={4}>
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Reverse Charge"
+                fullWidth
+                value={reverseCharge}
+                onChange={(e) => setReverseCharge(e.target.value)}
+              >
+                <MenuItem value="Yes">Yes</MenuItem>
+                <MenuItem value="No">No</MenuItem>
+              </TextField>
+            </Grid>
+          </Grid>
+        </Box>
+        <Divider sx={{ my: 2 }} />
+
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
           <Typography variant="h5" gutterBottom>
@@ -377,9 +391,71 @@ function PurchaseReturn() {
           ))}
         </Box>
 
+        {/* Add Other Charges */}
+        <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
+          <Grid item md={4} xs={4}>
+            <Button
+              variant="contained"
+              onClick={handleAddOtherCharge}
+              sx={{ mb: 2 }}
+              startIcon={<AddCircle />}
+              className="btn-design"
+            >
+              Add Other Charges
+            </Button>
+            {otherCharges.map((charge, index) => (
+              <TextField
+                key={index}
+                value={charge}
+                onChange={(e) => handleOtherChargeChange(index, e.target.value)}
+                fullWidth
+                sx={{ mb: 2 }}
+                label={`Other Charge ${index + 1}`}
+              />
+            ))}
+            <TextField label="Narration" fullWidth multiline rows={3} />
+          </Grid>
+          {/* Gross Amount */}
+          <Grid item md={8} xs={8}>
+            <Box
+              style={{ display: "grid", justifyContent: "center", gap: "15px" }}
+            >
+              <TextField label="Gross Amount" fullWidth />
+              <TextField label="GST Amount" fullWidth />
+              <TextField label="Other Charge" fullWidth />
+              <TextField label="Net Amount" fullWidth />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 2 }} />
+
+        {/* Button */}
+        <Grid container spacing={2}>
+          <Grid
+            item
+            md={12}
+            xs={12}
+            sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
+          >
+            <Button variant="contained" className="btn-design">
+              Save
+            </Button>
+
+            <Button
+              variant="contained"
+              className="btn-design"
+              onClick={handlePrint}
+            >
+              Save & Print
+            </Button>
+
+            <PurchasePayment />
+          </Grid>
+        </Grid>
       </Paper>
     </Container>
   );
 }
 
-export default PurchaseReturn;
+export default PurchaseOrder;

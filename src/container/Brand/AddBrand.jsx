@@ -3,7 +3,7 @@ import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import BreadcrumbContainer from "../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import DynamicButton from "../../common-components/ButtonContainer/DynamicButton";
 import {Add, Edit} from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 import AllBrandModals from "../../common-components/Modals/brandModals/AllBrandModals";
 import AddBrandTable from "../../common-components/TableContainer/brandTable/AddBrandTable";
 

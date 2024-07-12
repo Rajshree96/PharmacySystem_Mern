@@ -32,16 +32,20 @@ const suppliers = [
   { label: "Supplier Ledger" },
 ];
 const purchases = [
-  { label: "Purchase Order" },
-  { label: "Manage Purchase Order" },
+  { label: "Purchase Invoice" },
+  { label: "Manage Purchase Invoice" },
   { label: "Purchase Return" },
 ];
 const sales = [
-  { label: "Sale Invoice" },
-  { label: "Manage Invoice" },
+  { label: "Sales Estimate" },
+  { label: "Manage Sales Estimate" },
+  { label: "Sales Invoice" },
+  { label: "Manage Sales Invoice" },
+  { label: "Delivery Challan" },
+  { label: "Manage Delivery Challan" },
   { label: "POS Sale" },
   { label: "GUI Sale" },
-  { label: "Sale Return" },
+  { label: "Sales Return" },
 ];
 const customers = [{ label: "Add Customer" }, { label: "Manage Customer" },{ label: "Customer Ledger" }];
 const accounts = [
@@ -470,6 +474,7 @@ const Menu = ({ setActiveComponent }) => {
             <ListItemButton
               key={item.label}
               sx={{ pl: 6, minHeight: 32, color: "white" }}
+              onClick={() => handleMenuItemClick(item.label)}
             >
               <ListItemText
                 primary={item.label}

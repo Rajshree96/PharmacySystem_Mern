@@ -26,7 +26,7 @@ const AddBrandTable = () => {
 
      const [ rows, setRows ] = useState([]);
      const [selectedBrand, setSelectedBrand] = useState(null); // State to store the selected brand for editing
-     const navigate = Navigate();
+    //  const navigate = Navigate();
      useEffect(()=>{
         const fetchData = async () => {
             try {
@@ -45,7 +45,7 @@ const AddBrandTable = () => {
         // Handle edit logic
         const selected = rows.find((row) => row._id === id);
         setSelectedBrand(selected); 
-        navigate('/edit');
+        // navigate('/edit');
         console.log(`Edit row with id: ${id}`);
     };
 
