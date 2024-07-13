@@ -117,7 +117,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               }}
             >
               MRP
-            </TableCell>           
+            </TableCell>
             <TableCell
               sx={{
                 border: "1px solid grey",
@@ -127,7 +127,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               }}
             >
               Retail Price
-            </TableCell>           
+            </TableCell>
             <TableCell
               sx={{
                 border: "1px solid grey",
@@ -186,12 +186,28 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sno} fullWidth size="small" sx={{border:'none'}}/>
+                <TextField value={row.sno} fullWidth size="small"
+                  InputProps={{
+                    sx: {
+                      border: 'none',
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        border: 'none',
+                      },
+                    },
+                  }} />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.itemCode} fullWidth size="small" />
+                <TextField value={row.itemCode} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }} />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
@@ -212,42 +228,106 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.qty} fullWidth size="small" />
+                <TextField value={row.qty} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.mrp} fullWidth size="small" />
-              </TableCell>              
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.retailPrice} fullWidth size="small" />
-              </TableCell>             
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.taxableValue} fullWidth size="small" />
+                <TextField value={row.mrp} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.cgst} fullWidth size="small" />
+                <TextField value={row.retailPrice} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sgst} fullWidth size="small" />
+                <TextField value={row.taxableValue} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.igst} fullWidth size="small" />
+                <TextField value={row.cgst} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.totalValue} fullWidth size="small" />
+                <TextField value={row.sgst} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
+              </TableCell>
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.igst} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
+              </TableCell>
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.totalValue} fullWidth size="small" 
+                InputProps={{
+                  sx: {
+                    border: 'none',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                }}/>
               </TableCell>
               <TableCell sx={{ border: "1px solid white" }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -285,7 +365,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
               -
-            </TableCell>            
+            </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
               -
             </TableCell>
@@ -345,14 +425,14 @@ function PosSale() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
   };
- 
+
   const resumeRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
