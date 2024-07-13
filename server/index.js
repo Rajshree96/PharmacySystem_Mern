@@ -15,6 +15,11 @@ import paymentRouter from "./routes/paymentRoutes.js";
 import purchaseRouter from "./routes/purchaseReturnRoutes.js";
 import bankRouter from "./routes/bankRoutes.js";
 import cashRouter from "./routes/cashRoutes.js";
+import salesRouter from "./routes/salesEstimateRoutes.js";
+import salesInvoice from "./routes/salesRoutes.js";
+import deliveryChallanRouter from "./routes/deliveryChallanRoutes.js";
+import salesReturnRouter from "./routes/salesReturnRoutes.js";
+import posRouter from "./routes/posRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -40,6 +45,11 @@ app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/purchase-retrun", purchaseRouter);
 app.use("/api/v1/bank", bankRouter);
 app.use("/api/v1/cash", cashRouter);
+app.use("/api/v1/sales", salesRouter);
+app.use("/api/v1/salesinvoice", salesInvoice);
+app.use("/api/v1/deliveryChallan", deliveryChallanRouter);
+app.use("/api/v1/salesreturn", salesReturnRouter);
+app.use("/api/v1/pos", posRouter);
 
 
 const port = process.env.PORT || 4000;

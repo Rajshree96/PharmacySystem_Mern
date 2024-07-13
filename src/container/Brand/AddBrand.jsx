@@ -2,27 +2,29 @@ import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import BreadcrumbContainer from "../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import DynamicButton from "../../common-components/ButtonContainer/DynamicButton";
-import {Add, Edit} from "@mui/icons-material";
-// import {useNavigate} from "react-router-dom";
+import {Add} from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom";
 import AllBrandModals from "../../common-components/Modals/brandModals/AllBrandModals";
 import AddBrandTable from "../../common-components/TableContainer/brandTable/AddBrandTable";
 
 const AddBrand = () => {
-    //const navigate = useNavigate();
+    // const navigate = useNavigate();
     const breadcrumbs = [ "Add Brand", "Add Brand" ];
     const [ modalType, setModalType ] = useState("");
+    const [ selectedBrand, setSelectedBrand ] = useState(null); // State to store selected brand for editing
 
-    const handleOpenModal = (type) => {
+    const handleOpenModal = (type, brand = null) => {
         setModalType(type);
+        setSelectedBrand(brand);
     };
 
     const handleCloseModal = () => {
         setModalType("");
+        setSelectedBrand(null);
     };
 
     return (
         <>
-        
             <Box sx={{bgcolor: "#e0f7fa", py: 5}}>
                 <Container>
                     <Paper elevation={6} sx={{p: 4}}>
@@ -49,12 +51,18 @@ const AddBrand = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <AddBrandTable/>
+                        <AddBrandTable onEditBrand={(brand) => handleOpenModal("edit brand", brand)} />
                     </Paper>
                 </Container>
             </Box>
             {/* Modals */}
-            <AllBrandModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} style={{ width: '100%' }}/>
+            <AllBrandModals
+                open={!!modalType}
+                handleClose={handleCloseModal}
+                formType={modalType}
+                brandData={selectedBrand}
+                style={{width: "100%"}}
+            />
         </>
     );
 };
