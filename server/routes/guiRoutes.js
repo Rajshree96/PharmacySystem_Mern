@@ -1,5 +1,5 @@
 import express from "express";
-import { createGUI } from "../controllers/guiController";
+import { createGUI } from "../controllers/guiController.js";
 
 
 const guiRouter = express.Router();

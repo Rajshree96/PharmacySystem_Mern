@@ -64,5 +64,5 @@ const GUISchema = new mongoose.Schema({
    }],
 },{timestamps:true})
 
-const POS  = mongoose.model("POS", POSSchema);
-export default POS;
+const GUI  = mongoose.model("GUI", GUISchema);
+export default GUI;

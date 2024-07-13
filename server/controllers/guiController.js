@@ -1,6 +1,5 @@
 import GUI from '../models/guiModel.js';
-import Customer from '../models/customerModal.js';
-import medicineModel from '../models/medicineModel.js';
+
 
 
 
