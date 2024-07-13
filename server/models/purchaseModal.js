@@ -16,9 +16,9 @@ const purchaseModalSchema = new mongoose.Schema({
     supplierInvoiceNo:{
         type:String,
         unique:true,
-         required:true,
+        required:true,
     },
-    suuplierName:{
+    supplierName:{
     type:String,
     required:true,
 
@@ -127,7 +127,7 @@ const purchaseModalSchema = new mongoose.Schema({
     },
     totalValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
    },
 
@@ -146,30 +146,28 @@ const purchaseModalSchema = new mongoose.Schema({
      },
      netAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
    },
    Narration:{
     type:String,
    },
-   paymentStatus:{
-    type:String,
-    enum:["Success", "Failure"],
-    default:"Failure",
+//    paymentStatus:{
+//     type:String,
+//     enum:["Success", "Failure"],
+//     default:"Failure",
+// },
+//    voucherType:{
+//     type:String,
+//     enum:["purchase","payout","purchase return"] 
+//    },
+//    particular:{
+//     type:String,
+//     enum:["Opening Bal","By Purchase","To Bank"],
+//    },
+
 },
-   voucherType:{
-    type:String,
-    enum:["purchase","payout","purchase return"] 
-   },
-   particular:{
-    type:String,
-    enum:["Opening Bal","By Purchase","To Bank"],
-   },
-   
-   
-
-
-},{timestamps:true})
+{timestamps:true})
 
 const PurchaseModal = mongoose.model("PurchaseModal", purchaseModalSchema);
 export default PurchaseModal;

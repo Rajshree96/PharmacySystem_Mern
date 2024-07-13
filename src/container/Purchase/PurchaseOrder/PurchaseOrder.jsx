@@ -283,6 +283,7 @@ function PurchaseOrder() {
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
+  
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -497,7 +498,7 @@ function PurchaseOrder() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" >
               Save
             </Button>
 
