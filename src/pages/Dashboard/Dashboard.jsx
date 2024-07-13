@@ -41,7 +41,7 @@ import AddCustomer from "../../container/Customer/AddCustomer/AddCustomer";
 import ManageCustomer from "../../container/Customer/ManageCustomer/ManageCustomer";
 import CustomerLedger from "../../container/Customer/CustomerLedger/CustomerLedger";
 
-//Purchase 
+//Purchase
 import PurchaseInvoice from "../../container/Purchase/PurchaseInvoice/PurchaseInvoice";
 import ManagePurchaseInvoice from "../../container/Purchase/ManagePurchaseInvoice/ManagePurchaseInvoice";
 import PurchaseReturn from "../../container/Purchase/PurchaseReturn/PurchaseReturn";
@@ -58,6 +58,14 @@ import ManageDeliveryChallan from "../../container/Sales/ManageDeliveryChallan/M
 import PosSale from "../../container/Sales/POS_Sale/PosSale";
 import GuiSale from "../../container/Sales/GUI_Sale/GuiSale";
 import SalesReturn from "../../container/Sales/SalesReturn/SalesReturn";
+
+//Account
+import PaymentIn from "../../container/Account/PaymentIn/PaymentIn";
+import PaymentOut from "../../container/Account/PaymentOut/PaymentOut";
+import Expense from "../../container/Account/Expense/Expense";
+import FixedAssets from "../../container/Account/FixedAssets/FixedAssets";
+import Income from "../../container/Account/Income/Income";
+import Journal from "../../container/Account/Journal/Journal";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -167,34 +175,46 @@ const Dashboard = () => {
         return <ManageCustomer />;
       case "Customer Ledger":
         return <CustomerLedger />;
-        case "Purchase Order":
+      case "Purchase Order":
         return <PurchaseOrder />;
       case "Manage Purchase Order":
-      return <ManagePurchaseOrder />;
+        return <ManagePurchaseOrder />;
       case "Purchase Invoice":
         return <PurchaseInvoice />;
       case "Manage Purchase Invoice":
-      return <ManagePurchaseInvoice />;
+        return <ManagePurchaseInvoice />;
       case "Purchase Return":
-      return <PurchaseReturn />;
+        return <PurchaseReturn />;
       case "Sales Estimate":
         return <SalesEstimate />;
       case "Manage Sales Estimate":
-      return <ManageSalesEstimate />;
+        return <ManageSalesEstimate />;
       case "Sales Invoice":
-      return <SalesInvoice />;
+        return <SalesInvoice />;
       case "Manage Sales Invoice":
-      return <ManageSalesInvoice />;
+        return <ManageSalesInvoice />;
       case "Delivery Challan":
-      return <DeliveryChallan />;
+        return <DeliveryChallan />;
       case "Manage Delivery Challan":
-      return <ManageDeliveryChallan />;
+        return <ManageDeliveryChallan />;
       case "POS Sale":
-      return <PosSale />;
+        return <PosSale />;
       case "GUI Sale":
-      return <GuiSale />;
+        return <GuiSale />;
       case "Sales Return":
-      return <SalesReturn />;
+        return <SalesReturn />;
+      case "Payment In":
+        return <PaymentIn />;
+      case "Payment Out":
+        return <PaymentOut />;
+      case "Expense":
+        return <Expense />;
+      case "Income":
+        return <Income />;
+      case "Journal":
+        return <Journal />;
+      case "Fixed Assets":
+        return <FixedAssets />;
       default:
         return null;
     }
