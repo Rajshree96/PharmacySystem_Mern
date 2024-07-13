@@ -12,7 +12,7 @@ import {
   InputLabel,
   Radio,
   Select,
-MenuItem,
+  MenuItem,
 } from "@mui/material";
 
 const style = {
@@ -26,7 +26,7 @@ const style = {
   p: 4,
 };
 
-const PurchasePayment = () => {
+const PurchaseOrderPayment = () => {
   const [open, setOpen] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState("");
   const [dispatchedThrough, setDispatchedThrough] = useState("");
@@ -61,24 +61,25 @@ const PurchasePayment = () => {
   const [onlineTransaction, setOnlineTransaction] = useState("");
   const [chequeTransaction, setChequeTransaction] = useState("");
 
+
   return (
     <div>
       <Button variant="contained" className="btn-design" onClick={handleOpen}>
         Save & Payment
       </Button>
-      <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>          
+      <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
         <Grid container spacing={1} sx={style} maxWidth="xl">
-            <Grid item md={12} xs={12}>
+          <Grid item md={12} xs={12}>
             <Typography variant="h6" component="h2">
-            Payment
-          </Typography>
-            </Grid>
+              Payment
+            </Typography>
+          </Grid>
           <FormControl component="fieldset">
             <RadioGroup
               row
               value={paymentType}
               onChange={handlePaymentTypeChange}
-              sx={{m: 1}}
+              sx={{ m: 1 }}
             >
               <FormControlLabel value="cash" control={<Radio />} label="Cash" />
               <FormControlLabel value="bank" control={<Radio />} label="Bank" />
@@ -115,11 +116,11 @@ const PurchasePayment = () => {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <TextField
-                   select 
-                  label="Payment Method"
-                   fullWidth
+                    select
+                    label="Payment Method"
+                    fullWidth
                     value={paymentMethod}
-                    onChange={handlePaymentMethodChange}                    
+                    onChange={handlePaymentMethodChange}
                   >
                     <MenuItem value="online">Online</MenuItem>
                     <MenuItem value="cheque">Cheque</MenuItem>
@@ -127,9 +128,10 @@ const PurchasePayment = () => {
                 </Grid>
 
                 {paymentMethod === "online" && (
-                  <Grid container spacing={2} sx={{m: 1}}>
+                  <Grid container spacing={2} sx={{ m: 1 }}>
                     <Grid item xs={12} sm={6}>
-                    <TextField
+                      {/* <TextField label="Transaction Date" fullWidth /> */}
+                      <TextField
                         label="Transaction Date"
                         type="date"
                         fullWidth
@@ -157,9 +159,10 @@ const PurchasePayment = () => {
                 )}
 
                 {paymentMethod === "cheque" && (
-                  <Grid container spacing={2} sx={{m: 1}}>
+                  <Grid container spacing={2} sx={{ m: 1 }}>
                     <Grid item xs={12} sm={6}>
-                    <TextField
+                      {/* <TextField label="Transaction Date" fullWidth /> */}
+                      <TextField
                         label="Transaction Date"
                         type="date"
                         fullWidth
@@ -194,4 +197,4 @@ const PurchasePayment = () => {
   );
 };
 
-export default PurchasePayment;
+export default PurchaseOrderPayment;
