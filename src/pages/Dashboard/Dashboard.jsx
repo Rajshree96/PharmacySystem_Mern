@@ -45,6 +45,8 @@ import CustomerLedger from "../../container/Customer/CustomerLedger/CustomerLedg
 import PurchaseInvoice from "../../container/Purchase/PurchaseInvoice/PurchaseInvoice";
 import ManagePurchaseInvoice from "../../container/Purchase/ManagePurchaseInvoice/ManagePurchaseInvoice";
 import PurchaseReturn from "../../container/Purchase/PurchaseReturn/PurchaseReturn";
+import PurchaseOrder from "../../container/Purchase/PurchaseOrder/PurchaseOrder";
+import ManagePurchaseOrder from "../../container/Purchase/ManagePurchaseOrder/ManagePurchaseOrder";
 
 //Sales
 import SalesEstimate from "../../container/Sales/SalesEstimate/SalesEstimate";
@@ -165,6 +167,10 @@ const Dashboard = () => {
         return <ManageCustomer />;
       case "Customer Ledger":
         return <CustomerLedger />;
+        case "Purchase Order":
+        return <PurchaseOrder />;
+      case "Manage Purchase Order":
+      return <ManagePurchaseOrder />;
       case "Purchase Invoice":
         return <PurchaseInvoice />;
       case "Manage Purchase Invoice":
@@ -182,7 +188,7 @@ const Dashboard = () => {
       case "Delivery Challan":
       return <DeliveryChallan />;
       case "Manage Delivery Challan":
-        return <ManageDeliveryChallan />;
+      return <ManageDeliveryChallan />;
       case "POS Sale":
       return <PosSale />;
       case "GUI Sale":

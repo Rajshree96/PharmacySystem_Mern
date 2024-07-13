@@ -28,7 +28,7 @@ const AllBrandModals = ({open, handleClose, formType, style}) => {
         switch (formType) {
             case "add brand":
                 // return <AddUnitsModal unitName={unitName} setUnitName={setUnitName} />;
-                return <AddBrandModal/>;
+                return <AddBrandModal brandName={brandName} setBrandName={setBrandName} setSuccess={setSuccess}/>;
             default:
                 return null;
         }
@@ -58,16 +58,11 @@ const AllBrandModals = ({open, handleClose, formType, style}) => {
                         <DialogContentText sx={{mt: 2}}>
                             {formType.charAt(0).toUpperCase() + formType.slice(1)} added successfully!
                         </DialogContentText>
+                        <Button onClick={handleDialogClose} variant="contained" color="primary">Close</Button>
                     </Box>
                 )}
             </DialogContent>
-            {/* <DialogActions>
-        {!success ? (
-          <Button onClick={handleSubmit} variant="contained" color="primary">Add</Button>
-        ) : (
-          <Button onClick={handleDialogClose} variant="contained" color="primary">Close</Button>
-        )}
-      </DialogActions> */}
+           
         </Dialog>
     );
 };

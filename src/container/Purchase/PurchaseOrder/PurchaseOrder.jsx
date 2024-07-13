@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import PurchaseOrderPayment from "./PurchaseOrderPayment";
 
 const style = {
   position: "absolute",
@@ -41,8 +42,11 @@ const initialRow = {
   itemCode: "",
   productName: "",
   qty: "",
+  freeQty: "",
   mrp: "",
   retailPrice: "",
+  discount1: "",
+  discount2: "",
   taxableValue: "",
   cgst: "",
   sgst: "",
@@ -68,114 +72,46 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               S.no
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Item Code
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Product Name
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Qty
-            </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            </TableCell> 
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Free Qty
+            </TableCell>                 
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               MRP
-            </TableCell>           
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
-              Retail Price
-            </TableCell>           
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Unit Cost
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Discount1
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Discount2
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Taxable Value
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               CGST
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               SGST
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               IGST
             </TableCell>
-            <TableCell
-              sx={{
-                border: "1px solid grey",
-                width: 100,
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
-            >
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Total Value
             </TableCell>
           </TableRow>
@@ -213,17 +149,32 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.qty} fullWidth size="small" />
-              </TableCell>
+              </TableCell>     
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.freeQty} fullWidth size="small" />
+              </TableCell>        
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.mrp} fullWidth size="small" />
-              </TableCell>              
+              </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.retailPrice} fullWidth size="small" />
-              </TableCell>             
+                <TextField value={row.unitCost} fullWidth size="small" />
+              </TableCell>
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.discount1} fullWidth size="small" />
+              </TableCell>
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.discount2} fullWidth size="small" />
+              </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
@@ -264,31 +215,36 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
 
           <TableRow>
             <TableCell
-              sx={{
-                border: "1px solid grey",
-                fontWeight: 700,
-                fontSize: "15px",
-              }}
+              sx={{ border: "1px solid grey", fontWeight: 700, fontSize: '15px' }}
               colSpan={1}
               align="right"
             >
               Total
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               {calculateTotal("qty")}
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
-              -
-            </TableCell>            
-            <TableCell sx={{ border: "1px solid grey", textAlign: "center" }}>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
             </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>            
             <TableCell sx={{ border: "1px solid grey" }}>
               {calculateTotal("taxableValue")}
             </TableCell>
@@ -311,17 +267,22 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
   );
 }
 
-function GuiSale() {
-  const breadcrumbs = ["Sales", "Gui Sales"];
+function PurchaseOrder() {
+  const breadcrumbs = ["Purchase", "Purchase Order"];
   const [tables, setTables] = useState([
     {
       id: Date.now(),
       rows: [initialRow],
     },
   ]);
+  const [otherCharges, setOtherCharges] = useState([]);
+  const [reverseCharge, setReverseCharge] = useState("No");
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [charges, setCharges] = useState([]);
+  const [totalCharges, setTotalCharges] = useState(0);
+  const [currentCharge, setCurrentCharge] = useState('');
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -352,11 +313,34 @@ function GuiSale() {
       )
     );
   };
- 
+  const handleAddOtherCharge = () => {
+    setOtherCharges([...otherCharges, ""]);
+  };
+
+  const handleOtherChargeChange = (index, value) => {
+    const updatedCharges = [...otherCharges];
+    updatedCharges[index] = value;
+    setOtherCharges(updatedCharges);
+  };
+
   const resumeRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleAddCharge = () => {
+    const charge = parseFloat(currentCharge);
+    if (!isNaN(charge)) {
+      setCharges([...charges, charge]);
+      setTotalCharges(totalCharges + charge);
+      setCurrentCharge('');
+    }
+    setOpen(false);
+  };
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -364,7 +348,7 @@ function GuiSale() {
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
           <Typography variant="h4" gutterBottom>
-            Sales
+          Purchase
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
@@ -379,12 +363,63 @@ function GuiSale() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Invoice No." fullWidth />
+              <TextField label="Order No." fullWidth />
+            </Grid>           
+            <Grid item xs={3}>
+              <TextField select label="Supplier Name" fullWidth>
+                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
+                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
+              </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Customer Name" fullWidth>
-                <MenuItem value="CustomerName1">CustomerName1</MenuItem>
-                <MenuItem value="CustomerName2">CustomerName2</MenuItem>
+              <TextField label="Place of Supply" fullWidth />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                label="Payment Terms"
+                fullWidth
+                value={paymentTerms}
+                onChange={(e) => setPaymentTerms(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                label="Due Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={dueDate}
+                InputProps={{ readOnly: true }}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Divider sx={{ my: 2 }} />
+
+        {/* Transport Details */}
+        <Box sx={{ p: 2, mb: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Transport Details
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid item md={4} xs={4}>
+              <TransportDetails />
+            </Grid>
+            <Grid item md={4} xs={4}>
+              <TextField label="Billing Address" fullWidth />
+            </Grid>
+            <Grid item md={4} xs={4}>
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Reverse Charge"
+                fullWidth
+                value={reverseCharge}
+                onChange={(e) => setReverseCharge(e.target.value)}
+              >
+                <MenuItem value="Yes">Yes</MenuItem>
+                <MenuItem value="No">No</MenuItem>
               </TextField>
             </Grid>
           </Grid>
@@ -406,14 +441,47 @@ function GuiSale() {
           ))}
         </Box>
 
-        {/* Gross Amount */}
+        {/* Add Other Charges */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
-          <Grid item md={12} xs={12}>
+          <Grid item md={4} xs={4}>
+            <Button
+              variant="contained"
+              onClick={handleOpen}
+              sx={{ mb: 2 }}
+              startIcon={<AddCircle />}
+              className="btn-design"
+            >
+              Add Other Charges
+            </Button>
+            <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
+              <Grid container spacing={1} sx={style} maxWidth="xl">
+                <Grid item md={12} xs={12} >
+                  <Typography variant="h6" sx={{fontWeight:700}}> Other Charges</Typography>
+                  <TextField                    
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    label="Other Charges"
+                    value={currentCharge}
+                    onChange={(e) => setCurrentCharge(e.target.value)}
+                  />
+                  <Button className="btn-design" sx={{color:'white', mt:2}}  onClick={handleAddCharge}>Add</Button>
+                </Grid>
+              </Grid>
+            </Modal>   
+            <TextField label="Narration" fullWidth multiline rows={3} />
+          </Grid>
+          {/* Gross Amount */}
+          <Grid item md={8} xs={8}>
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
               <TextField label="Gross Amount" fullWidth />
               <TextField label="GST Amount" fullWidth />
+              <TextField label="Other Charge" fullWidth
+               value={totalCharges}
+               InputProps={{
+                 readOnly: true,
+               }} />
               <TextField label="Net Amount" fullWidth />
             </Box>
           </Grid>
@@ -429,6 +497,10 @@ function GuiSale() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
+            <Button variant="contained" className="btn-design">
+              Save
+            </Button>
+
             <Button
               variant="contained"
               className="btn-design"
@@ -436,6 +508,9 @@ function GuiSale() {
             >
               Save & Print
             </Button>
+
+            <PurchaseOrderPayment/>
+
           </Grid>
         </Grid>
       </Paper>
@@ -443,4 +518,4 @@ function GuiSale() {
   );
 }
 
-export default GuiSale;
+export default PurchaseOrder;

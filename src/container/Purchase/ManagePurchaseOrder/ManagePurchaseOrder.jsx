@@ -45,9 +45,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const ManagePurchaseInvoice = () => {
+const ManagePurchaseOrder = () => {
   const [customers, setCustomers] = useState([]);
-  const breadcrumbs = ["Purchase", "Manage Purchase Invoice"];
+  const breadcrumbs = ["Purchase", "Manage Purchase Order"];
 
   const fetchCustomer = async () => {
     try {
@@ -117,8 +117,7 @@ const ManagePurchaseInvoice = () => {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell>Invoice No.</StyledTableCell>
-                  <StyledTableCell>Supplier Invoice No.</StyledTableCell>
+                  <StyledTableCell>Order No.</StyledTableCell>
                   <StyledTableCell>Supplier Name</StyledTableCell>
                   <StyledTableCell>Place of Supply</StyledTableCell>
                   <StyledTableCell>Due Date</StyledTableCell>
@@ -134,7 +133,6 @@ const ManagePurchaseInvoice = () => {
                     <StyledTableCell component="th" scope="row">
                       {customers.customerDetails.name}
                     </StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.address}</StyledTableCell>
                     <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
                     <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
                     <StyledTableCell>{customers.customerDetails.statutoryDetails.stateRegistrationType}</StyledTableCell>
@@ -174,4 +172,4 @@ const ManagePurchaseInvoice = () => {
   );
 };
 
-export default ManagePurchaseInvoice;
+export default ManagePurchaseOrder;

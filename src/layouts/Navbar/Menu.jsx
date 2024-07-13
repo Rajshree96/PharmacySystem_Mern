@@ -25,13 +25,18 @@ const manufactuer = [
   { label: "Manage Manufacturer" },
   { label: "Manufacturer Ledger" },
 ];
-const brands = [{ label: "Add Brand" }, { label: "Manage Brand" }];
+const brands = [
+  { label: "Add Brand" }, 
+  // { label: "Manage Brand" }
+];
 const suppliers = [
   { label: "Add Supplier" },
   { label: "Manage Supplier" },
   { label: "Supplier Ledger" },
 ];
 const purchases = [
+  { label: "Purchase Order" },
+  { label: "Manage Purchase Order" },
   { label: "Purchase Invoice" },
   { label: "Manage Purchase Invoice" },
   { label: "Purchase Return" },

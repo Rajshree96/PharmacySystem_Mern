@@ -59,46 +59,46 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               S.no
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Item Code
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Product Name
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Qty
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            </TableCell>      
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Free Qty
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            </TableCell>    
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               MRP
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Unit Cost
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Discount1
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
-              Discount 2
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
+              Discount2
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Taxable Value
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               CGST
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               SGST
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               IGST
             </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100 }}>
+            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Total Value
             </TableCell>
           </TableRow>
@@ -136,12 +136,12 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.qty} fullWidth size="small" />
-              </TableCell>
+              </TableCell>  
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.freeQty} fullWidth size="small" />
-              </TableCell>
+              </TableCell>          
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
@@ -199,16 +199,39 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               </TableCell>
             </TableRow>
           ))}
-          <TableRow>     
-          </TableRow>
+
           <TableRow>
             <TableCell
-              sx={{ border: "1px solid grey" }}
-              colSpan={9}
+              sx={{ border: "1px solid grey", fontWeight: 700, fontSize: '15px' }}
+              colSpan={1}
               align="right"
             >
               Total
             </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              {calculateTotal("qty")}
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>    
+            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
+              -
+            </TableCell>        
             <TableCell sx={{ border: "1px solid grey" }}>
               {calculateTotal("taxableValue")}
             </TableCell>
