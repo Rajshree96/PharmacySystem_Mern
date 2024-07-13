@@ -96,14 +96,14 @@ const AddBrandTable = () => {
                 </TableBody>
             </Table>
         </TableContainer>
-        {selectedBrand && (
+        {/* {selectedBrand && (
         
             <AddBrandModal
                 isOpen={true} // Example: Assuming you have a prop to control modal visibility
                 brandData={selectedBrand} // Pass selectedBrand data to AddBrandModal
                 editBrand={handleEditBrand} // Pass editBrand function to handle edit operation
-            />
-        )}
+            /> */}
+        {/* )} */}
         </>
     );
 };
