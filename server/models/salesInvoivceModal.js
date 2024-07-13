@@ -2,138 +2,141 @@ import mongoose from "mongoose";
 // import supplierModel from "./supplierModel.js";
 // import medicineModel from "./medicineModel.js";
 
-const salesEstimateSchema  = new mongoose.Schema({
+const salesInvoiceSchema = new mongoose.Schema({
     date:{
-        type:Date,
-        default: Date.now(),
-        // required:true,
-    },
-    EstimateNo:{
         type:String,
-        unique:true
-        // required:true,
+        default: Date.now(),
+        required:true,
+    },
+    invoiceNumber:{
+        type:String,
+        unique:true,
+        required:true,
 
     },
     customerName:{
-     type:mongoose.Schema.Types.ObjectId,
-      ref:"Supplier",
-    //  required:true,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Customer",
+        required:true,
     },
+
     placeOfSupply:{
-         type:mongoose.Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Supplier",
+        required:true,
     },
     paymentTerm:{
         type:Date,
         default:Date.now(),
-        // required:true,
+         required:true,
     },
     dueDate:{
         type:Date,
-        // required:true,
+        required:true,
     },
 
    transPortDetails:{
     ReceiptNo:{
         type:String,
-        //  required:true,
+        required:true,
     },
     dispatchedThrough:{
         type:String,
-        // required:true,
+        required:true,
     },
     destination:{
         type:String,
-        // required:true,
+        required:true,
     },
     carrierName:{
         type:String,
-        // required:true,
+        required:true,
     },
     billOfLanding:{
         type:String,
-        // required:true,
+        required:true,
     },
   motorNo:{
     type:String,
-    // required:true,
+    required:true,
   },
 
 
    },
    billingAddress:{
     type:String,
-    // required:true,
+     required:true,
    },
    reverseCharge:{
     type:String,
     enum:["Yes", "No"],
-    // required:true,
+    required:true,
    },
 
-   purchaseTable:[{
+   purchaseTable:{
     itemCode:{
-         type:mongoose.Schema.Types.ObjectId,
-         ref:"Medicine",
-        // required:true,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Medicine",
+        required:true,
+        // type:String,
+        //  required:true,
 
     },
     productName:{
-         type:mongoose.Schema.Types.ObjectId,
-         ref:"Medicine",
-        // required:true,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Medicine",
+        required:true,
     },
     quantity:{
         type:Number,
-        // required:true,
+        required:true,
     },
     mrp:{
         type:Number,
-        // required:true
+        required:true
     },
-     retailPrice:{
-        type:Number,
-     },
-
-    }],
+    retailPrice:{
+        type:String,
+        required:true,
+    },
     taxableValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
     cGst:{
         type:String,
-        // required:true,
+        required:true,
     },
     sGst:{
        type:String,
-    //    required:true,
+       required:true,
     },
     iGst:{
         type:String,
-        // required:true,
+        required:true,
     },
     totalValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
-   
+   },
 
    amounts:{
     grossAmount:{
         type:Number,
-        // required:true,
+        required:true,
     },
      gstAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
      otherCharge:{
         type:Number,
-        // required:true,
+        required:true,
      },
      netAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
    },
    Narration:{
@@ -141,5 +144,5 @@ const salesEstimateSchema  = new mongoose.Schema({
    },
 },{timestamps:true})
 
-const SalesEstimate = mongoose.model("SalesEstimate", salesEstimateSchema);
-export default SalesEstimate;
+const SalesInvoice = mongoose.model("SalesInvoice", salesInvoiceSchema);
+export default SalesInvoice;
