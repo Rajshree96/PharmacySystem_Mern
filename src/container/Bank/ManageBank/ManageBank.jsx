@@ -152,9 +152,7 @@ const ManageBank = () => {
                           label="delete"
                           icon={Delete}
                           onClick={() => handleDeleteClick(customers._id)}
-
-                        />
-                        
+                        />                        
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>
