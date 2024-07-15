@@ -243,7 +243,7 @@ const AddMedicineModal = ({ setSuccess }) => {
         retailMargin: priceDetails.retailMargin,
         wholesalerDiscount: priceDetails.wholesalerDiscount,
         wholesalerPrice: priceDetails.wholesalerPrice,
-        wholesalerMargin: priceDetails.wholesaleMargin || 0,
+        wholesalerMargin: priceDetails.wholesalerMargin || 0,
         minimumStock: priceDetails.minimumStock,
       },
       openingBalance: {
@@ -264,9 +264,108 @@ const AddMedicineModal = ({ setSuccess }) => {
       
     }
   };
+
+  const calculateLandingCost = (price, gst, taxIncluded) => {
+    const priceNumber = parseFloat(price);
+    const gstNumber = parseFloat(gst);
+
+    if (isNaN(priceNumber) || isNaN(gstNumber)) {
+        return ''; // Return empty string if price or gst is not a number
+    }
+
+    let landingCost;
+    if (taxIncluded) {
+        landingCost = (priceNumber / (100 + gstNumber)) * 100;
+    } else {
+        landingCost = (priceNumber / 100) * (100 + gstNumber);
+    }
+
+    
+    if (typeof landingCost === 'number') {
+        return landingCost.toFixed(2); 
+    } else {
+        return ''; 
+    }
+};
+
   
- 
- 
+  const handlePurchaseTaxIncludedChange = (e) => {
+    const taxIncluded = e.target.checked;
+    setPurchaseTaxIncluded(taxIncluded);
+    const landingCost = calculateLandingCost(priceDetails.purchasePrice, gstRate, taxIncluded);
+    setPriceDetails((prevDetails) => ({ ...prevDetails, landingCost}));
+  };
+
+  const handleGstRateChange = (e) => {
+    const gstRateValue = e.target.value;
+    setGstRate(gstRateValue);
+    const landingCost = calculateLandingCost(priceDetails.purchasePrice, gstRateValue, purchaseTaxIncluded);
+    setPriceDetails((prevDetails) => ({ ...prevDetails, landingCost }));
+  };
+
+  const handlePurchasePriceChange = (event) => {
+   
+    const purchasePrice = event.target.value;
+    setPriceDetails((prevDetails) => ({ ...prevDetails, purchasePrice }));
+    
+    const landingCost = calculateLandingCost(purchasePrice, gstRate, purchaseTaxIncluded);
+    setPriceDetails((prevDetails) => ({ ...prevDetails, landingCost}));
+  };
+  
+  
+  const calculateRetailPriceAndMargin = (retailDiscount, mrp) => {
+    const retailDiscountNumber = parseFloat(retailDiscount);
+    const mrpNumber = parseFloat(mrp);
+  
+    if (isNaN(retailDiscountNumber) || isNaN(mrpNumber)) {
+        return {
+            retailPrice: '',
+            retailMargin: ''
+        };
+    }
+
+    const retailPrice = mrpNumber - (mrpNumber * (retailDiscountNumber / 100));
+    const retailMargin = Math.abs(retailPrice - mrpNumber);
+  
+    return {
+        retailPrice: retailPrice.toFixed(2),
+        retailMargin: retailMargin.toFixed(2)
+    };
+};
+  const handleRetailDiscountChange = (e)=>{
+    const retailDiscount = e.target.value;
+    setPriceDetails((prevDetails) => ({ ...prevDetails, retailDiscount }));
+    const { retailPrice, retailMargin } = calculateRetailPriceAndMargin(retailDiscount,priceDetails.mrp);
+    setPriceDetails((prevDetails) => ({ ...prevDetails, retailPrice ,retailMargin}));
+  }
+
+  const calculateWholeSalePriceAndMargin = (wholesalerDiscount, mrp) => {
+    const wholesalerDiscountNumber = parseFloat(wholesalerDiscount);
+    const mrpNumber = parseFloat(mrp);
+  
+    if (isNaN(wholesalerDiscountNumber) || isNaN(mrpNumber)) {
+        return {
+          wholesalerPrice: '',
+          wholesalerMargin: ''
+        };
+    }
+
+    const wholesalerPrice = mrpNumber - (mrpNumber * (wholesalerDiscountNumber / 100));
+    const wholesalerMargin = Math.abs(wholesalerPrice - mrpNumber);
+    console.log(wholesalerMargin);
+    return {
+      wholesalerPrice: wholesalerPrice.toFixed(2),
+      wholesalerMargin: wholesalerMargin.toFixed(2)
+    };
+};
+const handleWholeSaleDiscountChange = (e)=>{
+  const wholesalerDiscount = e.target.value;
+  setPriceDetails((prevDetails) => ({ ...prevDetails, wholesalerDiscount }));
+  const { wholesalerPrice, wholesalerMargin} = calculateWholeSalePriceAndMargin(wholesalerDiscount,priceDetails.mrp);
+  setPriceDetails((prevDetails) => ({ ...prevDetails, wholesalerPrice ,wholesalerMargin}));
+}
+
+
   return (
     <>
 
@@ -395,7 +494,9 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={gstRate}
-            onChange={(e) => setGstRate(e.target.value)}
+            //  onChange={(e)=>setGstRate(e.target.value)}
+             
+            onChange={handleGstRateChange}
             select
           >
             <MenuItem value="5%">5%</MenuItem>
@@ -408,7 +509,8 @@ const AddMedicineModal = ({ setSuccess }) => {
             control={
               <Checkbox
                 checked={purchaseTaxIncluded}
-                onChange={(e) => setPurchaseTaxIncluded(e.target.checked)}
+                onChange={handlePurchaseTaxIncludedChange}
+                // onChange={(e) => setPurchaseTaxIncluded(e.target.checked)}
               />
             }
             label="Purchase Tax Included"
@@ -518,11 +620,12 @@ const AddMedicineModal = ({ setSuccess }) => {
           <TextField
             margin="dense"
             label="Purchase Price"
-            type="text"
+            
             fullWidth
             variant="standard"
             value={priceDetails.purchasePrice}
-      onChange={(e) => setPriceDetails({ ...priceDetails, purchasePrice: e.target.value })}
+          
+           onChange={handlePurchasePriceChange}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -533,7 +636,7 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={priceDetails.landingCost}
-            onChange={(e) => setPriceDetails({ ...priceDetails, landingCost: e.target.value })}
+           
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -555,7 +658,8 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={priceDetails.retailDiscount}
-            onChange={(e) => setPriceDetails({ ...priceDetails, retailDiscount: e.target.value })}
+            onChange={handleRetailDiscountChange}
+            // onChange={(e) => setPriceDetails({ ...priceDetails, retailDiscount: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -566,7 +670,7 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={priceDetails.retailPrice}
-            onChange={(e) => setPriceDetails({ ...priceDetails, retailPrice: e.target.value })}
+            // onChange={(e) => setPriceDetails({ ...priceDetails, retailPrice: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -577,7 +681,7 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={priceDetails.retailMargin}
-            onChange={(e) => setPriceDetails({ ...priceDetails, retailMargin: e.target.value })}
+            // onChange={(e) => setPriceDetails({ ...priceDetails, retailMargin: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -588,7 +692,7 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={priceDetails.wholesalerDiscount}
-            onChange={(e) => setPriceDetails({ ...priceDetails, wholesalerDiscount: e.target.value })}
+            onChange={handleWholeSaleDiscountChange}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -599,7 +703,7 @@ const AddMedicineModal = ({ setSuccess }) => {
             fullWidth
             variant="standard"
             value={priceDetails.wholesalerPrice}
-            onChange={(e) => setPriceDetails({ ...priceDetails, wholesalerPrice: e.target.value })}
+            // onChange={(e) => setPriceDetails({ ...priceDetails, wholesalerPrice: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -609,8 +713,8 @@ const AddMedicineModal = ({ setSuccess }) => {
             type="text"
             fullWidth
             variant="standard"
-            value={priceDetails.wholesaleMargin}
-            onChange={(e) => setPriceDetails({ ...priceDetails, wholesaleMargin: e.target.value })}
+            value={priceDetails.wholesalerMargin}
+            // onChange={(e) => setPriceDetails({ ...priceDetails, wholesaleMargin: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} sm={4}>

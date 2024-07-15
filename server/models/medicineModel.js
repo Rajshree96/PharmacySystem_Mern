@@ -15,7 +15,7 @@ const PriceDetailsSchema = new mongoose.Schema({
     required: true,
   },
   retailDiscount: {
-    type: Number,
+    type: String,
     required: true,
   },
   retailPrice: {
@@ -27,7 +27,7 @@ const PriceDetailsSchema = new mongoose.Schema({
     required: true,
   },
   wholesalerDiscount: {
-    type: Number,
+    type: String,
     required: true,
   },
   wholesalerPrice: {
@@ -80,24 +80,30 @@ const MedicineSchema = new mongoose.Schema({
     required: true,
   },
   medicineCategory: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Category",
     required: true,
   },
   medicineType: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"MedicineType",
+    required: true,   
   },
   manufacturer: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Manufacturer",
+    required: true, 
+    
   },
   brand: {
-    type: String,
-    required: true,
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Brand",
+    required: true, 
   },
   unit: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Unit",
+    required: true, 
   },
   gstRate: {
     type: String,
@@ -110,6 +116,7 @@ const MedicineSchema = new mongoose.Schema({
   salesTaxIncluded: {
     type: Boolean,
     required: true,
+    default:false,
   },
   productPhotos: {
     type: [String], 
@@ -119,13 +126,17 @@ const MedicineSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  netWeight:{
+    type: Number,
+    required: true,
+  },
   batchNo: {
     type: String,
     required: true,
     unique: true,
   },
   expiryDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   ingredients: {

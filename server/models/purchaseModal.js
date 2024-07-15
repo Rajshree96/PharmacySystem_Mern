@@ -4,115 +4,102 @@ import mongoose from "mongoose";
 
 const purchaseModalSchema = new mongoose.Schema({
     date:{
-        type:Date,
-        default: Date.now(),
-        // required:true,
+        type:String,
+        required:true,
     },
     invoiceNumber:{
         type:String,
-        unique:true
-        // required:true,
+        unique:true,
+        required:true,
 
     },
     supplierInvoiceNo:{
         type:String,
         unique:true,
-        // required:true,
+        required:true,
     },
-    suuplierName:{
-    //  type:mongoose.Schema.Types.ObjectId,
-    //  ref:"Supplier",
-    //  required:true,
+    supplierName:{
     type:String,
-    // required:true,
+    required:true,
 
     },
     placeOfSupply:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Supplier",
-        // required:true,
         type:String,
-        // required:true,
+        required:true,
     },
     paymentTerm:{
-        type:Date,
-        default:Date.now(),
-        // required:true,
+        type:String,
+        required:true,
+        
     },
     dueDate:{
-        type:Date,
-        // required:true,
+        type:String,
+        required:true,
     },
 
    transPortDetails:{
     ReceiptNo:{
         type:String,
-        // required:true,
+        required:true,
     },
     dispatchedThrough:{
         type:String,
-        // required:true,
+        required:true,
     },
     destination:{
         type:String,
-        // required:true,
+        required:true,
     },
     carrierName:{
         type:String,
-        // required:true,
+        required:true,
     },
     billOfLanding:{
         type:String,
-        // required:true,
+        required:true,
     },
   motorNo:{
     type:String,
-    // required:true,
+    required:true,
   },
 
 
    },
    billingAddress:{
     type:String,
-    // required:true,
+    required:true,
    },
    reverseCharge:{
     type:String,
     enum:["Yes", "No"],
-    // required:true,
+    required:true,
    },
 
    purchaseTable:{
     itemCode:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Medicine",
-        // required:true,
         type:String,
-        // required:true,
-
+        required:true,  
     },
     productName:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Medicine",
-        // required:true,
         type:String,
-        // required:true,
+        required:true,  
+       
     },
     quantity:{
         type:Number,
-        // required:true,
+        required:true,
     },
     freeQuantity:{
         type:Number,
-        // required:true,
+        required:true,
     },
     mrp:{
         type:Number,
-        // required:true
+        required:true
     },
     unitCost:{
         type:String,
-        // required:true,
+        required:true,
     },
     discount1:{
         type:String,
@@ -124,7 +111,7 @@ const purchaseModalSchema = new mongoose.Schema({
     },
     taxableValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
     cGst:{
         type:String,
@@ -140,18 +127,18 @@ const purchaseModalSchema = new mongoose.Schema({
     },
     totalValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
    },
 
    amounts:{
     grossAmount:{
         type:Number,
-        // required:true,
+        required:true,
     },
      gstAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
      otherCharge:{
         type:Number,
@@ -159,20 +146,28 @@ const purchaseModalSchema = new mongoose.Schema({
      },
      netAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
    },
    Narration:{
     type:String,
    },
-   paymentStatus:{
-    type:String,
-    enum:["Success", "Failure"],
-    default:"Failure",
-    
+//    paymentStatus:{
+//     type:String,
+//     enum:["Success", "Failure"],
+//     default:"Failure",
+// },
+//    voucherType:{
+//     type:String,
+//     enum:["purchase","payout","purchase return"] 
+//    },
+//    particular:{
+//     type:String,
+//     enum:["Opening Bal","By Purchase","To Bank"],
+//    },
 
-   }
-},{timestamps:true})
+},
+{timestamps:true})
 
 const PurchaseModal = mongoose.model("PurchaseModal", purchaseModalSchema);
 export default PurchaseModal;

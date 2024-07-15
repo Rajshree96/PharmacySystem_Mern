@@ -3,88 +3,92 @@ import manufacturerModel from "../models/manufacturerModel.js";
 import supplierModel from "../models/supplierModel.js";
 import manufacturerLedgerModel from "../models/manufacturerLedgerModel.js";
 import supplierLedgerModel from "../models/supplierLedgerModel.js";
+import Category from "../models/categoryModel.js";
+import Brand from "../models/BrandModal.js";
+import Unit from "../models/unitsModel.js"
+import MedicineType from "../models/medicineTypeModel.js";
+import mongoose from "mongoose";
 import { error,success } from "../utills/responseWrapper.js";
 
 
-//controllers related to medicine
 export async function addMedicineController(req, res) {
     try {
-        
-        const {
-            itemCode,
-            medicineName,
-            medicineCategory,
-            medicineType,
-            manufacturer,
-            brand,
-            unit,
-            gstRate,
-            purchaseTaxIncluded,
-            salesTaxIncluded,
-            productPhotos,
-            description,
-            batchNo,
-            expiryDate,
-            ingredients,
-            priceDetails,
-            openingBalance,
-        } = req.body;
-      
-        if (
-            !itemCode || !medicineName || !medicineCategory || !medicineType ||
-            !manufacturer || !brand || !unit || !gstRate  ||
-            !purchaseTaxIncluded  || !salesTaxIncluded || 
-            !productPhotos || !description || !batchNo || !expiryDate ||
-            !ingredients || !priceDetails || !openingBalance
-        ) {
-            return res.send(error(400, "All fields are required."));
-        }
+      const {
+        itemCode,
+        medicineName,
+        medicineCategory,
+        medicineType,
+        manufacturer,
+        brand,
+        unit,
+        gstRate,
+        purchaseTaxIncluded,
+        productPhotos,
+        description,
+        netWeight,
+        batchNo,
+        expiryDate,
+        ingredients,
+        priceDetails,
+        openingBalance,
+      } = req.body;
+  
 
+      if (
+        !itemCode || !medicineName || !medicineCategory || !medicineType ||
+        !manufacturer || !brand || !unit || !gstRate  ||
+        !purchaseTaxIncluded  || 
+        !productPhotos || !description || !batchNo || !expiryDate ||
+        !ingredients || !priceDetails || !openingBalance
+    ) {
+        return res.send(error(400, "All fields are required."));
+    }
 
-        
-        const newMedicine = new medicineModel({
-            itemCode,
-            medicineName,
-            medicineCategory,
-            medicineType,
-            manufacturer,
-            brand,
-            unit,
-            gstRate,
-            purchaseTaxIncluded,
-            salesTaxIncluded,
-            productPhotos,
-            description,
-            batchNo,
-            expiryDate,
-            ingredients,
-            priceDetails,
-            openingBalance,
-        });
-
-       
-        await newMedicine.save();
-
-       
-        return res.send(success(201, "Medicine added successfully"));
+    
+  
+      // Create new medicine
+      const newMedicine =  medicineModel({
+        itemCode,
+        medicineName,
+        medicineCategory: medicineCategory,
+        medicineType: medicineType,
+        manufacturer: manufacturer,
+        brand: brand,
+        unit: unit,
+        gstRate,
+        purchaseTaxIncluded,
+        productPhotos,
+        description,
+        netWeight,
+        batchNo,
+        expiryDate,
+        ingredients,
+        priceDetails,
+        openingBalance,
+      });
+  
+      // Save to database
+      const savedMedicine = await newMedicine.save();
+  
+      return res.send(success(201, "Medicine added successfully"));
     } catch (err) {
         return res.send(error(500, err.message));
     }
-}
-
-
-export async function getAllMedicineController(req, res) {
+  };
+  export async function getAllMedicineController(req, res) {
     try {
-        
-        const medicines = await medicineModel.find();
-
-       
-        return res.send(success(200,  medicines));
+      const medicines = await medicineModel.find()
+        .populate('medicineCategory')
+        .populate('medicineType')
+        .populate('manufacturer')
+        .populate('brand')
+        .populate('unit');
+  
+      return res.send(success(200, medicines));
     } catch (err) {
-        
-        return res.send(error(500, err.message));
+      return res.send(error(500, err.message));
     }
-}
+  }
 
 
 export async function updateMedicineController(req, res) {
@@ -570,4 +574,35 @@ export async function deleteSupplierLedgerController(req,res){
         
         return res.send(error(500, err.message));
     }
+}
+
+
+//supplier ledger controller
+
+export async function  getSupplierLedgerController(req,res){
+    try {
+        const { supplierName,fromDate,toDate } = req.query;
+    
+        if(!supplierName || !fromDate || !toDate){
+            return res.status(404).send("all fields are required");
+        }
+        const query = {
+          date: {
+            $gte: new Date(fromDate),
+            $lte: new Date(toDate),
+          },
+        };
+    
+        
+        if (supplierName) {
+          query.supplierName = supplierName;
+        }
+    
+       
+        const purchases = await Purchase.find(query);
+        
+        res.json(purchases);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
 }

@@ -20,6 +20,7 @@ import salesInvoice from "./routes/salesRoutes.js";
 import deliveryChallanRouter from "./routes/deliveryChallanRoutes.js";
 import salesReturnRouter from "./routes/salesReturnRoutes.js";
 import posRouter from "./routes/posRoutes.js";
+import guiRouter from "./routes/guiRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -50,6 +51,7 @@ app.use("/api/v1/salesinvoice", salesInvoice);
 app.use("/api/v1/deliveryChallan", deliveryChallanRouter);
 app.use("/api/v1/salesreturn", salesReturnRouter);
 app.use("/api/v1/pos", posRouter);
+app.use('/api/v1/gui',guiRouter);
 
 
 const port = process.env.PORT || 4000;
