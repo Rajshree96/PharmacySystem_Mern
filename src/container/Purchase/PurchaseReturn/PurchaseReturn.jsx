@@ -423,10 +423,10 @@ function PurchaseReturn() {
               <TextField label="Select purchase" 
               select
               fullWidth >
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
               </TextField>
             </Grid>
             <Grid item md={3} xs={3}>
@@ -443,6 +443,7 @@ function PurchaseReturn() {
           </Typography>
           {tables.map((table) => (
             <ProductTable
+            fullWidth
               key={table.id}
               rows={table.rows}
               onAddRow={() => handleAddRow(table.id)}
