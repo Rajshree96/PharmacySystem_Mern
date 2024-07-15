@@ -59,11 +59,7 @@ const productOptions = [
   { value: "product2", label: "Product 2" },
   { value: "product3", label: "Product 3" },
 ];
-const billOptions = [
-  { value: "101", label: "101" },
-  { value: "102", label: "102" },
-  { value: "103", label: "103" },
-];
+
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   const calculateTotal = (key) => {
