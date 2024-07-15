@@ -21,20 +21,9 @@ import {
 } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
-import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import SearchProduct from "./SearchProduct";
 
 const initialRow = {
   sno: "",
@@ -414,6 +403,10 @@ function GuiSale() {
             Sales
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
+
+          {/* Search by Products */}
+         <SearchProduct />
+
           <Grid container spacing={2}>
             <Grid item xs={3}>
               <TextField
