@@ -43,9 +43,7 @@ const initialRow = {
   qty: "",
   freeQty: "",
   mrp: "",
-  retailPrice: "",
-  discount1: "",
-  discount2: "",
+  retailPrice: "",  
   taxableValue: "",
   cgst: "",
   sgst: "",
@@ -87,14 +85,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               MRP
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Unit Cost
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Discount1
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Discount2
-            </TableCell>
+              Retail Price
+            </TableCell>           
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Taxable Value
             </TableCell>
@@ -154,18 +146,8 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.unitCost} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.discount1} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.discount2} fullWidth size="small" />
-              </TableCell>
+                <TextField value={row.retailPrice} fullWidth size="small" />
+              </TableCell>             
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
@@ -223,13 +205,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
-              -
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
-              -
-            </TableCell>
+            </TableCell>           
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
             </TableCell>            
