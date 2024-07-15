@@ -56,11 +56,16 @@ const productOptions = [
   { value: "product3", label: "Product 3" },
 ];
 
-function ProductTable({ rows, onAddRow, onRemoveRow }) {
+function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
       .toFixed(2);
+  };
+  const handleInputChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    onRowChange(updatedRows);
   };
 
   return (
@@ -186,19 +191,27 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sno} fullWidth size="small" />
+                <TextField value={row.sno} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "sno", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.itemCode} fullWidth size="small" />
+                <TextField value={row.itemCode} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "itemCode", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <Select
                   value={row.productName}
-                  onChange={(e) => (row.productName = e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, "productName", e.target.value)
+                  }
                   fullWidth
                   size="small"
                 >
@@ -212,42 +225,66 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.qty} fullWidth size="small" />
+                <TextField value={row.qty} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "qty", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.mrp} fullWidth size="small" />
+                <TextField value={row.mrp} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "mrp", e.target.value)
+                }/>
               </TableCell>              
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.retailPrice} fullWidth size="small" />
+                <TextField value={row.retailPrice} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "retailPrice", e.target.value)
+                } />
               </TableCell>             
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.taxableValue} fullWidth size="small" />
+                <TextField value={row.taxableValue} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "taxableValue", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.cgst} fullWidth size="small" />
+                <TextField value={row.cgst} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "cgst", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sgst} fullWidth size="small" />
+                <TextField value={row.sgst} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "sgst", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.igst} fullWidth size="small" />
+                <TextField value={row.igst} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "igst", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.totalValue} fullWidth size="small" />
+                <TextField value={row.totalValue} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "totalValue", e.target.value)
+                }/>
               </TableCell>
               <TableCell sx={{ border: "1px solid white" }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -352,11 +389,21 @@ function GuiSale() {
       )
     );
   };
+
+  const handleRowChange = (tableId, updatedRows) => {
+    setTables(
+      tables.map((table) =>
+        table.id === tableId ? { ...table, rows: updatedRows } : table
+      )
+    );
+  };
  
   const resumeRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+
+  
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -402,6 +449,9 @@ function GuiSale() {
               rows={table.rows}
               onAddRow={() => handleAddRow(table.id)}
               onRemoveRow={(rowIndex) => handleRemoveRow(table.id, rowIndex)}
+              onRowChange={(updatedRows) =>
+                handleRowChange(table.id, updatedRows)
+              }
             />
           ))}
         </Box>

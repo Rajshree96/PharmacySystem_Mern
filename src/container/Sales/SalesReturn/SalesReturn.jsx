@@ -108,7 +108,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 <TextField value={row.sno} fullWidth size="small" 
                  onChange={(e) =>
                   handleInputChange(index, "sno", e.target.value)
-                }/>
+                } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
@@ -315,6 +315,7 @@ function SalesReturn() {
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+  
   const handleRowChange = (tableId, updatedRows) => {
     setTables(
       tables.map((table) =>
