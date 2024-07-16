@@ -15,15 +15,25 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { getAllUnits, deleteUnit, editUnit } from "../../unitapi";
 import AddUnitsModal from "../Modals/medicineModals/addMedicineModals/AddUnitsModal";
+import TablePaginations from "../TablePagination/TablePaginations";
 
 const MedicineTable = () => {
   const [units, setUnits] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentUnit, setCurrentUnit] = useState({});
   const [modalMode, setModalMode] = useState("add"); // State to manage modal mode (add or edit)
-
  
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  
   const fetchUnits = async () => {
     try {
       const response = await getAllUnits();
@@ -97,9 +107,9 @@ const MedicineTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {units.map((unit, index) => (
+            {units.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((unit, index) => (
               <TableRow key={unit._id}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                 <TableCell>{unit.name}</TableCell>
                 <TableCell>
                   <IconButton color="primary" onClick={() => handleEditUnit(unit)}>
@@ -114,6 +124,13 @@ const MedicineTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePaginations
+        count={units.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
 
        <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)}>
         <Box sx={{ padding: 4, backgroundColor: 'white', margin: 'auto', width: 550, marginTop:"140px" , borderRadius:"2%", border:"none", }}>

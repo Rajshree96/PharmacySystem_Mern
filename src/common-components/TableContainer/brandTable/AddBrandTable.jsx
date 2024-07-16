@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditButton from "../../ButtonContainer/EditButton";
 import DeleteButton from "../../ButtonContainer/DeleteButton";
 import {deleteBrand, getAllBrand} from "../../../brandApi";
+import TablePaginations from "../../TablePagination/TablePaginations";
 
 const useStyles = makeStyles((theme) => ({
     tableContainer: {
@@ -21,6 +22,16 @@ const useStyles = makeStyles((theme) => ({
 const AddBrandTable = ({onEditBrand}) => {
     const classes = useStyles();
     const [ rows, setRows ] = useState([]);
+    const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,6 +55,7 @@ const AddBrandTable = ({onEditBrand}) => {
     };
 
     return (
+        <>
         <TableContainer component={Paper} className={classes.tableContainer}>
             <Table aria-label="simple table">
                 <TableHead>
@@ -54,7 +66,7 @@ const AddBrandTable = ({onEditBrand}) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                         <TableRow key={row._id}>
                             <TableCell>{row.brand}</TableCell>
                             <TableCell>{row.manufactureId}</TableCell>
@@ -77,6 +89,14 @@ const AddBrandTable = ({onEditBrand}) => {
                 </TableBody>
             </Table>
         </TableContainer>
+        <TablePaginations
+        count={rows.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+</>
     );
 };
 

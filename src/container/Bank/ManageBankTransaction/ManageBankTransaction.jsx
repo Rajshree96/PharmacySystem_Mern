@@ -25,6 +25,7 @@ import { Edit, Delete, Visibility } from "@mui/icons-material";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,6 +50,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const ManageBankTransaction = () => {
   const [transaction, setTransaction] = useState([]);
   const breadcrumbs = ["Bank", "Manage Bank Transaction"];
+
 
   const fetchCustomer = async () => {
     try {
@@ -154,16 +156,17 @@ const ManageBankTransaction = () => {
                           label="delete"
                           icon={Delete}
                           onClick={() => handleDeleteClick(customers._id)}
-
-                        />
-                        
+                        />                    
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
+
             </Table>
           </TableContainer>
+
+         <TablePaginations count={transaction.length} />
         </Paper>
       </Box>
     </Container>

@@ -22,11 +22,23 @@ import { Edit, Delete, Add } from "@mui/icons-material";
 // import {addMedicineType,  getAllMedicineTypes, editMedicineType, deleteMedicineType } from "../../medicineapi";
 import { getAllMedicineTypes, addMedicineType, editMedicineType,  deleteMedicineType } from "../../medicineTypeapi";
 import AddMedicineTypeModal from "../Modals/medicineModals/addMedicineModals/AddMedicineTypeModal";
+import TablePaginations from "../TablePagination/TablePaginations";
 const MedicinTypeTable = () => {
   const [medicineTypes, setMedicineTypes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentMedicineType, setCurrentMedicineType] = useState({ mediType: "" });
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
     fetchMedicineTypes();
@@ -96,9 +108,9 @@ const MedicinTypeTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {medicineTypes.map((medicineType, index) => (
+            {medicineTypes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicineType, index) => (
               <TableRow key={medicineType._id}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                 <TableCell>{medicineType.mediType}</TableCell>
                 <TableCell>
                   <IconButton color="primary" onClick={() => handleOpenModal(medicineType)}>
@@ -113,6 +125,14 @@ const MedicinTypeTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePaginations
+        count={medicineTypes.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
 
       {/* <Button
         variant="contained"

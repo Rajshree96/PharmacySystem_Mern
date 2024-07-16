@@ -15,11 +15,24 @@ import {
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { addCategory, getAllCategories, editCategory, deleteCategory } from "../../categoriesApi";
 import AddCategoryModal from "../Modals/medicineModals/addMedicineModals/AddCategoryModal";
+import TablePaginations from "../TablePagination/TablePaginations";
+// import TablePaginations from "../TablePagination/TablePaginations";
 const MedicineCategoryTable = () => {
   const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState({ name: '' });
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -75,6 +88,8 @@ const MedicineCategoryTable = () => {
       console.error("Error saving category:", error);
     }
   };
+
+  
   // const handleEditCategory = (category) => {
   //   setCurrentCategory(category);
   //   setIsEditMode(true);
@@ -140,9 +155,9 @@ const MedicineCategoryTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories.map((category, index) => (
+            {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => (
               <TableRow key={category._id}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                 <TableCell>{category.name}</TableCell>
                 <TableCell>
                   <IconButton color="primary" onClick={() => handleOpenModal(category)}>
@@ -157,6 +172,14 @@ const MedicineCategoryTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePaginations
+        count={categories.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <Box
