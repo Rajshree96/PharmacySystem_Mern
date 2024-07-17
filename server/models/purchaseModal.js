@@ -39,7 +39,7 @@ const PurchaseSchema = new mongoose.Schema({
         otherCharge: { type: Array, required: true },
         netAmount: { type: String, required: true }
     },
-    Narration: { type: String, required: true }
+    Narration: { type: String }
 });
 
 const PurchaseModal = mongoose.model('Purchase', PurchaseSchema);

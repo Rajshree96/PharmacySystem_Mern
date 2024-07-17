@@ -42,6 +42,7 @@ import PurchaseModal from "../models/purchaseModal.js";
 
 export const addPurchase = async (req, res) => {
     try {
+        console.log(req.body);
         const newPurchase = new PurchaseModal({
             date: req.body.date,
             orderNo: req.body.orderNo,
@@ -62,7 +63,7 @@ export const addPurchase = async (req, res) => {
             amounts: req.body.amounts,
             Narration: req.body.Narration
         });
-
+        console.log(purchaseTable);
         // Validate the newPurchase object against the PurchaseModal schema
         const validationError = newPurchase.validateSync(); // This will synchronously validate the schema
 
