@@ -54,7 +54,7 @@ const AllMedicineModals = ({ open, handleClose, formType, selectedData, style })
                         setCategoryName={setCategoryName}
                         setSuccess={setSuccess}
                         formType={formType}
-                        categoryData={selectedData}
+                        selectedData={selectedData}
                     />
                 );
             case "add medicine":
@@ -73,7 +73,7 @@ const AllMedicineModals = ({ open, handleClose, formType, selectedData, style })
                         setMedicineTypeName={setMedicineTypeName}
                         setSuccess={setSuccess}
                         formType={formType}
-                        medicineTypeData={selectedData}
+                        selectedData={selectedData}
                     />
                 );
             case "add units":
@@ -84,7 +84,7 @@ const AllMedicineModals = ({ open, handleClose, formType, selectedData, style })
                         setUnitName={setUnitName}
                         setSuccess={setSuccess}
                         formType={formType}
-                        unitData={selectedData}
+                        selectedData={selectedData}
                     />
                 );
             default:
