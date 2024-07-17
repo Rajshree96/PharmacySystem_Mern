@@ -145,7 +145,8 @@ const Menu = ({ setActiveComponent }) => {
   //   };
 
   return (
-    <Box>
+    <Box sx={{bgcolor:'#086070',height:'250vh'}}>
+      {/* medicine  */}
       <Box
         sx={{
           bgcolor: medicine ? "#086070" : "#086070",

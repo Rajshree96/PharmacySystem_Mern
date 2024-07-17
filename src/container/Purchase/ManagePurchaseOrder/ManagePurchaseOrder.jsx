@@ -25,6 +25,7 @@ import { Edit, Delete, Visibility } from "@mui/icons-material";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,6 +49,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const ManagePurchaseOrder = () => {
   const [customers, setCustomers] = useState([]);
   const breadcrumbs = ["Purchase", "Manage Purchase Order"];
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const fetchCustomer = async () => {
     try {
@@ -127,9 +139,9 @@ const ManagePurchaseOrder = () => {
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {customers.map((customers,index) => (
+              {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customers,index) => (
                   <StyledTableRow key={customers._id}>
-                    <StyledTableCell>{index+1}</StyledTableCell>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {customers.customerDetails.name}
                     </StyledTableCell>
@@ -166,6 +178,15 @@ const ManagePurchaseOrder = () => {
               </TableBody>
             </Table>
           </TableContainer>
+         
+         <TablePaginations
+        count={customers.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
         </Paper>
       </Box>
     </Container>

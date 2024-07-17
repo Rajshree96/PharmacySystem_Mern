@@ -25,6 +25,7 @@ import { Edit, Delete, Visibility } from "@mui/icons-material";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -160,6 +161,8 @@ const ManageBank = () => {
               </TableBody>
             </Table>
           </TableContainer>
+         <TablePaginations count={bank.length} />
+
         </Paper>
       </Box>
     </Container>

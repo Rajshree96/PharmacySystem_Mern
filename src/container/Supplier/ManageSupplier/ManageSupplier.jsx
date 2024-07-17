@@ -27,6 +27,7 @@ import DeleteButton from "../../../common-components/ButtonContainer/DeleteButto
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import { useEffect } from "react";
 import axios from "axios";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -62,6 +63,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const ManageSupplier = () => {
   const [suppliers, setSuppliers] = useState([]);
   const breadcrumbs = ["Supplier", "Manage Supplier"];
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const fetchSupplier = async () => {
     try {
@@ -142,9 +154,9 @@ const ManageSupplier = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {suppliers.map((suppliers,index) => (
+                {suppliers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((suppliers,index) => (
                   <StyledTableRow key={suppliers._id}>
-                    <StyledTableCell>{index+1}</StyledTableCell>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {suppliers.name}
                     </StyledTableCell>
@@ -182,6 +194,14 @@ const ManageSupplier = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePaginations
+        count={suppliers.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
         </Paper>
       </Box>
     </Container>

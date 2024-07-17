@@ -22,6 +22,7 @@ import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import { useEffect } from "react";
 import axios from "axios"
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#086070",
@@ -66,6 +67,16 @@ const ManufacturerLedger = () => {
 
   const handleToDateChange = (event) => {
     setToDate(event.target.value);
+  };
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
   const breadcrumbs = ["Manufacturer", " Manufacturer Ledger"];
   const config = () => {
@@ -183,9 +194,9 @@ const ManufacturerLedger = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {manufacturerLedger.map((manu,index) => (
+                {manufacturerLedger.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((manu,index) => (
                   <StyledTableRow key={manu._id}>
-                    <StyledTableCell>{index+1}</StyledTableCell>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {manu.date}
                     </StyledTableCell>
@@ -199,6 +210,14 @@ const ManufacturerLedger = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePaginations
+        count={manufacturerLedger.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
         </Paper>
       </Box>
     </Container>

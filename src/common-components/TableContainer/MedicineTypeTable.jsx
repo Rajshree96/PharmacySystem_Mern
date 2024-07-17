@@ -174,13 +174,13 @@ import { Edit, Delete, Add } from "@mui/icons-material";
 //   addMedicineType,
 // } from "../../medicineTypeApi";
 // import {addMedicineType,  getAllMedicineTypes, editMedicineType, deleteMedicineType } from "../../medicineapi";
-import { getAllMedicineTypes, addMedicineType, editMedicineType,  deleteMedicineType } from "../../medicineTypeapi";
-import AddMedicineTypeModal from "../Modals/medicineModals/addMedicineModals/AddMedicineTypeModal";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditButton from "../ButtonContainer/EditButton";
 import DeleteButton from "../ButtonContainer/DeleteButton";
-const MedicinTypeTable = ({onEditMedicineType}) => {
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { getAllMedicineTypes, addMedicineType, editMedicineType,  deleteMedicineType } from "../../medicineTypeapi";
+import AddMedicineTypeModal from "../Modals/medicineModals/addMedicineModals/AddMedicineTypeModal";
+const MedicinTypeTable = ({onEditMedicineType }) => {
   const [medicineTypes, setMedicineTypes] = useState([]);
 
   useEffect(() => {
@@ -242,6 +242,8 @@ const MedicinTypeTable = ({onEditMedicineType}) => {
           </TableBody>
         </Table>
       </TableContainer>
+     
+
 
      
      

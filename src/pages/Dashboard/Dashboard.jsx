@@ -132,6 +132,7 @@ const AppBar = styled(MuiAppBar, {
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
+  backgroundColor:'red',
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
@@ -240,6 +241,12 @@ const Dashboard = () => {
     }
   };
 
+   const main = {
+      bgcolor: "#e0f7fa", 
+      minHeight: "100vh",
+      maxHeight:'auto'
+   };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -277,8 +284,10 @@ const Dashboard = () => {
         variant="persistent"
         anchor="left"
         open={open}
+        
       >
-        <DrawerHeader sx={{ bgcolor: "#086070" }}>
+         
+          <DrawerHeader sx={{ bgcolor: "#086070" }}>
           <Box
             sx={{
               display: "flex",
@@ -302,7 +311,7 @@ const Dashboard = () => {
         <Divider />
       </Drawer>
 
-      <Main open={open} sx={{ bgcolor: "#e0f7fa", height: "auto" }}>
+      <Main open={open} sx={main}>
         <DrawerHeader />
         {!activeComponent ? <DashboardCard /> : renderActiveComponent()}
       </Main>

@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  tableCellClasses,
+  tableCellClasses
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
@@ -29,6 +29,7 @@ import { Edit, Delete, Visibility, AddCircle } from "@mui/icons-material";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,7 +52,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const AddCash = () => {
   const [cash, setCash] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); 
   const [newCash, setNewCash] = useState({ name: "", openingBalance: "" });
   const breadcrumbs = ["Cash", "Add Cash"];
 
@@ -203,6 +204,8 @@ const AddCash = () => {
               </TableBody>
             </Table>
           </TableContainer>
+         <TablePaginations count={cash.length} />
+          
         </Paper>
       </Box>
 

@@ -214,9 +214,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { getAllCategories, deleteCategory } from "../../categoriesApi";
 import EditButton from "../ButtonContainer/EditButton";
 import DeleteButton from "../ButtonContainer/DeleteButton";
+import TablePaginations from "../TablePagination/TablePaginations";
 
 const MedicineCategoryTable = ({ onEditCategory }) => {
   const [categories, setCategories] = useState([]);
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -260,7 +266,7 @@ const MedicineCategoryTable = ({ onEditCategory }) => {
           <TableBody>
             {categories.map((category, index) => (
               <TableRow key={category._id}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{ index + 1}</TableCell>
                 <TableCell>{category.name}</TableCell>
                 <TableCell>
                   <EditButton
@@ -268,7 +274,6 @@ const MedicineCategoryTable = ({ onEditCategory }) => {
                     icon={EditIcon}
                     sx={{ mr: 1, color: "#1976d2" }}
                     onClick={() => onEditCategory(category)}
-                    
                   />
                   <DeleteButton
                     label={"delete"}
@@ -282,6 +287,8 @@ const MedicineCategoryTable = ({ onEditCategory }) => {
           </TableBody>
         </Table>
       </TableContainer>
+
+     
     </Box>
   );
 };

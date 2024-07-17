@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -64,6 +65,17 @@ const SupplierLedger = () => {
 
   const handleToDateChange = (event) => {
     setToDate(event.target.value);
+  };
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
   const breadcrumbs = ["Supplier", " Supplier Ledger"];
 
@@ -133,7 +145,7 @@ const SupplierLedger = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                   <StyledTableRow key={row.name}>
                     <StyledTableCell>{row.calories}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
@@ -149,6 +161,14 @@ const SupplierLedger = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePaginations
+        count={rows.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
         </Paper>
       </Box>
     </Container>
