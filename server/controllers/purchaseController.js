@@ -42,16 +42,10 @@ import PurchaseModal from "../models/purchaseModal.js";
 
 export const addPurchase = async (req, res) => {
     try {
+        console.log(req.body);
         const newPurchase = new PurchaseModal({
             date: req.body.date,
-<<<<<<< HEAD
-            invoiceNumber: req.body.invoiceNumber,
-            // supplierInvoiceNo: req.body.supplierInvoiceNo,
-            suuplierName: req.body.suuplierName,
-            supplierInvoiceNo: req.body.supplierInvoiceNo,
-=======
             orderNo: req.body.orderNo,
->>>>>>> 44796ec4f7eaeead03f7957aad93a2c7bce65847
             supplierName: req.body.supplierName,
             placeOfSupply: req.body.placeOfSupply,
             paymentTerm: req.body.paymentTerm,
@@ -69,11 +63,7 @@ export const addPurchase = async (req, res) => {
             amounts: req.body.amounts,
             Narration: req.body.Narration
         });
-<<<<<<< HEAD
-        console.log("newPurchase", newPurchase);
-
-=======
-
+        console.log(purchaseTable);
         // Validate the newPurchase object against the PurchaseModal schema
         const validationError = newPurchase.validateSync(); // This will synchronously validate the schema
 
@@ -84,7 +74,6 @@ export const addPurchase = async (req, res) => {
         }
 
         // If validation passes, save the new purchase
->>>>>>> 44796ec4f7eaeead03f7957aad93a2c7bce65847
         await newPurchase.save();
 
         // Respond with success message and the saved purchase object
@@ -112,7 +101,7 @@ export const updatePurchase = async (req, res) => {
     const updatedData = {
         date: req.body.date,
         invoiceNumber: req.body.invoiceNumber,
-        // supplierInvoiceNo: req.body.supplierInvoiceNo,
+        supplierInvoiceNo: req.body.supplierInvoiceNo,
         suuplierName: req.body.suuplierName,
         placeOfSupply: req.body.placeOfSupply,
         paymentTerm: req.body.paymentTerm,
