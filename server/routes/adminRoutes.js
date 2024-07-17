@@ -4,7 +4,7 @@ import { addManufacturerController, addManufacturerLedgerController, addMedicine
     addSupplierLedgerController, 
     deleteManufacturerController, deleteManufacturerLedgerController, deleteMedicineController, deleteSupplierController, 
     deleteSupplierLedgerController, 
-    getAllManufacturerController, getAllManufacturerLedgerController, getAllMedicineController, getAllSupplierController, 
+    getAllManufacturerController, getAllManufacturerLedgerController, getAllMedicineController, getAllMedicinePhotoController, getAllSupplierController, 
     getAllSupplierLedgerController, 
     getSupplierLedgerController, 
     updateManufacturerController, updateManufacturerLedgerController, updateMedicineController, updateSupplierController, 
@@ -18,7 +18,7 @@ adminRouter.post('/add-medicine',checkUserLogin,isAdmin, addMedicineController);
 adminRouter.get('/getallmedicine', getAllMedicineController);
 adminRouter.put('/medicine/:itemCode',checkUserLogin,isAdmin, updateMedicineController);
 adminRouter.delete('/delete/:itemCode',checkUserLogin,isAdmin, deleteMedicineController);
-
+adminRouter.get('/getMedicinePhotos',getAllMedicinePhotoController);
 //routes related to manufacturer
 adminRouter.post('/add-manufacturer',checkUserLogin,isAdmin, addManufacturerController);
 adminRouter.get('/getAllManufacturer',checkUserLogin,isAdmin, getAllManufacturerController);
