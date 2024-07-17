@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 // import supplierModel from "./supplierModel.js";
 // import medicineModel from "./medicineModel.js";
 
-const POSSchema = new mongoose.Schema({
+const payInSchema = new mongoose.Schema({
     date:{
         type:String,
-        default: Date.now(),
         required:true,
     },
     receiptNo:{
@@ -23,10 +22,21 @@ const POSSchema = new mongoose.Schema({
         enum:["Yes", "No"],
         required:true,
     },
-    paymentType:{
-        type:String,
-        enum:["Cash", "online"],
+    bank:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Bank",
         required:true,
+    },
+    paymentMethod:{
+        type:String,
+        enum:["Online", "Cheque"],
+        required:true,
+    },
+    transaction:{
+        type:String,
+    },
+    chequeNo:{
+        type:String
     },
    purchaseTable:[{
     itemCode:{
@@ -71,5 +81,5 @@ const POSSchema = new mongoose.Schema({
    }],
 },{timestamps:true})
 
-const POS  = mongoose.model("POS", POSSchema);
+const POS  = mongoose.model("POS", payInSchema);
 export default POS;

@@ -4,7 +4,7 @@ import PurchaseModal from "../models/purchaseModal.js";
 
 // Add a new payment record
 export const addPayment = async (req, res) => {
-    const { paymentType, cash, bank , invoiceNumber} = req.body;
+    const { paymentType,  cash, bank , invoiceNumber} = req.body;
     try {
 
     const purchase = await PurchaseModal.findOne({ invoiceNumber });
@@ -20,7 +20,7 @@ export const addPayment = async (req, res) => {
             newPaymentData = {
                 cash: {
                     amount: purchase.amounts.netAmount,
-                    avance: cash.avance,
+                    advance: cash.advance,
                     paid: cash.paid,
                     balance: cash.balance,
                     description: cash.description

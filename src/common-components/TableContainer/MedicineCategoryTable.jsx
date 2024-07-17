@@ -15,6 +15,7 @@ import {
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { addCategory, getAllCategories, editCategory, deleteCategory } from "../../categoriesApi";
 import AddCategoryModal from "../Modals/medicineModals/addMedicineModals/AddCategoryModal";
+import DynamicButton from "../ButtonContainer/DynamicButton";
 const MedicineCategoryTable = () => {
   const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -108,7 +109,7 @@ const MedicineCategoryTable = () => {
   // };
 
   return (
-    <Box sx={{ overflowX: "auto" }}>
+     <Box sx={{ overflowX: "auto" }}>
        <Button
          variant="contained"
         startIcon={<Add/>}
@@ -130,6 +131,8 @@ const MedicineCategoryTable = () => {
       >
         Add Category
       </Button>
+  
+  
       <TableContainer component={Paper} elevation={3}>
         <Table>
           <TableHead>
@@ -163,7 +166,7 @@ const MedicineCategoryTable = () => {
           sx={{
             position: 'absolute',
             top: '50%',
-            left: '50%',
+            left: '40%',
             transform: 'translate(-50%, -50%)',
             width: 400,
             bgcolor: 'background.paper',
@@ -189,9 +192,9 @@ const MedicineCategoryTable = () => {
           />
         </Box>
       </Modal>
-
+     
       
-    </Box>
+     </Box>
   );
 };
 

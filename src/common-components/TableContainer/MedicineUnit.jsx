@@ -41,7 +41,12 @@ const MedicineTable = () => {
   };
   useEffect(() => {
     fetchUnits();
-  }, [units]);
+
+  },[]);
+
+
+ 
+
   const handleDeleteUnit = async (id) => {
     try {
       await deleteUnit(id);
@@ -52,6 +57,7 @@ const MedicineTable = () => {
       console.error("Error deleting unit:", error);
     }
   };
+
 
   const handleEditUnit = (unit) => {
     setCurrentUnit(unit);

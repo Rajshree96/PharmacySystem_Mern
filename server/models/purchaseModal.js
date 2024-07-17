@@ -4,27 +4,26 @@ import mongoose from "mongoose";
 
 const purchaseModalSchema = new mongoose.Schema({
     date:{
-        type:Date,
-        default: Date.now(),
-        // required:true,
+        type:String,
+         required:true,
     },
     invoiceNumber:{
         type:String,
-        unique:true
-        // required:true,
+        unique:true,
+        required:true,
 
     },
-    supplierInvoiceNo:{
-        type:String,
-        unique:true,
-        // required:true,
-    },
+    // supplierInvoiceNo:{
+    //     type:String,
+    //     unique:true,
+        
+    // },
     suuplierName:{
     //  type:mongoose.Schema.Types.ObjectId,
     //  ref:"Supplier",
     //  required:true,
     type:String,
-    // required:true,
+     required:true,
 
     },
     placeOfSupply:{
@@ -32,54 +31,53 @@ const purchaseModalSchema = new mongoose.Schema({
         // ref:"Supplier",
         // required:true,
         type:String,
-        // required:true,
+         required:true,
     },
     paymentTerm:{
-        type:Date,
-        default:Date.now(),
-        // required:true,
+        type:String,
+         required:true,
     },
     dueDate:{
-        type:Date,
-        // required:true,
+        type:String,
+       required:true,
     },
 
    transPortDetails:{
     ReceiptNo:{
         type:String,
-        // required:true,
+        required:true,
     },
     dispatchedThrough:{
         type:String,
-        // required:true,
+        required:true,
     },
     destination:{
         type:String,
-        // required:true,
+        required:true,
     },
     carrierName:{
         type:String,
-        // required:true,
+        required:true,
     },
     billOfLanding:{
         type:String,
-        // required:true,
+        required:true,
     },
   motorNo:{
     type:String,
-    // required:true,
+     required:true,
   },
 
 
    },
    billingAddress:{
     type:String,
-    // required:true,
+     required:true,
    },
    reverseCharge:{
     type:String,
     enum:["Yes", "No"],
-    // required:true,
+    required:true,
    },
 
    purchaseTable:{
@@ -88,7 +86,7 @@ const purchaseModalSchema = new mongoose.Schema({
         // ref:"Medicine",
         // required:true,
         type:String,
-        // required:true,
+        required:true,
 
     },
     productName:{
@@ -96,62 +94,62 @@ const purchaseModalSchema = new mongoose.Schema({
         // ref:"Medicine",
         // required:true,
         type:String,
-        // required:true,
+         required:true,
     },
     quantity:{
         type:Number,
-        // required:true,
+        required:true,
     },
     freeQuantity:{
         type:Number,
-        // required:true,
+         required:true,
     },
     mrp:{
         type:Number,
-        // required:true
+        required:true
     },
     unitCost:{
         type:String,
-        // required:true,
+        required:true,
     },
     discount1:{
         type:String,
-        // required:true,
+        required:true,
     },
     discount2:{
        type:String,
-    //    reuired:true,
+       reuired:true,
     },
     taxableValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
     cGst:{
         type:String,
-        // required:true,
+        required:true,
     },
     sGst:{
        type:String,
-    //    required:true,
+       required:true,
     },
     iGst:{
         type:String,
-        // required:true,
+         required:true,
     },
     totalValue:{
         type:Number,
-        // required:true,
+        required:true,
     },
    },
 
    amounts:{
     grossAmount:{
         type:Number,
-        // required:true,
+        required:true,
     },
      gstAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
      otherCharge:{
         type:Number,
@@ -159,7 +157,7 @@ const purchaseModalSchema = new mongoose.Schema({
      },
      netAmount:{
         type:Number,
-        // required:true,
+        required:true,
      },
    },
    Narration:{

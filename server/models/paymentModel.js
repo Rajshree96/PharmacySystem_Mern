@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 
 const paymentSchema = new mongoose.Schema({
@@ -34,7 +34,7 @@ const paymentSchema = new mongoose.Schema({
         paymentMethod:{
             online:{
                 transactionDate:{
-                    type:Date,
+                    type:String,
                     // required:true,
                 },
                 transactionNo:{

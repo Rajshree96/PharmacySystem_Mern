@@ -7,7 +7,7 @@ export const addPurchase = async (req, res) => {
         const newPurchase = new PurchaseModal({
             date: req.body.date,
             invoiceNumber: req.body.invoiceNumber,
-            supplierInvoiceNo: req.body.supplierInvoiceNo,
+            // supplierInvoiceNo: req.body.supplierInvoiceNo,
             suuplierName: req.body.suuplierName,
             placeOfSupply: req.body.placeOfSupply,
             paymentTerm: req.body.paymentTerm,
@@ -21,6 +21,8 @@ export const addPurchase = async (req, res) => {
             // paymentStatus: req.body.paymentStatus
 
         });
+        console.log("newPurchase", newPurchase);
+
         await newPurchase.save();
         res.status(201).json({message:"Purchase Successfully congrates",newPurchase});
     } catch (error) {
@@ -44,7 +46,7 @@ export const updatePurchase = async (req, res) => {
     const updatedData = {
         date: req.body.date,
         invoiceNumber: req.body.invoiceNumber,
-        supplierInvoiceNo: req.body.supplierInvoiceNo,
+        // supplierInvoiceNo: req.body.supplierInvoiceNo,
         suuplierName: req.body.suuplierName,
         placeOfSupply: req.body.placeOfSupply,
         paymentTerm: req.body.paymentTerm,
