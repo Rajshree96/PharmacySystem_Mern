@@ -51,6 +51,17 @@ const ManageBankTransaction = () => {
   const [transaction, setTransaction] = useState([]);
   const breadcrumbs = ["Bank", "Manage Bank Transaction"];
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
 
   const fetchCustomer = async () => {
     try {
@@ -128,9 +139,9 @@ const ManageBankTransaction = () => {
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {transaction.map((transaction,index) => (
+              {transaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction,index) => (
                   <StyledTableRow key={transaction._id}>
-                    <StyledTableCell>{index+1}</StyledTableCell>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {transaction.date}
                     </StyledTableCell>
@@ -166,7 +177,13 @@ const ManageBankTransaction = () => {
             </Table>
           </TableContainer>
 
-         <TablePaginations count={transaction.length} />
+          <TablePaginations
+        count={transaction.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
         </Paper>
       </Box>
     </Container>

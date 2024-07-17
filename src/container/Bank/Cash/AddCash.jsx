@@ -56,6 +56,18 @@ const AddCash = () => {
   const [newCash, setNewCash] = useState({ name: "", openingBalance: "" });
   const breadcrumbs = ["Cash", "Add Cash"];
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+
   const fetchCustomer = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
@@ -170,9 +182,9 @@ const AddCash = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cash.map((cash, index) => (
+                {cash.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((cash, index) => (
                   <StyledTableRow key={cash._id}>
-                    <StyledTableCell>{index + 1}</StyledTableCell>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {cash.name}
                     </StyledTableCell>
@@ -204,7 +216,13 @@ const AddCash = () => {
               </TableBody>
             </Table>
           </TableContainer>
-         <TablePaginations count={cash.length} />
+          <TablePaginations
+        count={cash.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
           
         </Paper>
       </Box>
