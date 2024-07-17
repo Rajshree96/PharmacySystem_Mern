@@ -217,7 +217,7 @@ const MiniLineGraph = ({ color }) => {
     },
   };
 
-  return <Line data={data} options={options} pointStyle="circle" />;
+  return <Line data={data} options={options} />;
 };
 
 const DashboardCard = () => {
