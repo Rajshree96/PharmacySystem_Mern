@@ -16,12 +16,16 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  tableCellClasses,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  tableCellClasses
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import ViewButton from "../../../common-components/ButtonContainer/ViewButton";
-import { Edit, Delete, Visibility } from "@mui/icons-material";
+import { Edit, Delete, Visibility, AddCircle } from "@mui/icons-material";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
@@ -46,21 +50,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// const createData = (name, calories, fat, carbs, protein) => {
-//   return { name, calories, fat, carbs, protein };
-// };
-
-// const rows = [
-//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-//   createData("Eclair", 262, 16.0, 24, 6.0),
-//   createData("Cupcake", 305, 3.7, 67, 4.3),
-//   createData("Gingerbread", 356, 16.0, 49, 3.9),
-// ];
-
-const ManageCustomer = () => {
-  const [customers, setCustomers] = useState([]);
-  const breadcrumbs = ["Customer", "Manage Customer"];
+const AddCash = () => {
+  const [cash, setCash] = useState([]);
+  const [open, setOpen] = useState(false); 
+  const [newCash, setNewCash] = useState({ name: "", openingBalance: "" });
+  const breadcrumbs = ["Cash", "Add Cash"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -73,22 +67,23 @@ const ManageCustomer = () => {
     setPage(0);
   };
 
+
   const fetchCustomer = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
-    }
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+      }
       const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
         {
           headers: { Authorization: `Bearer ${auth.token}`}
-         }
+        }
       );
       console.log("API Response:", response.data);
 
       if (Array.isArray(response.data)) {
-        setCustomers(response.data);
+        setCash(response.data);
       } else {
         console.error("API response does not contain cutomer array:", response.data.result);
       }
@@ -99,9 +94,7 @@ const ManageCustomer = () => {
 
   useEffect(() => {
     fetchCustomer();
-    
   }, []);
-  // console.log("customer data",customers);
 
   const handleDeleteClick = async (_id) => {
     const auth = JSON.parse(localStorage.getItem('auth'));
@@ -127,68 +120,95 @@ const ManageCustomer = () => {
     }
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = async () => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/cutomer/add",
+        newCash,
+        {
+          headers: { Authorization: `Bearer ${auth.token}` }
+        }
+      );
+      console.log("API Response:", response.data);
+
+      if (response.data.status === "ok") {
+        console.log("Added new cash entry:", response.data);
+        fetchCustomer();
+        handleClose();
+      } else {
+        console.error("Failed to add cash entry:", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding cash entry:", error);
+    }
+  };
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
-             Customer
+            Cash
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Divider sx={{ my: 2 }} />
-          <TableContainer component={Paper}>
+          <Button variant="contained" className="btn-design" 
+              startIcon={<AddCircle />}
+              onClick={handleClickOpen} >
+            Add Cash
+          </Button>
+          <TableContainer component={Paper} sx={{ mt: 2 }}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>S.no</StyledTableCell>
-                  <StyledTableCell>Customer Name</StyledTableCell>
-                  <StyledTableCell>Address</StyledTableCell>
-                  <StyledTableCell>State</StyledTableCell>
-                  <StyledTableCell>Contact Number</StyledTableCell>
-                  <StyledTableCell>Registration Type</StyledTableCell>
-                  <StyledTableCell>GSTIN</StyledTableCell>
+                  <StyledTableCell>Name</StyledTableCell>
                   <StyledTableCell>Opening Balance</StyledTableCell>
-                  <StyledTableCell>Account Number</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell sx={{ textAlign: 'center' }}>Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* console.log(customers) */}
-              {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customers,index) => (
-                  <StyledTableRow key={customers._id}>
+                {cash.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((cash, index) => (
+                  <StyledTableRow key={cash._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {customers.customerDetails.name}
+                      {cash.name}
                     </StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.address}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.statutoryDetails.stateRegistrationType}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.statutoryDetails.gstin}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.openingBalance.asOnFirstDayOfFinancialYear}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.bankDetails.accountNumber}</StyledTableCell>
+                    <StyledTableCell>{cash.openingBalance}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
                       >
                         <ViewButton
-                          sx={{ mr: 1, color: "green  " }}
+                          sx={{ mr: 1, color: "green" }}
                           label="View"
                           icon={Visibility}
                         />
-                         <EditButton
+                        <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
                         />
                         <DeleteButton
-                          sx={{ mr: 1, color: "red  " }}
+                          sx={{ mr: 1, color: "red" }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(customers._id)}
-
-                        />                        
-                        
+                          onClick={() => handleDeleteClick(cash._id)}
+                        />
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -196,19 +216,49 @@ const ManageCustomer = () => {
               </TableBody>
             </Table>
           </TableContainer>
-         
-         <TablePaginations
-        count={customers.length}
+          <TablePaginations
+        count={cash.length}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-
+          
         </Paper>
       </Box>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add Cash</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newCash.name}
+            onChange={(e) => setNewCash({ ...newCash, name: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Opening Balance"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={newCash.openingBalance}
+            onChange={(e) => setNewCash({ ...newCash, openingBalance: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}  >Cancel</Button>
+          <Button onClick={handleSave} variant="contained" className="btn-design">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
 
-export default ManageCustomer;
+export default AddCash;

@@ -60,18 +60,25 @@ const productOptions = [
   { value: "product3", label: "Product 3" },
 ];
 
-function ProductTable({ rows, onAddRow, onRemoveRow }) {
+
+function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
       .toFixed(2);
   };
 
+  const handleInputChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    onRowChange(updatedRows);
+  };
+
   return (
     <TableContainer sx={{ mb: 2 }} maxWidth="xl">
       <Table>
         <TableHead>
-          <TableRow>
+        <TableRow>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               S.no
             </TableCell>
@@ -120,21 +127,53 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
           {rows.map((row, index) => (
             <TableRow key={index}>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.sno} fullWidth size="small" />
+                <TextField
+                  value={row.sno}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "sno", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.itemCode} fullWidth size="small" />
+                <TextField
+                  value={row.itemCode}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "itemCode", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
                   value={row.productName}
-                  onChange={(e) => (row.productName = e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, "productName", e.target.value)
+                  }
                   fullWidth
                   size="small"
                 >
@@ -146,63 +185,233 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
                 </Select>
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.qty} fullWidth size="small" />
-              </TableCell>     
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.freeQty} fullWidth size="small" />
-              </TableCell>        
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.mrp} fullWidth size="small" />
+                <TextField
+                  value={row.qty}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "qty", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.unitCost} fullWidth size="small" />
+                <TextField
+                  value={row.freeQty}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "freeQty", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.discount1} fullWidth size="small" />
+                <TextField
+                  value={row.mrp}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "mrp", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.discount2} fullWidth size="small" />
+                <TextField
+                  value={row.unitCost}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "unitCost", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.taxableValue} fullWidth size="small" />
+                <TextField
+                  value={row.discount1}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "discount1", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
+              </TableCell> <TableCell
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
+              >
+                <TextField
+                  value={row.discount2}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "discount2", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
+              </TableCell> <TableCell
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
+              >
+                <TextField
+                  value={row.taxableValue}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "taxableValue", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
+              </TableCell> <TableCell
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
+              >
+                <TextField
+                  value={row.cgst}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "cgst", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
+              </TableCell> <TableCell
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
+              >
+                <TextField
+                  value={row.sgst}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "sgst", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.cgst} fullWidth size="small" />
+                <TextField
+                  value={row.igst}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "igst", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
               <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+                sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
-                <TextField value={row.sgst} fullWidth size="small" />
+                <TextField
+                  value={row.totalValue}
+                  fullWidth
+                  size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "totalValue", e.target.value)
+                  }
+                  InputProps={{
+                    sx: {
+                      border: "none",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
               </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.igst} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.totalValue} fullWidth size="small" />
-              </TableCell>
+              
+
+
+
+
+
               <TableCell sx={{ border: "1px solid white" }}>
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <IconButton onClick={() => onRemoveRow(index)} color="error">
+                <Box sx={{ display: "flex", justifyContent: "start" }}>
+                  <IconButton
+                    onClick={() => onRemoveRow(index)}
+                    color="error"
+                  >
                     <RemoveCircle />
                   </IconButton>
                   <IconButton onClick={onAddRow} color="success">
@@ -212,8 +421,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               </TableCell>
             </TableRow>
           ))}
-
-          <TableRow>
+         <TableRow>
             <TableCell
               sx={{ border: "1px solid grey", fontWeight: 700, fontSize: '15px' }}
               colSpan={1}
@@ -314,6 +522,15 @@ function PurchaseOrder() {
       )
     );
   };
+
+  const handleRowChange = (tableId, updatedRows) => {
+    setTables(
+      tables.map((table) =>
+        table.id === tableId ? { ...table, rows: updatedRows } : table
+      )
+    );
+  };
+
   const handleAddOtherCharge = () => {
     setOtherCharges([...otherCharges, ""]);
   };
@@ -438,6 +655,9 @@ function PurchaseOrder() {
               rows={table.rows}
               onAddRow={() => handleAddRow(table.id)}
               onRemoveRow={(rowIndex) => handleRemoveRow(table.id, rowIndex)}
+              onRowChange={(updatedRows) =>
+                handleRowChange(table.id, updatedRows)
+              }
             />
           ))}
         </Box>

@@ -412,7 +412,7 @@ function PaymentIn() {
                     label="Cheque Number"
                     fullWidth
                     value={chequeNumber}
-                    onChange={(e) => setChequeNumber(e.target.value)}
+                    onChange={(e) => setChequeNumber(e.target.value)} 
                   />
                 </Grid>
               )}

@@ -69,6 +69,8 @@ const banks = [
   { label: "Add Bank" },
   { label: "Manage Bank" },
   { label: "Bank Transaction" },
+  { label: "Manage Bank Transaction" },
+  { label: "Add Cash" },
 ];
 const reports = [
   { label: "Stock Report" },
@@ -143,7 +145,8 @@ const Menu = ({ setActiveComponent }) => {
   //   };
 
   return (
-    <Box>
+    <Box sx={{bgcolor:'#086070',height:'250vh'}}>
+      {/* medicine  */}
       <Box
         sx={{
           bgcolor: medicine ? "#086070" : "#086070",
@@ -654,6 +657,7 @@ const Menu = ({ setActiveComponent }) => {
             <ListItemButton
               key={item.label}
               sx={{ pl: 6, minHeight: 32, color: "white" }}
+              onClick={() => handleMenuItemClick(item.label)} 
             >
               <ListItemText
                 primary={item.label}

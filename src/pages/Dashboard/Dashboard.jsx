@@ -67,6 +67,16 @@ import FixedAssets from "../../container/Account/FixedAssets/FixedAssets";
 import Income from "../../container/Account/Income/Income";
 import Journal from "../../container/Account/Journal/Journal";
 
+//Bank
+import AddBank from "../../container/Bank/AddBank/AddBank";
+import ManageBank from "../../container/Bank/ManageBank/ManageBank";
+import BankTransaction from "../../container/Bank/BankTransaction/BankTransaction";
+import ManageBankTransaction from "../../container/Bank/ManageBankTransaction/ManageBankTransaction";
+
+// Cash
+import AddCash from "../../container/Bank/Cash/AddCash";
+import ManageCash from "../../container/Bank/Cash/ManageCash";
+
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
     paddingLeft: 24,
@@ -122,6 +132,7 @@ const AppBar = styled(MuiAppBar, {
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
+  backgroundColor:'red',
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
@@ -215,10 +226,26 @@ const Dashboard = () => {
         return <Journal />;
       case "Fixed Assets":
         return <FixedAssets />;
+      case "Add Bank":
+        return <AddBank />;
+      case "Manage Bank":
+        return <ManageBank />;
+      case "Bank Transaction":
+        return <BankTransaction />;
+      case "Manage Bank Transaction":
+        return <ManageBankTransaction />;
+      case "Add Cash":
+        return <AddCash />;
       default:
         return null;
     }
   };
+
+   const main = {
+      bgcolor: "#e0f7fa", 
+      minHeight: "100vh",
+      maxHeight:'auto'
+   };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -257,8 +284,10 @@ const Dashboard = () => {
         variant="persistent"
         anchor="left"
         open={open}
+        
       >
-        <DrawerHeader sx={{ bgcolor: "#086070" }}>
+         
+          <DrawerHeader sx={{ bgcolor: "#086070" }}>
           <Box
             sx={{
               display: "flex",
@@ -282,7 +311,7 @@ const Dashboard = () => {
         <Divider />
       </Drawer>
 
-      <Main open={open} sx={{ bgcolor: "#e0f7fa", height: "auto" }}>
+      <Main open={open} sx={main}>
         <DrawerHeader />
         {!activeComponent ? <DashboardCard /> : renderActiveComponent()}
       </Main>

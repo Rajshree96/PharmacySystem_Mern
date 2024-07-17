@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -21,11 +21,9 @@ import {
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import ViewButton from "../../../common-components/ButtonContainer/ViewButton";
-import EditButton from "../../../common-components/ButtonContainer/EditButton"
-import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton"
-
 import { Edit, Delete, Visibility } from "@mui/icons-material";
-import { useEffect } from "react";
+import EditButton from "../../../common-components/ButtonContainer/EditButton";
+import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 
@@ -48,21 +46,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// const createData = (name, calories, fat, carbs, protein) => {
-//   return { name, calories, fat, carbs, protein };
-// };
 
-// const rows = [
-//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-//   createData("Eclair", 262, 16.0, 24, 6.0),
-//   createData("Cupcake", 305, 3.7, 67, 4.3),
-//   createData("Gingerbread", 356, 16.0, 49, 3.9),
-// ];
-
-const ManageSupplier = () => {
-  const [suppliers, setSuppliers] = useState([]);
-  const breadcrumbs = ["Supplier", "Manage Supplier"];
+const ManageBankTransaction = () => {
+  const [transaction, setTransaction] = useState([]);
+  const breadcrumbs = ["Bank", "Manage Bank Transaction"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -75,24 +62,25 @@ const ManageSupplier = () => {
     setPage(0);
   };
 
-  const fetchSupplier = async () => {
+
+  const fetchCustomer = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
     if (!auth || !auth.token) {
       console.error("No token found in local storage");
       return;
     }
-      const response = await axios.get("http://localhost:4000/api/v1/admin/getAllSupplier",
+      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
         {
           headers: { Authorization: `Bearer ${auth.token}`}
          }
       );
-      console.log("API Response:", response.data.result);
+      console.log("API Response:", response.data);
 
-      if (Array.isArray(response.data.result)) {
-        setSuppliers(response.data.result);
+      if (Array.isArray(response.data)) {
+        setTransaction(response.data);
       } else {
-        console.error("API response does not contain supplier array:", response.data);
+        console.error("API response does not contain cutomer array:", response.data.result);
       }
     } catch (error) {
       console.error("Error fetching manufacturer:", error);
@@ -100,7 +88,7 @@ const ManageSupplier = () => {
   };
 
   useEffect(() => {
-    fetchSupplier();
+    fetchCustomer();
     
   }, []);
 
@@ -112,19 +100,19 @@ const ManageSupplier = () => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/admin/delete/supplier/${_id}`, {
+      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
       console.log("API Response:", response);
 
       if (response.data.status === "ok" || response.status === 200) {
-        console.log("Deleted supplier with _id code:", _id);
-        fetchSupplier();
+        console.log("Deleted customer with _id code:", _id);
+        fetchCustomer();
       } else {
-        console.error("Failed to delete supplier:", response.data);
+        console.error("Failed to delete customer:", response.data);
       }
     } catch (error) {
-      console.error("Error deleting supplier:", error);
+      console.error("Error deleting customer:", error);
     }
   };
 
@@ -133,40 +121,33 @@ const ManageSupplier = () => {
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
-           Supplier
+             Bank
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Divider sx={{ my: 2 }} />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              <TableHead>
+              <TableHead >
                 <TableRow>
                   <StyledTableCell>S.no</StyledTableCell>
-                  <StyledTableCell>Supplier Name</StyledTableCell>
-                  <StyledTableCell>Address</StyledTableCell>
-                  <StyledTableCell>State</StyledTableCell>
-                  <StyledTableCell>Contact Number</StyledTableCell>
-                  <StyledTableCell>Registration Type</StyledTableCell>
-                  <StyledTableCell>GSTIN</StyledTableCell>
-                  <StyledTableCell>Opening Balance</StyledTableCell>
-                  <StyledTableCell>Account Number</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell>Date</StyledTableCell>
+                  <StyledTableCell>Transaction Type</StyledTableCell>
+                  <StyledTableCell>Contra Number</StyledTableCell>
+                  <StyledTableCell>Amount</StyledTableCell>
+                  <StyledTableCell sx={{textAlign:'center'}}>Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {suppliers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((suppliers,index) => (
-                  <StyledTableRow key={suppliers._id}>
+                {/* console.log(customers) */}
+              {transaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction,index) => (
+                  <StyledTableRow key={transaction._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {suppliers.name}
+                      {transaction.date}
                     </StyledTableCell>
-                    <StyledTableCell>{suppliers.address}</StyledTableCell>
-                    <StyledTableCell>{suppliers.state}</StyledTableCell>
-                    <StyledTableCell>{suppliers.contact}</StyledTableCell>
-                    <StyledTableCell>{suppliers.statutoryDetails.registrationType}</StyledTableCell>
-                    <StyledTableCell>{suppliers.statutoryDetails.gstin}</StyledTableCell>
-                    <StyledTableCell>{suppliers.openingBalance.asOnFirstDayOfFinancialYear}</StyledTableCell>
-                    <StyledTableCell>{suppliers.openingBalance.accountNumber}</StyledTableCell>
+                    <StyledTableCell>{transaction.type}</StyledTableCell>
+                    <StyledTableCell>{transaction.contraNumber}</StyledTableCell>
+                    <StyledTableCell>{transaction.amount}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
@@ -176,7 +157,7 @@ const ManageSupplier = () => {
                           label="View"
                           icon={Visibility}
                         />
-                        <EditButton
+                         <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
@@ -185,27 +166,28 @@ const ManageSupplier = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(suppliers._id)}
-                        />  
+                          onClick={() => handleDeleteClick(customers._id)}
+                        />                    
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
+
             </Table>
           </TableContainer>
+
           <TablePaginations
-        count={suppliers.length}
+        count={transaction.length}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-
         </Paper>
       </Box>
     </Container>
   );
 };
 
-export default ManageSupplier;
+export default ManageBankTransaction;

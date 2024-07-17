@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditButton from "../../ButtonContainer/EditButton";
 import DeleteButton from "../../ButtonContainer/DeleteButton";
 import {deleteBrand, getAllBrand} from "../../../brandApi";
+import TablePaginations from "../../TablePagination/TablePaginations";
 
 const useStyles = makeStyles((theme) => ({
     tableContainer: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const AddBrandTable = ({onEditBrand}) => {
     const classes = useStyles();
     const [ rows, setRows ] = useState([]);
+  
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,6 +46,7 @@ const AddBrandTable = ({onEditBrand}) => {
     };
 
     return (
+        <>
         <TableContainer component={Paper} className={classes.tableContainer}>
             <Table aria-label="simple table">
                 <TableHead>
@@ -77,6 +80,8 @@ const AddBrandTable = ({onEditBrand}) => {
                 </TableBody>
             </Table>
         </TableContainer>
+      
+</>
     );
 };
 

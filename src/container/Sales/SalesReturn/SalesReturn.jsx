@@ -31,7 +31,7 @@ const initialRow = {
   qty: "",
   freeQty: "",
   mrp: "",
-  unitCost: "",
+  retailPrice: "",
   discount1: "",
   discount2: "",
   taxableValue: "",
@@ -47,11 +47,16 @@ const productOptions = [
   { value: "product3", label: "Product 3" },
 ];
 
-function ProductTable({ rows, onAddRow, onRemoveRow }) {
+function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
       .toFixed(2);
+  };
+  const handleInputChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    onRowChange(updatedRows);
   };
 
   return (
@@ -70,22 +75,13 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Qty
-            </TableCell>      
-            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Free Qty
-            </TableCell>    
+            </TableCell>                   
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               MRP
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Unit Cost
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Discount1
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
-              Discount2
-            </TableCell>
+              Retail Price
+            </TableCell>            
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Taxable Value
             </TableCell>
@@ -109,19 +105,27 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sno} fullWidth size="small" />
+                <TextField value={row.sno} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "sno", e.target.value)
+                } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.itemCode} fullWidth size="small" />
+                <TextField value={row.itemCode} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "itemCode", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <Select
                   value={row.productName}
-                  onChange={(e) => (row.productName = e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, "productName", e.target.value)
+                  }
                   fullWidth
                   size="small"
                 >
@@ -135,57 +139,66 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.qty} fullWidth size="small" />
-              </TableCell>  
+                <TextField value={row.qty} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "qty", e.target.value)
+                }/>
+              </TableCell>                       
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.freeQty} fullWidth size="small" />
-              </TableCell>          
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.mrp} fullWidth size="small" />
+                <TextField value={row.mrp} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "mrp", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.unitCost} fullWidth size="small" />
+                <TextField value={row.retailPrice} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "retailPrice", e.target.value)
+                }/>
+              </TableCell>             
+              <TableCell
+                sx={{ border: "1px solid grey", width: 100, height: 25 }}
+              >
+                <TextField value={row.taxableValue} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "taxableValue", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.discount1} fullWidth size="small" />
+                <TextField value={row.cgst} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "cgst", e.target.value)
+                } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.discount2} fullWidth size="small" />
+                <TextField value={row.sgst} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "sgst", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.taxableValue} fullWidth size="small" />
+                <TextField value={row.igst} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "igst", e.target.value)
+                }/>
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.cgst} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.sgst} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.igst} fullWidth size="small" />
-              </TableCell>
-              <TableCell
-                sx={{ border: "1px solid grey", width: 100, height: 25 }}
-              >
-                <TextField value={row.totalValue} fullWidth size="small" />
+                <TextField value={row.totalValue} fullWidth size="small" 
+                 onChange={(e) =>
+                  handleInputChange(index, "totalValue", e.target.value)
+                }/>
               </TableCell>
               <TableCell sx={{ border: "1px solid white" }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -219,16 +232,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
-              -
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
-              -
-            </TableCell>
-            <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
-              -
-            </TableCell>    
+            </TableCell>                           
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
             </TableCell>        
@@ -311,6 +315,14 @@ function SalesReturn() {
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+  
+  const handleRowChange = (tableId, updatedRows) => {
+    setTables(
+      tables.map((table) =>
+        table.id === tableId ? { ...table, rows: updatedRows } : table
+      )
+    );
+  };
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -323,9 +335,9 @@ function SalesReturn() {
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
           <Grid item xs={3}>
-              <TextField select label="Supplier Name" fullWidth>
-                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
-                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
+              <TextField select label="Customer Name" fullWidth>
+                <MenuItem value="CustomerName1">CustomerName1</MenuItem>
+                <MenuItem value="CustomerName2">CustomerName2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
@@ -339,11 +351,8 @@ function SalesReturn() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Debit Note No." fullWidth />
-            </Grid>            
-            <Grid item xs={3}>
-              <TextField label="Place of Supply" fullWidth />
-            </Grid>
+              <TextField label="Credit Note No." fullWidth />
+            </Grid>                        
             <Grid item xs={3}>
               <TextField
                 label="Payment Terms"
@@ -369,13 +378,13 @@ function SalesReturn() {
               <TextField label="Billing Address" fullWidth />
             </Grid>
             <Grid item md={3} xs={3}>
-              <TextField label="Select purchase" 
+            <TextField label="Select Sales" 
               select
               fullWidth >
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
-                <MenuItem>INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
+                <MenuItem value="INV452325">INV452325</MenuItem>
               </TextField>
             </Grid>
             <Grid item md={3} xs={3}>
@@ -396,6 +405,9 @@ function SalesReturn() {
               rows={table.rows}
               onAddRow={() => handleAddRow(table.id)}
               onRemoveRow={(rowIndex) => handleRemoveRow(table.id, rowIndex)}
+              onRowChange={(updatedRows) =>
+                handleRowChange(table.id, updatedRows)
+              }
             />
           ))}
         </Box>
