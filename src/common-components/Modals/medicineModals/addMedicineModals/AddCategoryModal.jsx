@@ -1,70 +1,25 @@
-// import React from "react";
-// import { Button, TextField } from "@mui/material";
-// import { Add } from "@mui/icons-material";
-
-// const AddCategoryModal = ({ category, setCategory, isEditMode, onSave ,setSuccess}) => {
-//   const handleSaveCategory = () => {
-//      onSave(category); // Trigger the save action directly from props
-//      handleAddCategory();
-//   };
-
-//   const handleAddCategory = () => {
-//     setTimeout(() => {
-//       setSuccess(true);
-//     }, 300);
-//   };
-
-//   return (
-//     <>
-//       <TextField
-//         autoFocus
-//         margin="dense"
-//         label="Category Name"
-//         type="text"
-//         fullWidth
-//         variant="standard"
-//         value={category.name}
-//         onChange={(e) => setCategory({...category, name: e.target.value})}
-//       />
-//       <Button
-//         variant="contained"
-//         // startIcon={isEditMode ? null : <Add />}
-//         startIcon={<Add/>}
-//         color="primary"
-//          sx={{ mt: 2 }}
-//         onClick={handleSaveCategory}
-//       >
-//         Add
-//         {/* {isEditMode ? "Save" : "Add"} */}
-//       </Button>
-//     </>
-//   );
-// };
-
-// export default AddCategoryModal;
-
 import React, {useState, useEffect} from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
 import {addCategory, editCategory} from "../../../../categoriesApi";
 
-const AddCategoryModal = ({formType, categoryData, setSuccess, handleClose}) => {
+const AddCategoryModal = ({formType, selectedData, setSuccess, handleClose}) => {
     const [ categoryName, setCategoryName ] = useState("");
 
     useEffect(() => {
-        if (formType === "edit category" && categoryData) {
-            setCategoryName(categoryData.name);
+        if (formType === "edit category" && selectedData) {
+            setCategoryName(selectedData.name);
         }
         else {
             setCategoryName("");
         }
-    }, [ formType, categoryData ]);
+    }, [ formType, selectedData ]);
 
     const handleSaveCategory = async () => {
         try {
             if (formType === "edit category") {
-                await editCategory(categoryData._id, {name: categoryName});
+                await editCategory(selectedData._id, {name: categoryName});
                 console.log("Category updated successfully");
-            }
+            }   
             else {
                 await addCategory({name: categoryName});
                 console.log("Category added successfully");

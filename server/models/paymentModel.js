@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import mongoose from "mongoose";
+=======
+import mongoose from  "mongoose";
+>>>>>>> 44796ec4f7eaeead03f7957aad93a2c7bce65847
 
 
 const paymentSchema = new mongoose.Schema({

@@ -129,6 +129,7 @@
 // };
 
 // export default MedicineUnitTable;
+// 
 import React, { useEffect, useState } from "react";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box } from "@mui/material";
 import { getAllUnits, deleteUnit } from "../../unitapi";
@@ -142,7 +143,7 @@ const MedicineUnitTable = ({ onEditUnit }) => {
 
     useEffect(() => {
         fetchUnits();
-    }, []);
+    }, [units]);
 
     const fetchUnits = async () => {
         try {
