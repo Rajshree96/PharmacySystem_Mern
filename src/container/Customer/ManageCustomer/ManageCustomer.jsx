@@ -187,7 +187,7 @@ const ManageCustomer = () => {
                           icon={Delete}
                           onClick={() => handleDeleteClick(customers._id)}
 
-                        />
+                        />                        
                         
                       </Box>
                     </StyledTableCell>

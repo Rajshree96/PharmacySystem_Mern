@@ -51,6 +51,17 @@ const ManageBank = () => {
   const [bank, setBank] = useState([]);
   const breadcrumbs = ["Bank", "Manage Bank"];
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const fetchCustomer = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
@@ -126,9 +137,9 @@ const ManageBank = () => {
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {bank.map((bank,index) => (
+              {bank.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((bank,index) => (
                   <StyledTableRow key={bank._id}>
-                    <StyledTableCell>{index+1}</StyledTableCell>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {bank.customerDetails.name}
                     </StyledTableCell>
@@ -161,7 +172,13 @@ const ManageBank = () => {
               </TableBody>
             </Table>
           </TableContainer>
-         <TablePaginations count={bank.length} />
+          <TablePaginations
+        count={bank.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
 
         </Paper>
       </Box>
