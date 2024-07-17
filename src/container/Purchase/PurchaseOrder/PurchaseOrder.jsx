@@ -25,7 +25,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
 import PurchaseOrderPayment from "./PurchaseOrderPayment";
-
+import axios from "axios"
 const style = {
   position: "absolute",
   top: "50%",
@@ -491,6 +491,23 @@ function PurchaseOrder() {
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
+   const[orderNo, setOrderNo]=useState('')
+   const[supplierName,setSupplierName]=useState('')
+   const[placeOfSupply,setPlaceOfSupply]=useState('')
+   const[billingAddress,setBillingAddress]=useState('')
+   const[grossAmount,setGrossAmount]=useState('')
+   const[gstAmount,setGstAmount]=useState('')
+   const[netAmount,setNetAmount]=useState('')
+   const[narration,setNarration]=useState('');
+   const [transportDetails, setTransportDetails] = useState({
+    receiptNumber: '',
+    dispatchedThrough: '',
+    destination: '',
+    carrierName: '',
+    billOfLading: '',
+    vehicleNumber: ''
+  });
+  
   
 
   useEffect(() => {
@@ -559,6 +576,74 @@ function PurchaseOrder() {
     }
     setOpen(false);
   };
+  const addPurchase = async (purchaseData) => {
+    console.log(purchaseData);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.post('http://localhost:4000/api/v1/purchase/add',
+         purchaseData,
+        { 
+          
+          headers: {
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log(response);
+      if (response.data.status === 201) {
+      console.log("purchase created successfully ");
+      } 
+      
+
+    } catch (error) {
+     
+      console.log("something went wrong")
+      
+    }
+  };
+
+  // const handleAddMedicine = () => {
+  //   setTimeout(() => {     
+  //     setSuccess(true);
+  //   }, 300);
+  // };
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    const purchaseData = {
+      date: date,
+      orderNo: orderNo,
+      supplierName: supplierName,
+      placeOfSupply: placeOfSupply,
+      paymentTerm: paymentTerms,
+      dueDate: dueDate,
+      transPortDetails:transportDetails,
+      billingAddress: billingAddress,
+      reverseCharge: reverseCharge,
+      purchaseTable: tables[0].rows,
+      amounts: {
+          grossAmount: grossAmount,
+          gstAmount: gstAmount,
+          otherCharge: otherCharges,
+          netAmount: netAmount
+      },
+      Narration:narration
+  };
+  
+    try {
+      await addPurchase(purchaseData);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding purchase:', error);
+      
+    }
+  };
+
+ console.log(tables)
+ console.log(transportDetails)
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -581,16 +666,25 @@ function PurchaseOrder() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Order No." fullWidth />
+              <TextField label="Order No." fullWidth 
+              value={orderNo}
+              onChange={(e) => setOrderNo(e.target.value)}
+              />
             </Grid>           
             <Grid item xs={3}>
-              <TextField select label="Supplier Name" fullWidth>
+              <TextField select label="Supplier Name" fullWidth
+              value={supplierName}
+              onChange={(e) => setSupplierName(e.target.value)}
+              >
                 <MenuItem value="SupplierName1">SupplierName1</MenuItem>
                 <MenuItem value="SupplierName2">SupplierName2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Place of Supply" fullWidth />
+              <TextField label="Place of Supply" fullWidth
+              value={placeOfSupply}
+              onChange={(e) => setPlaceOfSupply(e.target.value)}
+               />
             </Grid>
             <Grid item xs={3}>
               <TextField
@@ -622,10 +716,17 @@ function PurchaseOrder() {
 
           <Grid container spacing={2}>
             <Grid item md={4} xs={4}>
-              <TransportDetails />
+            <TransportDetails
+              transportDetails={transportDetails}
+             setTransportDetails={setTransportDetails}
+            />
+
             </Grid>
             <Grid item md={4} xs={4}>
-              <TextField label="Billing Address" fullWidth />
+              <TextField label="Billing Address" fullWidth 
+              value={billingAddress}
+              onChange={(e) => setBillingAddress(e.target.value)}
+              />
             </Grid>
             <Grid item md={4} xs={4}>
               <TextField
@@ -689,21 +790,33 @@ function PurchaseOrder() {
                 </Grid>
               </Grid>
             </Modal>   
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3}
+            value={narration}
+            onChange={(e) => setNarration(e.target.value)}
+             />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
-              <TextField label="Gross Amount" fullWidth />
-              <TextField label="GST Amount" fullWidth />
+              <TextField label="Gross Amount" fullWidth 
+              value={grossAmount}
+              onChange={(e) => setGrossAmount(e.target.value)}
+              />
+              <TextField label="GST Amount" fullWidth 
+                value={gstAmount}
+                onChange={(e) => setGstAmount(e.target.value)}
+              />
               <TextField label="Other Charge" fullWidth
                value={totalCharges}
                InputProps={{
                  readOnly: true,
                }} />
-              <TextField label="Net Amount" fullWidth />
+              <TextField label="Net Amount" fullWidth
+              value={netAmount}
+              onChange={(e) => setNetAmount(e.target.value)}
+               />
             </Box>
           </Grid>
         </Grid>
@@ -718,7 +831,7 @@ function PurchaseOrder() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design" >
+            <Button variant="contained" className="btn-design" onClick={handleSubmit} >
               Save
             </Button>
 
