@@ -21,6 +21,7 @@
     "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "framer-motion": "^11.2.12",
+    "hex-to-rgba": "^2.0.1",
     "karo": "^0.0.1",
     "mongoose": "^8.4.4",
     "react": "^18.3.1",

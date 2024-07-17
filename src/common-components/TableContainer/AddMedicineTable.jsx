@@ -24,11 +24,23 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import axios from "axios";
+import TablePaginations from "../TablePagination/TablePaginations";
 
 const AddMedicineTable = () => {
   const [medicines, setMedicines] = useState([]);
   const [editingMedicine, setEditingMedicine] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const fetchMedicines = async () => {
     try {
@@ -49,7 +61,7 @@ const AddMedicineTable = () => {
     fetchMedicines();
     
   }, [medicines]);
-
+ console.log(medicines);
   
   const handleVisibilityClick = (medicine) => {
     console.log("Viewing details for medicine:", medicine);
@@ -142,17 +154,17 @@ const AddMedicineTable = () => {
           </TableHead>
           <TableBody>
             {Array.isArray(medicines) && medicines.length > 0 ? (
-              medicines.map((medicine,index) => (
+              medicines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicine,index) => (
                 <TableRow key={medicine._id}>
-                  <TableCell>{index+1}</TableCell>
+                 <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                   <TableCell>{medicine.itemCode}</TableCell>
                   <TableCell>{medicine.medicineName}</TableCell>
                   <TableCell>{medicine.batchNo}</TableCell>
                   <TableCell>{medicine.expiryDate}</TableCell>
-                  <TableCell>{medicine.medicineCategory}</TableCell>
-                  <TableCell>{medicine.medicineType}</TableCell>
-                  <TableCell>{medicine.brand}</TableCell>
-                  <TableCell>{medicine.unit}</TableCell>
+                  <TableCell>{medicine.medicineCategory.name}</TableCell>
+                  <TableCell>{medicine.medicineType.mediType}</TableCell>
+                  <TableCell>{medicine.brand.brand}</TableCell>
+                  <TableCell>{medicine.unit.name}</TableCell>
                   <TableCell>{medicine.netWeight}</TableCell>
                   <TableCell>
                     <IconButton color="success" onClick={() => handleVisibilityClick(medicine)}>
@@ -177,6 +189,15 @@ const AddMedicineTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      
+      <TablePaginations
+        count={medicines.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
 
       <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
         <DialogTitle>Edit Medicine</DialogTitle>

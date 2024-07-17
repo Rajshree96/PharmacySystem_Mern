@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#086070",
@@ -52,6 +53,17 @@ const ManageManufacturer = () => {
   const breadcrumbs = [ "Manufacturer", "Manage Manufacturer" ];
   const [editingManufacturer, setEditingManufacturer] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const fetchManufacturer = async () => {
     try {
@@ -172,9 +184,9 @@ const ManageManufacturer = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {manufacturer.map((manufacturer,index) => (
+          {manufacturer.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((manufacturer,index) => (
             <StyledTableRow key={manufacturer._id}>
-              <StyledTableCell>{index+1}</StyledTableCell>
+              <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
               <StyledTableCell component="th" scope="row">
                 {manufacturer.name}
               </StyledTableCell>
@@ -212,6 +224,14 @@ const ManageManufacturer = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    <TablePaginations
+        count={manufacturer.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
         </Paper>
 
       </Box>

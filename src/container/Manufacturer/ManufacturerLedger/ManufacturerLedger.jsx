@@ -22,6 +22,7 @@ import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import { useEffect } from "react";
 import axios from "axios"
+import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#086070",
@@ -56,6 +57,7 @@ const rows = [
 const ManufacturerLedger = () => {
   const [manufacturer, setmanufacturer] = useState([]);
   // const [manufacturerName, setManufacturerName] = useState('');
+  const [manufacturerLedger, setManufacturerLedger] = useState([]);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
 
@@ -66,7 +68,27 @@ const ManufacturerLedger = () => {
   const handleToDateChange = (event) => {
     setToDate(event.target.value);
   };
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   const breadcrumbs = ["Manufacturer", " Manufacturer Ledger"];
+  const config = () => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+
+    return {
+      headers: {
+        Authorization:` Bearer ${auth.token}`,
+        'Content-Type': 'application/json'
+      },
+    };
+  };
   const fetchManufecturer = async () => {
     try {
        const response = await axios.get('http://localhost:4000/api/v1/admin/getAllManufacturer', config());
@@ -81,10 +103,29 @@ const ManufacturerLedger = () => {
       setmanufacturer([]);
     }
   };
+  const fetchManufacturerLedger = async () => {
+    try {
+       const response = await axios.get('http://localhost:4000/api/v1/purchase/getAll', config());
+       console.log("manufacturedLedger  fetched", response.data);
+       if(Array.isArray(response.data)){
+        setManufacturerLedger(response.data);
+       }else{
+        console.error("Error: Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching manufactures:", error);
+      setmanufacturer([]);
+    }
+  };
+  
   useEffect(()=>{
-    fetchManufecturer();
-  },[manufacturer]);
+    
+    fetchManufacturerLedger();
+  },[]);
 
+ useEffect(()=>{
+    fetchManufecturer();
+  },[]);
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box>
@@ -142,6 +183,7 @@ const ManufacturerLedger = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                  <StyledTableCell>Sno.</StyledTableCell>
                   <StyledTableCell>Date</StyledTableCell>
                   <StyledTableCell>Particular</StyledTableCell>
                   <StyledTableCell>Vouchar Type</StyledTableCell>
@@ -152,11 +194,11 @@ const ManufacturerLedger = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell>{row.calories}</StyledTableCell>
+                {manufacturerLedger.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((manu,index) => (
+                  <StyledTableRow key={manu._id}>
+                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {row.name}
+                      {manu.date}
                     </StyledTableCell>
                     <StyledTableCell>{row.fat}</StyledTableCell>
                     <StyledTableCell>{row.carbs}</StyledTableCell>
@@ -168,6 +210,14 @@ const ManufacturerLedger = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePaginations
+        count={manufacturerLedger.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
         </Paper>
       </Box>
     </Container>

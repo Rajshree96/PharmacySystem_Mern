@@ -19,7 +19,7 @@ const payInSchema = new mongoose.Schema({
     },
     receiptMode:{
         type:String,
-        enum:["Yes", "No"],
+        enum:["Cash", "Bank"],
         required:true,
     },
     bank:{
@@ -39,47 +39,31 @@ const payInSchema = new mongoose.Schema({
         type:String
     },
    purchaseTable:[{
-    itemCode:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Medicine",
-        required:true,
-
-    },
-    productName:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Medicine",
-        required:true,
-    },
-    quantity:{
+    billNo:{
         type:Number,
         required:true,
     },
-    mrp:{
+    billAmount:{
+        type:Number,
+        required:true,
+    },
+    recivedAmount:{
         type:Number,
         required:true
     },
-    retailPrice:{
-        type:String,
-        required:true,
-    },
-    taxableValue:{
+    balanceAmount:{
         type:Number,
         required:true,
     },
-    cGst:{
-        type:String,
-        required:true,
-    },
-    sGst:{
-       type:String,
-       required:true,
-    },
-    totalValue:{
+    total:{
         type:Number,
         required:true,
     },
+    narration:{
+        type:String,
+    }
    }],
 },{timestamps:true})
 
-const POS  = mongoose.model("POS", payInSchema);
-export default POS;
+const PayIN  = mongoose.model("PayIN", payInSchema);
+export default PayIN;

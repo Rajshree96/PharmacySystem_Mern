@@ -24,12 +24,17 @@ const purchaseModalSchema = new mongoose.Schema({
     //  required:true,
     type:String,
      required:true,
+    supplierInvoiceNo:{
+        type:String,
+        unique:true,
+        required:true,
+    },
+    supplierName:{
+    type:String,
+    required:true,
 
     },
     placeOfSupply:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Supplier",
-        // required:true,
         type:String,
          required:true,
     },
@@ -66,6 +71,8 @@ const purchaseModalSchema = new mongoose.Schema({
   motorNo:{
     type:String,
      required:true,
+
+   
   },
 
 
@@ -73,6 +80,7 @@ const purchaseModalSchema = new mongoose.Schema({
    billingAddress:{
     type:String,
      required:true,
+    
    },
    reverseCharge:{
     type:String,
@@ -82,19 +90,15 @@ const purchaseModalSchema = new mongoose.Schema({
 
    purchaseTable:{
     itemCode:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Medicine",
-        // required:true,
         type:String,
         required:true,
 
     },
     productName:{
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:"Medicine",
-        // required:true,
         type:String,
          required:true,
+
+       
     },
     quantity:{
         type:Number,
@@ -103,6 +107,8 @@ const purchaseModalSchema = new mongoose.Schema({
     freeQuantity:{
         type:Number,
          required:true,
+
+        
     },
     mrp:{
         type:Number,
@@ -163,14 +169,23 @@ const purchaseModalSchema = new mongoose.Schema({
    Narration:{
     type:String,
    },
-   paymentStatus:{
-    type:String,
-    enum:["Success", "Failure"],
-    default:"Failure",
-    
+}
+//    paymentStatus:{
+//     type:String,
+//     enum:["Success", "Failure"],
+//     default:"Failure",
+// },
+//    voucherType:{
+//     type:String,
+//     enum:["purchase","payout","purchase return"] 
+//    },
+//    particular:{
+//     type:String,
+//     enum:["Opening Bal","By Purchase","To Bank"],
+//    },
 
-   }
-},{timestamps:true})
+},
+{timestamps:true})
 
 const PurchaseModal = mongoose.model("PurchaseModal", purchaseModalSchema);
 export default PurchaseModal;

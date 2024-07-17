@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from "@mui/material";
-import {addbrand} from "../../../brandApi";
+import {addbrand, editBrand} from "../../../brandApi";
 import axios from "axios";
 
-const AddBrandModal = ({ brandName, setBrandName, setSuccess}) => {
+const AddBrandModal = ({
+    brandName,
+    setBrandName,
+    selectedManufacturer,
+    setSelectedManufacturer,
+    setSuccess,
+    formType,
+    brandData,
+}) => {
     const [ manufacturers, setManufacturers ] = useState([]);
-    const [ selectedManufacturer, setSelectedManufacturer ] = useState("");
-    const handleAddBrand = () => {
-        setTimeout(() => {
-            setSuccess(true);
-        }, 300);
-    };
 
     const fetchManufacturer = async () => {
         try {
@@ -47,20 +49,25 @@ const AddBrandModal = ({ brandName, setBrandName, setSuccess}) => {
         };
 
         try {
-            const response = await addbrand(brandData);
-            console.log("Brand added successfully", response);
-            setBrandName("");
-            setSelectedManufacturer("");
-            handleAddBrand();
+            if (formType === "edit brand") {
+                // await editBrand(brandData._id, brandData);
+                console.log("Brand edited successfully");
+            }
+            else {
+                const response = await addbrand(brandData);
+                console.log("Brand added successfully", response);
+                setBrandName("");
+                setSelectedManufacturer("");
+            }
+            setSuccess(true);
         } catch (error) {
-            console.error("Error adding brand", error);
+            console.error(`Error ${formType === "edit brand" ? "editing" : "adding"} brand:`, error);
         }
     };
 
     return (
         <>
             <Grid container spacing={2}>
-                {/* Brand name */}
                 <Grid item xs={12} sm={6} md={4} lg={12}>
                     <TextField
                         autoFocus
@@ -73,7 +80,6 @@ const AddBrandModal = ({ brandName, setBrandName, setSuccess}) => {
                         onChange={(e) => setBrandName(e.target.value)}
                     />
                 </Grid>
-                {/* Manufacture */}
                 <Grid item xs={12} sm={6} md={4} lg={12}>
                     <FormControl fullWidth variant="standard">
                         <InputLabel>Manufacture</InputLabel>
@@ -88,17 +94,12 @@ const AddBrandModal = ({ brandName, setBrandName, setSuccess}) => {
                                     {manufacturer.name}
                                 </MenuItem>
                             ))}
-
-                            {/* <MenuItem value="">Select Manufacture</MenuItem>
-              <MenuItem value="manufacture 1">Manufacture 1</MenuItem>
-              <MenuItem value="manufacture 2">Manufacture 2</MenuItem> */}
                         </Select>
                     </FormControl>
                 </Grid>
             </Grid>
-
             <Button className="btn-design" variant="contained" sx={{mt: 2}} onClick={handleSaveBrand}>
-                Add
+                {formType === "edit brand" ? "Update" : "Add"}
             </Button>
         </>
     );

@@ -9,6 +9,8 @@ export const addPurchase = async (req, res) => {
             invoiceNumber: req.body.invoiceNumber,
             // supplierInvoiceNo: req.body.supplierInvoiceNo,
             suuplierName: req.body.suuplierName,
+            supplierInvoiceNo: req.body.supplierInvoiceNo,
+            supplierName: req.body.supplierName,
             placeOfSupply: req.body.placeOfSupply,
             paymentTerm: req.body.paymentTerm,
             dueDate: req.body.dueDate,

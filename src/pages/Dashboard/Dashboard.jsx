@@ -41,7 +41,7 @@ import AddCustomer from "../../container/Customer/AddCustomer/AddCustomer";
 import ManageCustomer from "../../container/Customer/ManageCustomer/ManageCustomer";
 import CustomerLedger from "../../container/Customer/CustomerLedger/CustomerLedger";
 
-//Purchase 
+//Purchase
 import PurchaseInvoice from "../../container/Purchase/PurchaseInvoice/PurchaseInvoice";
 import ManagePurchaseInvoice from "../../container/Purchase/ManagePurchaseInvoice/ManagePurchaseInvoice";
 import PurchaseReturn from "../../container/Purchase/PurchaseReturn/PurchaseReturn";
@@ -58,6 +58,24 @@ import ManageDeliveryChallan from "../../container/Sales/ManageDeliveryChallan/M
 import PosSale from "../../container/Sales/POS_Sale/PosSale";
 import GuiSale from "../../container/Sales/GUI_Sale/GuiSale";
 import SalesReturn from "../../container/Sales/SalesReturn/SalesReturn";
+
+//Account
+import PaymentIn from "../../container/Account/PaymentIn/PaymentIn";
+import PaymentOut from "../../container/Account/PaymentOut/PaymentOut";
+import Expense from "../../container/Account/Expense/Expense";
+import FixedAssets from "../../container/Account/FixedAssets/FixedAssets";
+import Income from "../../container/Account/Income/Income";
+import Journal from "../../container/Account/Journal/Journal";
+
+//Bank
+import AddBank from "../../container/Bank/AddBank/AddBank";
+import ManageBank from "../../container/Bank/ManageBank/ManageBank";
+import BankTransaction from "../../container/Bank/BankTransaction/BankTransaction";
+import ManageBankTransaction from "../../container/Bank/ManageBankTransaction/ManageBankTransaction";
+
+// Cash
+import AddCash from "../../container/Bank/Cash/AddCash";
+import ManageCash from "../../container/Bank/Cash/ManageCash";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -114,6 +132,7 @@ const AppBar = styled(MuiAppBar, {
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
+  backgroundColor:'red',
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
@@ -167,38 +186,66 @@ const Dashboard = () => {
         return <ManageCustomer />;
       case "Customer Ledger":
         return <CustomerLedger />;
-        case "Purchase Order":
+      case "Purchase Order":
         return <PurchaseOrder />;
       case "Manage Purchase Order":
-      return <ManagePurchaseOrder />;
+        return <ManagePurchaseOrder />;
       case "Purchase Invoice":
         return <PurchaseInvoice />;
       case "Manage Purchase Invoice":
-      return <ManagePurchaseInvoice />;
+        return <ManagePurchaseInvoice />;
       case "Purchase Return":
-      return <PurchaseReturn />;
+        return <PurchaseReturn />;
       case "Sales Estimate":
         return <SalesEstimate />;
       case "Manage Sales Estimate":
-      return <ManageSalesEstimate />;
+        return <ManageSalesEstimate />;
       case "Sales Invoice":
-      return <SalesInvoice />;
+        return <SalesInvoice />;
       case "Manage Sales Invoice":
-      return <ManageSalesInvoice />;
+        return <ManageSalesInvoice />;
       case "Delivery Challan":
-      return <DeliveryChallan />;
+        return <DeliveryChallan />;
       case "Manage Delivery Challan":
-      return <ManageDeliveryChallan />;
+        return <ManageDeliveryChallan />;
       case "POS Sale":
-      return <PosSale />;
+        return <PosSale />;
       case "GUI Sale":
-      return <GuiSale />;
+        return <GuiSale />;
       case "Sales Return":
-      return <SalesReturn />;
+        return <SalesReturn />;
+      case "Payment In":
+        return <PaymentIn />;
+      case "Payment Out":
+        return <PaymentOut />;
+      case "Expense":
+        return <Expense />;
+      case "Income":
+        return <Income />;
+      case "Journal":
+        return <Journal />;
+      case "Fixed Assets":
+        return <FixedAssets />;
+      case "Add Bank":
+        return <AddBank />;
+      case "Manage Bank":
+        return <ManageBank />;
+      case "Bank Transaction":
+        return <BankTransaction />;
+      case "Manage Bank Transaction":
+        return <ManageBankTransaction />;
+      case "Add Cash":
+        return <AddCash />;
       default:
         return null;
     }
   };
+
+   const main = {
+      bgcolor: "#e0f7fa", 
+      minHeight: "100vh",
+      maxHeight:'auto'
+   };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -237,8 +284,10 @@ const Dashboard = () => {
         variant="persistent"
         anchor="left"
         open={open}
+        
       >
-        <DrawerHeader sx={{ bgcolor: "#086070" }}>
+         
+          <DrawerHeader sx={{ bgcolor: "#086070" }}>
           <Box
             sx={{
               display: "flex",
@@ -262,7 +311,7 @@ const Dashboard = () => {
         <Divider />
       </Drawer>
 
-      <Main open={open} sx={{ bgcolor: "#e0f7fa", height: "auto" }}>
+      <Main open={open} sx={main}>
         <DrawerHeader />
         {!activeComponent ? <DashboardCard /> : renderActiveComponent()}
       </Main>
