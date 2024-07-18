@@ -1,25 +1,24 @@
 import React, {useState} from "react";
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
+import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
+import {Add} from "@mui/icons-material";
+import AllMedicineModals from "../../../common-components/Modals/medicineModals/AllMedicineModals";
 import AddMedicineTable from "../../../common-components/TableContainer/AddMedicineTable";
 
-import DynamicButton from "../../../common-components/ButtonContainer/DynamicButton";
-import {Add, Edit} from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
-import AllMedicineModals from "../../../common-components/Modals/medicineModals/AllMedicineModals";
 const AddMedicine = () => {
-    // const navigate = useNavigate();
-    const breadcrumbs = [ "Medicine", "AddMedicine" ];
-
+    const breadcrumbs = [ "Medicine", "Add Medicine" ];
     const [ modalType, setModalType ] = useState("");
+    const [ selectedAddMedicine, setSelectedAddMedicine ] = useState(null);
 
-    const handleOpenModal = (type) => {
-        console.log('add medicine modal open successfully')
+    const handleOpenModal = (type, medicine = null) => {
         setModalType(type);
+        setSelectedAddMedicine(medicine);
     };
 
     const handleCloseModal = () => {
         setModalType("");
+        setSelectedAddMedicine(null);
     };
 
     return (
@@ -31,7 +30,7 @@ const AddMedicine = () => {
                         <Grid container spacing={3} sx={{mb: 3}}>
                             <Grid item xs={12} sm={6} md={4}>
                                 <Typography variant="h6" sx={{color: "black", fontWeight: "bold"}}>
-                                AddMedicine
+                                    Add Medicine
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -41,7 +40,6 @@ const AddMedicine = () => {
                                     icon={Add}
                                     label={"Add Medicine"}
                                     onClick={() => handleOpenModal("add medicine")}
-                                    // onClick={() => navigate("/form/addmedicine")}
                                     sx={{
                                         bgcolor: "#00816b",
                                         "&:hover": {bgcolor: "#004d40"},
@@ -50,17 +48,21 @@ const AddMedicine = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <AddMedicineTable />
+                        <AddMedicineTable
+                            onEditAddMedicine={(medicine) => handleOpenModal("edit medicine", medicine)}
+                        />
                     </Paper>
                 </Container>
             </Box>
 
             {/* Modals */}
-            <AllMedicineModals open={!!modalType} handleClose={handleCloseModal} formType={modalType} maxWidth="xl"
-        fullWidth={true}
-        style={{ width: '100%' }}/>
-            
-            
+            <AllMedicineModals
+                open={!!modalType}
+                handleClose={handleCloseModal}
+                formType={modalType}
+                selectedData={selectedAddMedicine}
+                style={{width: "100%"}}
+            />
         </>
     );
 };

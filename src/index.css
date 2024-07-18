@@ -6,7 +6,7 @@
     scroll-behavior: smooth
 }
 
-/* for all form buttons */
+/*------------------- for all form buttons--------------------- */
 .btn-design,.table-design{
     background-color: #086070 !important;
     /* color: #086070; */
@@ -25,4 +25,11 @@
 .btn-design-green:hover{
     background-color: #004d40 !important;
     transition: "all 0.3s",
+}
+/* -----------------------Popup Form Title ----------------------------- */
+.dialogTitle-popupForm{
+    font-size: 1.08rem !important;
+    font-weight: 700 !important;
+    color: #095561 !important;
+
 }
