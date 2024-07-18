@@ -241,7 +241,7 @@ const AddMedicineModal = ({ setSuccess, formType, selectedData }) => {
     };
 
     const editMedicine = async (medicineData) => {
-        // console.log("Medicine@@@@", medicineData.itemCode);
+        console.log("Medicine@@@@", medicineData.itemCode);
         
         const auth = JSON.parse(localStorage.getItem('auth'));
             if (!auth || !auth.token) {
@@ -251,16 +251,16 @@ const AddMedicineModal = ({ setSuccess, formType, selectedData }) => {
         
             try {
               const response = await axios.put(
-                `http://localhost:4000/api/v1/admin/medicine/${medicineData.itemCode}`,
-                medicines,
+                `http://localhost:4000/api/v1/admin/medicine/testtyuhh`,
+                medicineData,
                 {
                   headers: { Authorization: `Bearer ${auth.token}` }
                 }
               );
-              console.log("Medicine updated:", response);
+              console.log("Medicine updated:", response.data);
               setMedicines((prevMedicines) =>
                 prevMedicines.map((med) =>
-                  med.itemCode === medicines.itemCode ? medicines : med
+                  med.itemCode === medicineData.itemCode ? medicineData : med
                 )
               );
               handleEditDialogClose();
