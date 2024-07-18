@@ -115,7 +115,6 @@ const MedicineSchema = new mongoose.Schema({
   },
   salesTaxIncluded: {
     type: Boolean,
-    required: true,
     default:false,
   },
   productPhotos: {

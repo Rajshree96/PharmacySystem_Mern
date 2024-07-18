@@ -9,6 +9,7 @@ import Unit from "../models/unitsModel.js"
 import MedicineType from "../models/medicineTypeModel.js";
 import mongoose from "mongoose";
 import { error,success } from "../utills/responseWrapper.js";
+import { Try } from "@mui/icons-material";
 
 
 export async function addMedicineController(req, res) {
@@ -91,6 +92,8 @@ export async function addMedicineController(req, res) {
   }
 
 
+
+
 export async function updateMedicineController(req, res) {
     try {
         
@@ -147,7 +150,34 @@ export async function deleteMedicineController(req, res) {
     }
 }
 
+export async function getAllMedicinePhotoController(req, res) {
+    try {
+        
+        const { keyword } = req.body;
 
+        if (!keyword) {
+            return res.status(400).json({ error: "Keyword is required" });
+        }
+
+        const regex = new RegExp(keyword, 'i');
+        
+
+        const medicines = await medicineModel.find({ medicineName: regex }, 'productPhotos');
+        console.log(medicines)
+        if (!medicines.length) {
+            return res.status(404).json({ error: "No medicines found" });
+        }
+
+        // Extract photos from the found medicines
+        const photos = medicines.flatMap(medicine => medicine.productPhotos);
+
+        // Send the photos as the response
+        res.status(200).json(photos);
+    } catch (error) {
+        console.error("Error fetching medicine photos:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
 // controllers related to manufacturer
 
 
@@ -208,7 +238,7 @@ export async function updateManufacturerController(req,res){
     try {
         
         const {  ...updateData } = req.body;
-        const _id = req.params;
+        const { _id } = req.params;
 
         
         if (!_id ) {
@@ -317,7 +347,7 @@ export async function getAllSupplierController(req,res){
 export async function updateSupplierController(req,res){
     try{
     const {  ...updateData } = req.body;
-        const _id = req.params;
+        const {_id}  = req.params;
 
         
         if (!_id ) {
