@@ -96,9 +96,9 @@ export async function addMedicineController(req, res) {
 
 export async function updateMedicineController(req, res) {
     try {
-        
-        const { itemCode, ...updateData } = req.body;
-
+        const {itemCode}= req.params;
+        const {  ...updateData } = req.body;
+        console.log(itemCode);
         
         if (!itemCode) {
             return res.send(error(400, "Item code is required."));
@@ -111,7 +111,7 @@ export async function updateMedicineController(req, res) {
             { new: true }
         );
 
-       
+       console.log(updatedMedicine)
         if (!updatedMedicine) {
             return res.send(error(404, "Medicine not found."));
         }

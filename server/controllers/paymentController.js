@@ -4,10 +4,10 @@ import PurchaseModal from "../models/purchaseModal.js";
 
 // Add a new payment record
 export const addPayment = async (req, res) => {
-    const { paymentType, cash, bank , invoiceNumber} = req.body;
+    const { paymentType, cash, bank , orderNumber} = req.body;
     try {
 
-    const purchase = await PurchaseModal.findOne({ invoiceNumber });
+    const purchase = await PurchaseModal.findOne({ orderNo:orderNumber });
             if (!purchase) {
                 return res.status(404).json({ message: "Purchase not found" });
             }
