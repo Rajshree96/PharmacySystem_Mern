@@ -19,11 +19,17 @@ import TablePaginations from "../TablePagination/TablePaginations";
 
 const MedicineCategoryTable = ({ onEditCategory }) => {
   const [categories, setCategories] = useState([]);
-  
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+ 
 
   useEffect(() => {
     fetchCategories();
@@ -65,7 +71,7 @@ const MedicineCategoryTable = ({ onEditCategory }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories.map((category, index) => (
+            {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => (
               <TableRow key={category._id}>
                 <TableCell>{ index + 1}</TableCell>
                 <TableCell>{category.name}</TableCell>
@@ -88,7 +94,13 @@ const MedicineCategoryTable = ({ onEditCategory }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
+      <TablePaginations
+        count={categories.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
      
     </Box>
   );

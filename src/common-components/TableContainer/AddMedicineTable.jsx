@@ -648,9 +648,20 @@ import { getAllCategories, deleteCategory } from "../../categoriesApi";
 import EditButton from "../ButtonContainer/EditButton";
 import DeleteButton from "../ButtonContainer/DeleteButton";
 import axios from "axios";
+import TablePaginations from "../TablePagination/TablePaginations";
 
 const AddMedicineTable = ({ onEditAddMedicine }) => {
   const [medicines, setMedicines] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const fetchMedicines = async () => {
     try {
@@ -716,9 +727,9 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
           </TableHead>
           <TableBody>
             {Array.isArray(medicines) && medicines.length > 0 ? (
-              medicines.map((medicine,index) => (
+              medicines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicine,index) => (
                 <TableRow key={medicine._id}>
-                 <TableCell>{index + 1}</TableCell>
+                 <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                   <TableCell>{medicine.itemCode}</TableCell>
                   <TableCell>{medicine.medicineName}</TableCell>
                   <TableCell>{medicine.batchNo}</TableCell>
@@ -756,6 +767,13 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePaginations
+        count={medicines.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
      
     </Box>
   );

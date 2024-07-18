@@ -16,9 +16,21 @@ import EditButton from "../ButtonContainer/EditButton";
 import DeleteButton from "../ButtonContainer/DeleteButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TablePaginations from "../TablePagination/TablePaginations";
 
 const MedicineTypeTable = ({ onEditMedicineType }) => {
     const [medicineTypes, setMedicineTypes] = useState([]);
+    const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
 
     useEffect(() => {
         fetchMedicineTypes();
@@ -55,9 +67,9 @@ const MedicineTypeTable = ({ onEditMedicineType }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {medicineTypes.map((medicineType, index) => (
+                        {medicineTypes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicineType, index) => (
                             <TableRow key={medicineType._id}>
-                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                                 <TableCell>{medicineType.mediType}</TableCell>
                                 <TableCell>
                                     <EditButton
@@ -78,6 +90,14 @@ const MedicineTypeTable = ({ onEditMedicineType }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePaginations
+        count={medicineTypes.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+     
         </Box>
     );
 };

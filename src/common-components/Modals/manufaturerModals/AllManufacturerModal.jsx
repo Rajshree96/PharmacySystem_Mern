@@ -35,7 +35,7 @@ const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}
             onClose={handleDialogClose}
             PaperProps={{
                 style: {
-                    width: success ? "40%" : "80%", // Change width based on success state
+                    width: success ? "40%" : "80%", // Change Modal width based on success state
                     maxWidth: success ? "600px" : "100vw", // Adjust max width if needed
                     transition: "width 0.3s ease", // Smooth transition for width change
                 },
