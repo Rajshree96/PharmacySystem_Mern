@@ -6,7 +6,7 @@ const secretKey = process.env.ACCESS_SECRET_KEY || "manasvitech";
 
 export function generateAccessToken(data){
     try {
-        const token = Jwt.sign(data, secretKey,{expiresIn:"1d"});
+        const token = Jwt.sign(data, secretKey,{expiresIn:"1y"});
         return token;
     } catch (error) {
         return error;

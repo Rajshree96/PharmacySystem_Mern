@@ -12,25 +12,21 @@ const style = {
   p: 4,
 };
 
-const TransportDetails = () => {
+const TransportDetails = ({ transportDetails, setTransportDetails }) => {
   const [open, setOpen] = useState(false);
-  const [receiptNumber, setReceiptNumber] = useState('');
-  const [dispatchedThrough, setDispatchedThrough] = useState('');
-  const [destination, setDestination] = useState('');
-  const [carrierName, setCarrierName] = useState('');
-  const [billOfLading, setBillOfLading] = useState('');
-  const [vehicleNumber, setVehicleNumber] = useState('');
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleChange = (field) => (e) => {
+    setTransportDetails({
+      ...transportDetails,
+      [field]: e.target.value
+    });
+  };
+
   const handleSave = () => {
-    console.log('Receipt Number:', receiptNumber);
-    console.log('Dispatched Through:', dispatchedThrough);
-    console.log('Destination:', destination);
-    console.log('Carrier Name/Agent:', carrierName);
-    console.log('Bill of Lading/LR-RR No.:', billOfLading);
-    console.log('Motor Vehicle No.:', vehicleNumber);
+    console.log('Transport Details:', transportDetails);
     handleClose();
   };
 
@@ -45,64 +41,64 @@ const TransportDetails = () => {
             Add Transport Details
           </Typography>
           <Grid item md={6} xs={12}>
-          <TextField
-            label="Receipt Doc No."
-            variant="outlined"
-            fullWidth
-            value={receiptNumber}
-            onChange={(e) => setReceiptNumber(e.target.value)}
-            margin="normal"
-          />
+            <TextField
+              label="Receipt Doc No."
+              variant="outlined"
+              fullWidth
+              value={transportDetails.receiptNumber}
+              onChange={handleChange('receiptNumber')}
+              margin="normal"
+            />
           </Grid>
           <Grid item md={6} xs={12}>
-          <TextField
-            label="Dispatched through"
-            variant="outlined"
-            fullWidth
-            value={dispatchedThrough}
-            onChange={(e) => setDispatchedThrough(e.target.value)}
-            margin="normal"
-          />
-           </Grid>
-           <Grid item md={6} xs={12}>
-          <TextField
-            label="Destination"
-            variant="outlined"
-            fullWidth
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            margin="normal"
-          />
-           </Grid>
-           <Grid item md={6} xs={12}>
-          <TextField
-            label="Carrier Name/Agent"
-            variant="outlined"
-            fullWidth
-            value={carrierName}
-            onChange={(e) => setCarrierName(e.target.value)}
-            margin="normal"
-          />
-           </Grid>
-           <Grid item md={6} xs={12}>
-          <TextField
-            label="Bill of Lading/LR-RR No."
-            variant="outlined"
-            fullWidth
-            value={billOfLading}
-            onChange={(e) => setBillOfLading(e.target.value)}
-            margin="normal"
-          />
-           </Grid>
-           <Grid item md={6} xs={12}>
-          <TextField
-            label="Motor Vehicle No."
-            variant="outlined"
-            fullWidth
-            value={vehicleNumber}
-            onChange={(e) => setVehicleNumber(e.target.value)}
-            margin="normal"
-          />
+            <TextField
+              label="Dispatched through"
+              variant="outlined"
+              fullWidth
+              value={transportDetails.dispatchedThrough}
+              onChange={handleChange('dispatchedThrough')}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Destination"
+              variant="outlined"
+              fullWidth
+              value={transportDetails.destination}
+              onChange={handleChange('destination')}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Carrier Name/Agent"
+              variant="outlined"
+              fullWidth
+              value={transportDetails.carrierName}
+              onChange={handleChange('carrierName')}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Bill of Lading/LR-RR No."
+              variant="outlined"
+              fullWidth
+              value={transportDetails.billOfLading}
+              onChange={handleChange('billOfLading')}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Motor Vehicle No."
+              variant="outlined"
+              fullWidth
+              value={transportDetails.vehicleNumber}
+              onChange={handleChange('vehicleNumber')}
+              margin="normal"
+            />
           </Grid>
           <Box sx={{ display: 'flex', justifyContent: 'start' }}>
             <Button
