@@ -9,6 +9,10 @@ const paymentSchema = new mongoose.Schema({
             // //  required:true,
             type:String,
         },
+        orderNumber:{
+            type:String,
+            required:true
+        },
         advance:{
             type:Number,
             //  required:true,
