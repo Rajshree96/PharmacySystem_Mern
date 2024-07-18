@@ -19,6 +19,9 @@ const AllMedicineModals = ({ open, handleClose, formType, selectedData, style })
                 case "edit category":
                     setCategoryName(selectedData.name);
                     break;
+                case "edit medicine":
+                    setMedicineName(selectedData.name);
+                    break;
                 case "edit units":
                     setUnitName(selectedData.name);
                     break;
@@ -58,11 +61,14 @@ const AllMedicineModals = ({ open, handleClose, formType, selectedData, style })
                     />
                 );
             case "add medicine":
+            case "edit medicine":
                 return (
                     <AddMedicineModal
                         medicineName={medicineName}
                         setMedicineName={setMedicineName}
                         setSuccess={setSuccess}
+                        formType={formType}
+                        selectedData={selectedData}
                     />
                 );
             case "add medicinetype":
