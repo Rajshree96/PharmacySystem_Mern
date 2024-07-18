@@ -263,7 +263,7 @@ const AddCustomer = () => {
         setGstin("");
         setOpeningBalance("");
         setRegistrationType("");
-        toast.success("supplier added successfully");
+        toast.success("customer added successfully");
       }
     } catch (error) {
       console.log("Error adding customer:", error);

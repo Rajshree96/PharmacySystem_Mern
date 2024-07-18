@@ -36,7 +36,7 @@ const responsiveMargin = (minMargin, maxMargin) => {
   return `calc(${minMargin}px + (${maxMargin} - ${minMargin}) * ((100vw - 320px) / (1280 - 320)))`;
 };
 const responsivePadding = (minPadding, maxPadding) => {
-  return` calc(${minPadding}px + (${maxPadding} - ${minPadding}) * ((100vw - 320px) / (1280 - 320)))`;
+  return ` calc(${minPadding}px + (${maxPadding} - ${minPadding}) * ((100vw - 320px) / (1280 - 320)))`;
 };
 const responsiveHeight = (minHeight, maxHeight) => {
   return `calc(${minHeight}px + (${maxHeight} - ${minHeight}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -63,12 +63,12 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     marginBottom: responsiveMargin(16, 32),
-    color:'#086070'
+    color: '#086070'
   },
   sectionIcon: {
     marginRight: responsiveMargin(8, 16),
     fontSize: responsiveFontSize(20, 30),
-    color:'#086070'
+    color: '#086070'
   },
   // divider: {
   //   marginTop:'30px',
@@ -86,8 +86,8 @@ const useStyles = makeStyles({
   button: {
     fontSize: responsiveFontSize(10, 15),
     padding: responsivePadding(5, 8),
-    color:'white',
-    
+    color: 'white',
+
   },
   textFieldStyle: {
     height: '50px',
@@ -116,17 +116,17 @@ const AddBank = () => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
-  const [name,setName] =useState('');
-  const[address,setAddress] =useState('')
-  const[pinCode,setPinCode] = useState('')
-  const[contact,setContact] =useState('')  
-  const[ifscCode,setIfscCode]= useState('')
-  const[accountHolderName,setAccountHolderName]=useState('')
-  const[accountNumber,setAccountNumber]=useState('')
-  const[openingBalance,setOpeningBalance]=useState('')
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('')
+  const [pinCode, setPinCode] = useState('')
+  const [contact, setContact] = useState('')
+  const [ifscCode, setIfscCode] = useState('')
+  const [accountHolderName, setAccountHolderName] = useState('')
+  const [accountNumber, setAccountNumber] = useState('')
+  const [openingBalance, setOpeningBalance] = useState('')
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
-    setSelectedState(""); 
+    setSelectedState("");
   };
 
   const handleStateChange = (val) => {
@@ -142,56 +142,54 @@ const AddBank = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
-  const breadcrumbs = [ "Bank", "Add Bank" ];
+  const breadcrumbs = ["Bank", "Add Bank"];
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const customerDetails = {
-      customerDetails: {
-        name: name,
-        address: address,
-        state: selectedState,
-        pinCode: pinCode,
-        country: selectedCountry,
-        contact: contact,
-        bankDetails: {
-          ifscCode: ifscCode,
-          accountHolderName: accountHolderName,
-          accountNumber: accountNumber,
-        },        
-        openingBalance: {
-          asOnFirstDayOfFinancialYear: openingBalance,
-        },
-      },
-    };
-
     try {
+    e.preventDefault();
+    const bankDetail = {
+      bankName: name,
+      address: address,
+        state: selectedState,
+        country: selectedCountry,
+        pinCode: pinCode,
+        accountHolderName: accountHolderName,
+        accountNumber: accountNumber,
+        ifscCode: ifscCode,
+        mobileNo: contact,
+        openingBalance: openingBalance,
+      };
+      console.log("data@@@@", bankDetail);
+
       const auth = JSON.parse(localStorage.getItem('auth'));
-      const response = await axios.post('http://localhost:4000/api/v1/cutomer/add', 
-        customerDetails,
-        { 
+      const response = await axios.post('http://localhost:4000/api/v1/bank/add-bank',
+        bankDetail,
+        {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${auth.token}`
           }
         }
       );
-      if (response.status === 201) {
-        console.log("customer added successfully:", response.data);
-      } 
+      console.log("API Response:", response.data);
+
+      if (response.data.status === 201) {
+        console.log("Bank added successfully:", response.data);
+      
+      }
     } catch (error) {
-      console.log("Error adding customer:", error);
-    } 
+      console.log("Error adding Bank:", error);
+    }
   };
 
   return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
         <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
-        <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
-               Bank
-            </Typography>
-        <BreadcrumbContainer breadcrumbs={breadcrumbs} />
-          <motion.div initial="hidden" animate="visible" variants={containerVariants}>           
+          <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
+            Bank
+          </Typography>
+          <BreadcrumbContainer breadcrumbs={breadcrumbs} />
+          <motion.div initial="hidden" animate="visible" variants={containerVariants}>
             <Formik
               initialValues={{
                 name: "",
@@ -219,7 +217,7 @@ const AddBank = () => {
             >
               {({ errors, touched }) => (
                 <Form>
-                  <motion.div variants={itemVariants}>                                        
+                  <motion.div variants={itemVariants}>
                     {/* name */}
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6} md={3}>
@@ -232,7 +230,7 @@ const AddBank = () => {
                           error={touched.name && !!errors.name}
                           helperText={touched.name && errors.name}
                           value={name}
-                          onChange={(e)=> setName(e.target.value)}
+                          onChange={(e) => setName(e.target.value)}
                         />
                       </Grid>
                       {/* Address */}
@@ -244,7 +242,7 @@ const AddBank = () => {
                           label="Address"
                           variant="outlined"
                           value={address}
-                          onChange={(e)=> setAddress(e.target.value)}
+                          onChange={(e) => setAddress(e.target.value)}
                         />
                       </Grid>
                       {/* Country */}
@@ -285,12 +283,12 @@ const AddBank = () => {
                           label="Pin Code"
                           variant="outlined"
                           value={pinCode}
-                          onChange={(e)=> setPinCode(e.target.value)}
+                          onChange={(e) => setPinCode(e.target.value)}
                         />
-                      </Grid>                                          
+                      </Grid>
                     </Grid>
                   </motion.div>
-                  <Divider sx={{marginTop:'40px',marginBottom:'30px'}} />
+                  <Divider sx={{ marginTop: '40px', marginBottom: '30px' }} />
 
                   <motion.div variants={itemVariants}>
                     {/* Bank Details */}
@@ -335,8 +333,8 @@ const AddBank = () => {
                           onChange={(e) => setIfscCode(e.target.value)}
                         />
                       </Grid>
-                       {/* Contact */}
-                       <Grid item xs={12} sm={6} md={3}>
+                      {/* Contact */}
+                      <Grid item xs={12} sm={6} md={3}>
                         <Field
                           name="contact"
                           as={TextField}
@@ -344,13 +342,13 @@ const AddBank = () => {
                           label="Contact"
                           variant="outlined"
                           value={contact}
-                          onChange={(e)=>setContact(e.target.value)}
+                          onChange={(e) => setContact(e.target.value)}
                         />
                       </Grid>
-                     
+
                     </Grid>
                   </motion.div>
-                  <Divider sx={{marginTop:'40px',marginBottom:'30px'}} />                  
+                  <Divider sx={{ marginTop: '40px', marginBottom: '30px' }} />
 
                   <motion.div variants={itemVariants}>
                     {/* Opening Balance */}
@@ -373,7 +371,7 @@ const AddBank = () => {
                     </Grid>
                   </motion.div>
                   <Box className={classes.buttonContainer} >
-                    <motion.div variants={itemVariants} > 
+                    <motion.div variants={itemVariants} >
                       <Tooltip title="Save" >
                         <Button
                           type="submit"
@@ -387,7 +385,7 @@ const AddBank = () => {
                         >
                           Save
                         </Button>
-                      </Tooltip>                     
+                      </Tooltip>
                     </motion.div>
                   </Box>
                 </Form>
