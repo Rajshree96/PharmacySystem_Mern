@@ -105,12 +105,15 @@ const useStyles = makeStyles({
 const validationSchema = Yup.object().shape({
   name: Yup.string()
     .matches(/^[a-zA-Z\s]+$/, "Only letters are allowed")
-    .min(1, " Name must be at least 3 digits")
+    .min(1, "Name must be at least 1 character")
     .required("Name is required"),
   state: Yup.string().required("State is required"),
+  registrationType: Yup.string().required("Registration Type is required"),
   gstin: Yup.string()
-    .matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}$/, "Invalid GSTIN")
-    .min(15, "GSTIN must be at least 15 digits")
+    .matches(
+      /^[A-Z0-9]{15}$/,
+      "GSTIN must be 15 characters long and contain only capital letters and numbers"
+    )
     .required("GSTIN is required"),
 });
 
@@ -134,6 +137,10 @@ const AddManufacturer = () => {
   const[openingBalance,setOpeningBalance]=useState('')
   const[registrationType,setRegistrationType]=useState('')
   
+  const [nameError, setNameError] = useState("");
+  const [gstError, setGstError] = useState("");
+  const [stateError, setStateError] = useState("");
+  const [registrationTypeError, setRegistrationTypeError] = useState("");
 
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
@@ -144,10 +151,48 @@ const AddManufacturer = () => {
     setSelectedState(val);
   };
  
-  
-  
+    
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      // Validate name
+      await validationSchema.validateAt("name", { name });
+      setNameError(""); // Clear any previous error
+    } catch (err) {
+      setNameError(err.message); // Set error message for name
+    }
+
+    try {
+      // Validate gstin
+      await validationSchema.validateAt("gstin", { gstin });
+      setGstError("");
+    } catch (err) {
+      setGstError(err.message);
+    }
+
+    try {
+      // Validate state
+      await validationSchema.validateAt("state", { state: selectedState });
+      setStateError("");
+    } catch (err) {
+      setStateError(err.message);
+    }
+
+    try {
+      // Validate registration type
+      await validationSchema.validateAt("registrationType", { registrationType });
+      setRegistrationTypeError("");
+    } catch (err) {
+      setRegistrationTypeError(err.message);
+    }
+
+    // Check overall validity after individual validations
+    const isValid = await validationSchema.isValid({ name, gstin, state: selectedState, registrationType });
+
+    if (!isValid) {
+      // Handle any additional logic if the overall form is not valid
+      return;
+    }
     const manufacturerData = {
       name: name,
       address: address,
@@ -233,33 +278,7 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                Manufacturer
             </Typography>
         <BreadcrumbContainer  breadcrumbs={breadcrumbs}/>
-            <Formik
-              initialValues={{
-                name: "",
-                address: "",
-                state: "",
-                pinCode: "",
-                country: "",
-                contact: "",
-                email: "",
-                website: "",
-                bankName: "",
-                bankAddress: "",
-                ifscCode: "",
-                accountHolderName: "",
-                accountNumber: "",
-                gstin: "",
-                openingBalance: "",
-                registrationType: "",
-              }}
-              validationSchema={validationSchema}
-              onSubmit={(values) => {
-                console.log(values);
-                // Handle form submission
-              }}
-            >
-              {({ errors, touched }) => (
-                <Form>
+        <form onSubmit={handleSubmit}>            
                   <motion.div variants={itemVariants}>
                     <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
                       <BusinessIcon className={classes.sectionIcon} /> Manufacturer Details
@@ -267,23 +286,21 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                     {/* name */}
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="name"
-                          as={TextField}
+                        <TextField
+                          name="name"                          
                           fullWidth
-                          label="Name"
+                          label="Name*"
                           variant="outlined"
-                          error={touched.name && !!errors.name}
-                          helperText={touched.name && errors.name}
+                          error={!!nameError}
+                          helperText={nameError}
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                         />
                       </Grid>
                       {/* Address */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="address"
-                          as={TextField}
+                        <TextField
+                          name="address"                          
                           fullWidth
                           label="Address"
                           variant="outlined"
@@ -306,26 +323,21 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       {/* State */}
                       <Grid item xs={12} sm={6} md={3}>
                         <FormControl fullWidth>
-                          <RegionDropdown
-                            country={selectedCountry}
-                            value={selectedState}
-                            onChange={handleStateChange}
-                            disabled={!selectedCountry}
-                            label="State"
-                            className={classes.textFieldStyle}
-                          />
-                          {touched.state && errors.state && (
-                            <Typography variant="caption" color="error">
-                              {errors.state}
-                            </Typography>
-                          )}
+                        <RegionDropdown
+                        country={selectedCountry}
+                        value={selectedState}
+                        onChange={handleStateChange}
+                        disabled={!selectedCountry}
+                        label="State*"
+                        className={classes.textFieldStyle}
+                      />
+                      {stateError && <Typography color="error">{stateError}</Typography>}
                         </FormControl>
                       </Grid>
                       {/* Pin Code */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="pinCode"
-                          as={TextField}
+                        <TextField
+                          name="pinCode"                          
                           fullWidth
                           label="Pin Code"
                           variant="outlined"
@@ -335,9 +347,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* Contact */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="contact"
-                          as={TextField}
+                        <TextField
+                          name="contact"                          
                           fullWidth
                           label="Contact"
                           variant="outlined"
@@ -347,9 +358,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* Email */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="email"
-                          as={TextField}
+                        <TextField
+                          name="email"                          
                           fullWidth
                           label="Email"
                           variant="outlined"
@@ -359,9 +369,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* Website */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="website"
-                          as={TextField}
+                        <TextField
+                          name="website"                          
                           fullWidth
                           label="Website"
                           variant="outlined"
@@ -381,9 +390,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                     {/* Bank Name */}
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="bankName"
-                          as={TextField}
+                        <TextField
+                          name="bankName"                          
                           fullWidth
                           label="Bank Name"
                           variant="outlined"
@@ -393,9 +401,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* Bank Address */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="bankAddress"
-                          as={TextField}
+                        <TextField
+                          name="bankAddress"                          
                           fullWidth
                           label="Bank Address"
                           variant="outlined"
@@ -405,9 +412,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* IFSC Code */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="ifscCode"
-                          as={TextField}
+                        <TextField
+                          name="ifscCode"                          
                           fullWidth
                           label="IFSC Code"
                           variant="outlined"
@@ -417,9 +423,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* Account Holder Name */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="accountHolderName"
-                          as={TextField}
+                        <TextField
+                          name="accountHolderName"                          
                           fullWidth
                           label="Account Holder Name"
                           variant="outlined"
@@ -429,9 +434,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Grid>
                       {/* Account Number */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="accountNumber"
-                          as={TextField}
+                        <TextField
+                          name="accountNumber"                          
                           fullWidth
                           label="Account Number"
                           variant="outlined"
@@ -452,15 +456,12 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                     <Grid container spacing={3}>
                       {/* Registration Type */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="registrationType"
-                          as={TextField}
+                        <TextField
+                          name="registrationType"                          
                           select
                           fullWidth
-                          label="Registration Type"
-                          variant="outlined"
-                          error={touched.registrationType && !!errors.registrationType}
-                          helperText={touched.registrationType && errors.registrationType}
+                          label="Registration Type*"
+                          variant="outlined"                         
                           value={registrationType}
                           onChange={(e) => setRegistrationType(e.target.value)}
                         >
@@ -469,19 +470,19 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                               {option.label}
                             </MenuItem>
                           ))}
-                        </Field>
+                        </TextField>
+                        {registrationTypeError && <Typography color="error">{registrationTypeError}</Typography>}
                       </Grid>
                       {/* GSTIN */}
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="gstin"
-                          as={TextField}
+                        <TextField
+                          name="gstin"                          
                           fullWidth
-                          label="GSTIN"
+                          label="GSTIN*"
                           variant="outlined"
                           inputProps={{ style: { textTransform: 'uppercase' } }}
-                          error={touched.gstin && !!errors.gstin}
-                          helperText={touched.gstin && errors.gstin}
+                          error={!!gstError}
+                          helperText={gstError}
                           value={gstin}
                           onChange={(e) => setgstin(e.target.value)}
                         />
@@ -498,9 +499,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                     {/* Opening Balance */}
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6} md={3}>
-                        <Field
-                          name="openingBalance"
-                          as={TextField}
+                        <TextField
+                          name="openingBalance"                          
                           fullWidth
                           label="Opening Balance"
                           variant="outlined"
@@ -541,9 +541,8 @@ const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
                       </Tooltip>
                     </motion.div>
                   </Box>
-                </Form>
-              )}
-            </Formik>
+                </form>
+              
           </motion.div>
         </Paper>
       </Box>
