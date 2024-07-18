@@ -9,9 +9,13 @@ const AddMedicineTypeModal = ({ setSuccess, formType, selectedData }) => {
         if (formType === "edit medicinetype" && selectedData) {
             setMedicineTypeName(selectedData.mediType);
         } else {
-            setMedicineTypeName("");
+            resetForm();
         }
     }, [formType, selectedData]);
+
+    const resetForm = () => {
+        setMedicineTypeName("");
+    };
 
     const handleSaveMedicineType = async () => {
         try {
