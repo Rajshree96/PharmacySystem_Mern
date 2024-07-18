@@ -631,6 +631,7 @@ function PurchaseOrder() {
       },
       Narration:narration
   };
+  console.log(tables);
   
     try {
       await addPurchase(purchaseData);
