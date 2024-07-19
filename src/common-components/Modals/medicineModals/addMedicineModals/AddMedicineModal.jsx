@@ -835,7 +835,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                     <Grid item xs={12}>
                         <DialogContentText className="dialogTitle-popupForm">Opening Balance</DialogContentText>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    {/* <Grid item xs={12} md={4}>
                         <TextField
                             margin="dense"
                             label="Opening Balance"
@@ -845,7 +845,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             value={openingBalance.particular}
                             onChange={(e) => handleOpeningBalanceChange("particular", e.target.value)}
                         />
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item xs={12} md={4}>
                         <TextField
