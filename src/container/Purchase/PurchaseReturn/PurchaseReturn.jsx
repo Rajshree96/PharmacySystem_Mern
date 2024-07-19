@@ -115,17 +115,17 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.sno} fullWidth size="small"
-                 onChange={(e) =>
-                  handleInputChange(index, "sno", e.target.value)
-                } />
+                  onChange={(e) =>
+                    handleInputChange(index, "sno", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.itemCode} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "itemCode", e.target.value)
-                } />
+                <TextField value={row.itemCode} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "itemCode", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
@@ -148,82 +148,82 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.qty} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "qty", e.target.value)
-                } />
+                <TextField value={row.qty} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "qty", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.freeQty} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "freeQty", e.target.value)
-                } />
+                <TextField value={row.freeQty} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "freeQty", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.mrp} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "mrp", e.target.value)
-                } />
+                <TextField value={row.mrp} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "mrp", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.unitCost} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "unitCost", e.target.value)
-                }/>
+                <TextField value={row.unitCost} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "unitCost", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.discount1} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "discount1", e.target.value)
-                }/>
+                <TextField value={row.discount1} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "discount1", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.discount2} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "discount2", e.target.value)
-                }/>
+                <TextField value={row.discount2} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "discount2", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.taxableValue} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "taxableValue", e.target.value)
-                } />
+                <TextField value={row.taxableValue} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "taxableValue", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.cgst} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "cgst", e.target.value)
-                }/>
+                <TextField value={row.cgst} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "cgst", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sgst} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "sgst", e.target.value)
-                }/>
+                <TextField value={row.sgst} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "sgst", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.igst} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "igst", e.target.value)
-                }/>
+                <TextField value={row.igst} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "igst", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
@@ -310,6 +310,7 @@ function PurchaseReturn() {
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const[taxType,setTaxType]=useState('');
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -333,9 +334,9 @@ function PurchaseReturn() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
@@ -373,7 +374,7 @@ function PurchaseReturn() {
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
-          <Grid item xs={3}>
+            <Grid item xs={3}>
               <TextField select label="Supplier Name" fullWidth>
                 <MenuItem value="SupplierName1">SupplierName1</MenuItem>
                 <MenuItem value="SupplierName2">SupplierName2</MenuItem>
@@ -391,7 +392,7 @@ function PurchaseReturn() {
             </Grid>
             <Grid item xs={3}>
               <TextField label="Debit Note No." fullWidth />
-            </Grid>            
+            </Grid>
             <Grid item xs={3}>
               <TextField label="Place of Supply" fullWidth />
             </Grid>
@@ -412,17 +413,17 @@ function PurchaseReturn() {
                 value={dueDate}
                 InputProps={{ readOnly: true }}
               />
-            </Grid>            
+            </Grid>
           </Grid>
           {/* Billing Address */}
-          <Grid container spacing={2} sx={{mt:1}}>
-          <Grid item md={3} xs={3}>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item md={3} xs={3}>
               <TextField label="Billing Address" fullWidth />
             </Grid>
             <Grid item md={3} xs={3}>
-              <TextField label="Select purchase" 
-              select
-              fullWidth >
+              <TextField label="Select purchase"
+                select
+                fullWidth >
                 <MenuItem value="INV452325">INV452325</MenuItem>
                 <MenuItem value="INV452325">INV452325</MenuItem>
                 <MenuItem value="INV452325">INV452325</MenuItem>
@@ -432,10 +433,19 @@ function PurchaseReturn() {
             <Grid item md={3} xs={3}>
               <TextField label="Reason for Return" fullWidth />
             </Grid>
+            <Grid item md={3} xs={3}>
+            <TextField select label="Tax Type" fullWidth
+              value={taxType}
+              onChange={(e) => setTaxType(e.target.value)}
+              >
+                <MenuItem value="TaxType1">TaxType1</MenuItem>
+                <MenuItem value="TaxType2">TaxType2</MenuItem>
+              </TextField>
+            </Grid>
           </Grid>
         </Box>
         <Divider sx={{ my: 2 }} />
-    
+
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
           <Typography variant="h5" gutterBottom>
@@ -443,7 +453,7 @@ function PurchaseReturn() {
           </Typography>
           {tables.map((table) => (
             <ProductTable
-            fullWidth
+              fullWidth
               key={table.id}
               rows={table.rows}
               onAddRow={() => handleAddRow(table.id)}
@@ -453,6 +463,15 @@ function PurchaseReturn() {
               }
             />
           ))}
+
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+
+            <Button variant="contained" className="btn-design"
+            // onClick={handleSubmit}  
+            >
+              Save
+            </Button>
+          </Box>
         </Box>
 
       </Paper>

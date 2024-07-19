@@ -1,52 +1,25 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogContent, DialogContentText, DialogTitle, Box} from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CloseIcon from "@mui/icons-material/Close";
 import AddBrandModal from "./AddBrandModal";
 
-const AllBrandModals = ({open, handleClose, formType, brandData, style}) => {
-    const [ brandName, setBrandName ] = useState("");
-    const [ selectedManufacturer, setSelectedManufacturer ] = useState("");
+const AllBrandModals = ({open, handleClose, formType, selectedData, style}) => {
     const [ success, setSuccess ] = useState(false);
 
-    useEffect(() => {
-        if (brandData && formType === "edit brand") {
-            setBrandName(brandData.brand);
-            setSelectedManufacturer(brandData.manufactureId);
-        }
-    }, [ brandData, formType ]);
-
-    const handleAddBrand = () => {
-        setTimeout(() => {
-            setSuccess(true);
-        }, 500);
-    };
-
     const resetForm = () => {
-        setBrandName("");
-        setSelectedManufacturer("");
         setSuccess(false);
     };
 
     const handleDialogClose = () => {
         resetForm();
-        handleClose();
+        handleClose(); 
     };
-
     const renderForm = () => {
         switch (formType) {
             case "add brand":
             case "edit brand":
-                return (
-                    <AddBrandModal
-                        brandName={brandName}
-                        setBrandName={setBrandName}
-                        selectedManufacturer={selectedManufacturer}
-                        setSelectedManufacturer={setSelectedManufacturer}
-                        setSuccess={setSuccess}
-                        formType={formType}
-                        brandData={brandData}
-                    />
-                );
+                return <AddBrandModal setSuccess={setSuccess} formType={formType} selectedData={selectedData} />;
             default:
                 return null;
         }
@@ -54,6 +27,7 @@ const AllBrandModals = ({open, handleClose, formType, brandData, style}) => {
 
     return (
         <Dialog open={open} onClose={handleDialogClose} PaperProps={{style}}>
+             <CloseIcon sx={{position: "absolute", top: 10, right: 10, cursor: "pointer"}} onClick={handleDialogClose} />
             <DialogTitle sx={{color: "#086070", fontWeight: "600"}}>
                 {formType.charAt(0).toUpperCase() + formType.slice(1)}
             </DialogTitle>

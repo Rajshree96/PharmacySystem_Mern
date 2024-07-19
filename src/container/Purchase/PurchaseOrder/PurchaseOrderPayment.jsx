@@ -26,7 +26,7 @@ const style = {
   p: 4,
 };
 
-const PurchaseOrderPayment = () => {
+const PurchaseOrderPayment = ({ onClick, netAmount }) => {
   const [open, setOpen] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState("");
   const [dispatchedThrough, setDispatchedThrough] = useState("");
@@ -39,12 +39,6 @@ const PurchaseOrderPayment = () => {
   const handleClose = () => setOpen(false);
 
   const handleSave = () => {
-    console.log("Receipt Number:", receiptNumber);
-    console.log("Dispatched Through:", dispatchedThrough);
-    console.log("Destination:", destination);
-    console.log("Carrier Name/Agent:", carrierName);
-    console.log("Bill of Lading/LR-RR No.:", billOfLading);
-    console.log("Motor Vehicle No.:", vehicleNumber);
     handleClose();
   };
   const [paymentType, setPaymentType] = useState("");
@@ -64,7 +58,7 @@ const PurchaseOrderPayment = () => {
 
   return (
     <div>
-      <Button variant="contained" className="btn-design" onClick={handleOpen}>
+      <Button variant="contained" className="btn-design" onClick={(e) => { onClick(e); handleOpen(); }}>
         Save & Payment
       </Button>
       <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
@@ -88,7 +82,9 @@ const PurchaseOrderPayment = () => {
             {paymentType === "cash" && (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Amount" fullWidth />
+                  <TextField label="Amount" fullWidth
+                    value={netAmount}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField label="Advance" fullWidth />
@@ -139,9 +135,14 @@ const PurchaseOrderPayment = () => {
                         value={onlineTransaction}
                         onChange={(e) => setOnlineTransaction(e.target.value)}
                       />
-                    </Grid>
+                    </Grid>                   
                     <Grid item xs={12} sm={6}>
                       <TextField label="Transaction No" fullWidth />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="Amount" fullWidth
+                        value={netAmount}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField label="Advance" fullWidth />
@@ -175,6 +176,11 @@ const PurchaseOrderPayment = () => {
                       <TextField label="Cheque No" fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
+                      <TextField label="Amount" fullWidth
+                        value={netAmount}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
                       <TextField label="Advance" fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -190,6 +196,9 @@ const PurchaseOrderPayment = () => {
                 )}
               </Grid>
             )}
+            <Button onClick={handleSave}
+              className="btn-design" sx={{ color: 'white', mt: 3 }}
+            >Save</Button>
           </FormControl>
         </Grid>
       </Modal>

@@ -499,6 +499,8 @@ function PurchaseOrder() {
    const[gstAmount,setGstAmount]=useState('')
    const[netAmount,setNetAmount]=useState('')
    const[narration,setNarration]=useState('');
+   const[taxType,setTaxType]=useState('');
+   
    const [transportDetails, setTransportDetails] = useState({
     receiptNumber: '',
     dispatchedThrough: '',
@@ -560,6 +562,7 @@ function PurchaseOrder() {
 
   const resumeRef = useRef();
   const handlePrint = useReactToPrint({
+    
     content: () => resumeRef.current,
   });
 
@@ -608,29 +611,32 @@ function PurchaseOrder() {
   //     setSuccess(true);
   //   }, 300);
   // };
+
+  const purchaseData = {
+    date: date,
+    orderNo: orderNo,
+    supplierName: supplierName,
+    placeOfSupply: placeOfSupply,
+    paymentTerm: paymentTerms,
+    dueDate: dueDate,
+    transPortDetails:transportDetails,
+    billingAddress: billingAddress,
+    reverseCharge: reverseCharge,
+    purchaseTable: tables[0].rows,
+    amounts: {
+        grossAmount: grossAmount,
+        gstAmount: gstAmount,
+        otherCharge: otherCharges,
+        netAmount: netAmount
+    },
+    Narration:narration
+};
   const handleSubmit = async (event) => {
     
     event.preventDefault(); 
    
-    const purchaseData = {
-      date: date,
-      orderNo: orderNo,
-      supplierName: supplierName,
-      placeOfSupply: placeOfSupply,
-      paymentTerm: paymentTerms,
-      dueDate: dueDate,
-      transPortDetails:transportDetails,
-      billingAddress: billingAddress,
-      reverseCharge: reverseCharge,
-      purchaseTable: tables[0].rows,
-      amounts: {
-          grossAmount: grossAmount,
-          gstAmount: gstAmount,
-          otherCharge: otherCharges,
-          netAmount: netAmount
-      },
-      Narration:narration
-  };
+    
+  console.log(tables);
   
     try {
       await addPurchase(purchaseData);
@@ -715,20 +721,20 @@ function PurchaseOrder() {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
             <TransportDetails
               transportDetails={transportDetails}
              setTransportDetails={setTransportDetails}
             />
 
             </Grid>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
               <TextField label="Billing Address" fullWidth 
               value={billingAddress}
               onChange={(e) => setBillingAddress(e.target.value)}
               />
             </Grid>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
               <TextField
                 id="outlined-select-currency"
                 select
@@ -739,6 +745,15 @@ function PurchaseOrder() {
               >
                 <MenuItem value="Yes">Yes</MenuItem>
                 <MenuItem value="No">No</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item md={3} xs={3}>
+            <TextField select label="Tax Type" fullWidth
+              value={taxType}
+              onChange={(e) => setTaxType(e.target.value)}
+              >
+                <MenuItem value="TaxType1">TaxType1</MenuItem>
+                <MenuItem value="TaxType2">TaxType2</MenuItem>
               </TextField>
             </Grid>
           </Grid>
@@ -831,19 +846,20 @@ function PurchaseOrder() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design" onClick={handleSubmit} >
+            <Button variant="contained" className="btn-design" onClick={handleSubmit}  >
               Save
             </Button>
 
             <Button
               variant="contained"
               className="btn-design"
-              onClick={handlePrint}
+              onClick={(e)=>{handleSubmit(e); handlePrint();}}
+              
             >
               Save & Print
             </Button>
 
-            <PurchaseOrderPayment/>
+            <PurchaseOrderPayment onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount}/>
 
           </Grid>
         </Grid>

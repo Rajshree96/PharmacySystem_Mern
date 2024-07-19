@@ -137,6 +137,7 @@ import EditButton from "../ButtonContainer/EditButton";
 import DeleteButton from "../ButtonContainer/DeleteButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TablePaginations from "../TablePagination/TablePaginations";
 
 const MedicineUnitTable = ({ onEditUnit }) => {
     const [units, setUnits] = useState([]);
@@ -170,6 +171,17 @@ const MedicineUnitTable = ({ onEditUnit }) => {
         }
     };
 
+    const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
     return (
         <Box sx={{ overflowX: "auto" }}>
             <TableContainer component={Paper} elevation={3}>
@@ -182,9 +194,9 @@ const MedicineUnitTable = ({ onEditUnit }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {units.map((unit, index) => (
+                        {units.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((unit, index) => (
                             <TableRow key={unit._id}>
-                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                                 <TableCell>{unit.name}</TableCell>
                                 <TableCell>
                                     <EditButton
@@ -205,6 +217,13 @@ const MedicineUnitTable = ({ onEditUnit }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePaginations
+        count={units.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
         </Box>
     );
 };
