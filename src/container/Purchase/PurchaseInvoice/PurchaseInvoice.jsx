@@ -454,7 +454,10 @@ function PurchaseOrder() {
 
           <Grid container spacing={2}>
             <Grid item md={4} xs={4}>
-              <TransportDetails />
+            <TransportDetails
+              transportDetails={transportDetails}
+             setTransportDetails={setTransportDetails}
+            />
             </Grid>
             <Grid item md={4} xs={4}>
               <TextField label="Billing Address" fullWidth />

@@ -47,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManagePurchaseOrder = () => {
-  const [customers, setCustomers] = useState([]);
+  const [purchaseData, setPurchaseData] = useState([]);
   const breadcrumbs = ["Purchase", "Manage Purchase Order"];
 
   const [page, setPage] = useState(0);
@@ -61,14 +61,14 @@ const ManagePurchaseOrder = () => {
     setPage(0);
   };
 
-  const fetchCustomer = async () => {
+  const fetchPurchaseList = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
     if (!auth || !auth.token) {
       console.error("No token found in local storage");
       return;
     }
-      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
+      const response = await axios.get("http://localhost:4000/api/v1/purchase/getall",
         {
           headers: { Authorization: `Bearer ${auth.token}`}
          }
@@ -76,17 +76,17 @@ const ManagePurchaseOrder = () => {
       console.log("API Response:", response.data);
 
       if (Array.isArray(response.data)) {
-        setCustomers(response.data);
+        setPurchaseData(response.data);
       } else {
-        console.error("API response does not contain cutomer array:", response.data.result);
+        console.error("API response does not contain purchase array:", response.data.result);
       }
     } catch (error) {
-      console.error("Error fetching manufacturer:", error);
+      console.error("Error fetching purchase list:", error);
     }
   };
 
   useEffect(() => {
-    fetchCustomer();
+    fetchPurchaseList();
     
   }, []);
   // console.log("customer data",customers);
@@ -99,19 +99,19 @@ const ManagePurchaseOrder = () => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+      const response = await axios.delete(`http://localhost:4000/api/v1/purchase/delete/${_id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
       console.log("API Response:", response);
 
       if (response.data.status === "ok" || response.status === 200) {
-        console.log("Deleted customer with _id code:", _id);
-        fetchCustomer();
+        console.log("Deleted purchase with _id code:", _id);
+        fetchPurchaseList();
       } else {
-        console.error("Failed to delete customer:", response.data);
+        console.error("Failed to delete purchase:", response.data);
       }
     } catch (error) {
-      console.error("Error deleting customer:", error);
+      console.error("Error deleting purchase:", error);
     }
   };
 
@@ -128,6 +128,7 @@ const ManagePurchaseOrder = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                <StyledTableCell>Sno.</StyledTableCell>
                   <StyledTableCell>Date</StyledTableCell>
                   <StyledTableCell>Order No.</StyledTableCell>
                   <StyledTableCell>Supplier Name</StyledTableCell>
@@ -139,16 +140,17 @@ const ManagePurchaseOrder = () => {
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customers,index) => (
-                  <StyledTableRow key={customers._id}>
+              {purchaseData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((purchaseData,index) => (
+                  <StyledTableRow key={purchaseData._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {customers.customerDetails.name}
+                      {purchaseData.date}
                     </StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.statutoryDetails.stateRegistrationType}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.statutoryDetails.gstin}</StyledTableCell>
+                    <StyledTableCell>{purchaseData.orderNo}</StyledTableCell>
+                    <StyledTableCell>{purchaseData.supplierName}</StyledTableCell>
+                    <StyledTableCell>{purchaseData.placeOfSupply}</StyledTableCell>
+                    <StyledTableCell>{purchaseData.dueDate}</StyledTableCell>
+                    <StyledTableCell>{purchaseData.dueDate}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
@@ -167,7 +169,7 @@ const ManagePurchaseOrder = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(customers._id)}
+                          onClick={() => handleDeleteClick(purchaseData._id)}
 
                         />
                         
@@ -180,7 +182,7 @@ const ManagePurchaseOrder = () => {
           </TableContainer>
          
          <TablePaginations
-        count={customers.length}
+        count={purchaseData.length}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
