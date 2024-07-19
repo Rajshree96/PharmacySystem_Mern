@@ -1,4 +1,4 @@
-import PurchaseModal from "../models/purchaseModal.js";
+import Purchase from "../models/purchaseModal.js";
 
 
 // Add a new purchase record with all fields
@@ -43,7 +43,7 @@ import PurchaseModal from "../models/purchaseModal.js";
 export const addPurchase = async (req, res) => {
     try {
         console.log(req.body);
-        const newPurchase = new PurchaseModal({
+        const newPurchase = new Purchase({
             date: req.body.date,
             orderNo: req.body.orderNo,
             supplierName: req.body.supplierName,
@@ -63,7 +63,7 @@ export const addPurchase = async (req, res) => {
             amounts: req.body.amounts,
             Narration: req.body.Narration
         });
-        console.log(purchaseTable);
+   
         // Validate the newPurchase object against the PurchaseModal schema
         const validationError = newPurchase.validateSync(); // This will synchronously validate the schema
 
@@ -88,7 +88,7 @@ export const addPurchase = async (req, res) => {
 //getall purchesh 
 export const getAllPurchases = async (req, res) => {
     try {
-        const purchases = await PurchaseModal.find();
+        const purchases = await Purchase.find();
         res.status(200).json(purchases);
     } catch (error) {
         res.status(500).json({ message: "Failed to retrieve purchases", error: error.message });
@@ -116,7 +116,7 @@ export const updatePurchase = async (req, res) => {
     };
 
     try {
-        const updatedPurchase = await PurchaseModal.findByIdAndUpdate(id, updatedData, { new: true });
+        const updatedPurchase = await Purchase.findByIdAndUpdate(id, updatedData, { new: true });
         if (!updatedPurchase) {
             return res.status(404).json({ message: "Purchase not found" });
         }
@@ -132,7 +132,7 @@ export const deletePurchase = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const deletedPurchase = await PurchaseModal.findByIdAndDelete(id);
+        const deletedPurchase = await Purchase.findByIdAndDelete(id);
         if (!deletedPurchase) {
             return res.status(404).json({ message: "Purchase not found" });
         }

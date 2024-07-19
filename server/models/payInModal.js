@@ -13,8 +13,7 @@ const payInSchema = new mongoose.Schema({
         unique:true,
     },
     customerDetail:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Customer",
+        type:String,
         required:true,
     },
     receiptMode:{
@@ -23,8 +22,7 @@ const payInSchema = new mongoose.Schema({
         required:true,
     },
     bank:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Bank",
+        type:String,
         required:true,
     },
     paymentMethod:{

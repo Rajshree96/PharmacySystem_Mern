@@ -1,30 +1,49 @@
 import DeliveryChallan from '../models/deliveryChalanModal.js';
-import Customer from '../models/customerModal.js';
-import supplierModel from '../models/supplierModel.js';
-import medicineModel from '../models/medicineModel.js';
+
 
 // Create a new delivery challan
 export const createDeliveryChallan = async (req, res) => {
     try {
-        const newDeliveryChallan = new DeliveryChallan(req.body);
         
-        // Save the new delivery challan
-        let savedDeliveryChallan = await newDeliveryChallan.save();
-
-        // Populate the required fields after saving with specific fields
-        savedDeliveryChallan = await DeliveryChallan.findById(savedDeliveryChallan._id)
-            .populate('customerName', 'customerDetails.name') // populate only the customer's name
-            .populate('placeOfSupply', 'state') // populate only the supplier's name
-            .populate('purchaseTable.itemCode', 'itemCode') // populate only the item code
-            .populate('purchaseTable.productName', 'medicineName'); // populate only the medicine name
-
-        res.status(201).json({
-            message: "Delivery Challan created successfully",
-            data: savedDeliveryChallan
+        const newDeliveryChallan= new DeliveryChallan({
+            date: req.body.date,
+            deliveryChallanNo: req.body.deliveryChallanNo,
+            customerName: req.body.customerName,
+            placeOfSupply: req.body.placeOfSupply,
+            paymentTerm: req.body.paymentTerm,
+            dueDate: req.body.dueDate,
+            transPortDetails: {
+                                receiptNumber: req.body.transPortDetails.receiptNumber,
+                                dispatchedThrough: req.body.transPortDetails.dispatchedThrough,
+                                destination: req.body.transPortDetails.destination,
+                                carrierName: req.body.transPortDetails.carrierName,
+                                billOfLading: req.body.transPortDetails.billOfLading
+                          },
+            billingAddress: req.body.billingAddress,
+            reverseCharge: req.body.reverseCharge,
+            purchaseTable: req.body.purchaseTable,
+            amounts: req.body.amounts,
+            Narration: req.body.Narration
         });
+    
+          // Validate the newPurchase object against the PurchaseModal schema
+          const validationError = newDeliveryChallan.validateSync(); // This will synchronously validate the schema
+    
+          if (validationError) {
+              // If validation fails, respond with a 400 Bad Request status and error details
+              console.log(validationError.message)
+              return res.status(400).json({ message: validationError.message });
+          }
+      
+          // If validation passes, save the new purchase
+          await newDeliveryChallan.save();
+      
+          // Respond with success message and the saved purchase object
+          res.status(201).json({ message: "DeliveryChallan Successfully congrates", newDeliveryChallan });
+
     } catch (error) {
         res.status(400).json({
-            message: "Failed to create Delivery Challan",
+            message: "Failed to create Delivey Challan",
             error: error.message
         });
     }

@@ -43,6 +43,6 @@ const PurchaseSchema = new mongoose.Schema({
     Narration: { type: String }
 });
 
-const PurchaseModal = mongoose.model('Purchase', PurchaseSchema);
+const Purchase = mongoose.model('Purchase', PurchaseSchema);
 
-export default PurchaseModal;
+export default Purchase;

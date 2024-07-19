@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -278,7 +279,7 @@ function SalesInvoice() {
       rows: [initialRow],
     },
   ]);
-  const [otherCharges, setOtherCharges] = useState([]);
+  const [otherCharges, setOtherCharges] = useState("");
   const [reverseCharge, setReverseCharge] = useState("No");
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
@@ -287,6 +288,22 @@ function SalesInvoice() {
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
 
+  const[invoiceNo, setInvoiceNo] =useState('');
+  const[customerName,setCustomerName]=useState('')
+  const[placeOfSupply,setPlaceOfSupply]=useState('')
+  const[billingAddress,setBillingAddress]=useState('')
+  const[grossAmount,setGrossAmount]=useState('')
+  const[gstAmount,setGstAmount]=useState('')
+  const[netAmount,setNetAmount]=useState('')
+  const[narration,setNarration]=useState('');
+  const [transPortDetails, setTransPortDetails] = useState({
+    receiptNumber: '',
+    dispatchedThrough: '',
+   destination: '',
+   carrierName: '',
+   billOfLading: '',
+   vehicleNumber: ''
+ });
   useEffect(() => {
     if (date && paymentTerms) {
       const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
@@ -353,6 +370,66 @@ function SalesInvoice() {
     );
   };
 
+
+  const addSalesInvoice = async(salesInvoice)=>{
+    console.log(salesInvoice);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/salesinvoice/addSalesInvoice',
+        salesInvoice,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("salesInvoice response", response);
+       if (response.data.status === 201) {
+        console.log("salesInvoice created successfully ");
+        } 
+    } catch (error) {
+      console.log("Somthing went wrong");
+
+    }
+  }
+
+
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    const salesInvoice = {
+      date: date,
+      invoiceNo: invoiceNo,
+      customerName: customerName,
+      placeOfSupply: placeOfSupply,
+      paymentTerm: paymentTerms,
+      dueDate: dueDate,
+      transPortDetails:transPortDetails,
+      billingAddress: billingAddress,
+      reverseCharge: reverseCharge,
+      purchaseTable: tables[0].rows,
+      amounts: {
+          grossAmount: grossAmount,
+          gstAmount: gstAmount,
+          otherCharge: otherCharges,
+          netAmount: netAmount
+      },
+      Narration:narration
+  };
+  
+    try {
+      await addSalesInvoice(salesInvoice);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding salesInvoice:', error);
+      
+    }
+  };
+  console.log(tables)
+  console.log(transPortDetails)
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -374,16 +451,25 @@ function SalesInvoice() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Estimate No." fullWidth />
+              <TextField label="Invoic No." fullWidth 
+              value={invoiceNo}
+              onChange={(e)=> setInvoiceNo(e.target.value)}
+              />
             </Grid>           
             <Grid item xs={3}>
-              <TextField select label="Customer Name" fullWidth>
+              <TextField select label="Customer Name" fullWidth
+               value={customerName}
+               onChange={(e)=>setCustomerName(e.target.value)}
+              >
                 <MenuItem value="CustomerName1">CustomerName1</MenuItem>
                 <MenuItem value="CustomerName2">CustomerName2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Place of Supply" fullWidth />
+              <TextField label="Place of Supply" fullWidth
+              value={placeOfSupply}
+              onChange={(e)=> setPlaceOfSupply(e.target.value)}
+              />
             </Grid>
             <Grid item xs={3}>
               <TextField
@@ -415,10 +501,16 @@ function SalesInvoice() {
 
           <Grid container spacing={2}>
             <Grid item md={4} xs={4}>
-              <TransportDetails />
+              <TransportDetails
+              transPortDetails={transPortDetails}
+               setTransPortDetails={setTransPortDetails}
+              />
             </Grid>
             <Grid item md={4} xs={4}>
-              <TextField label="Billing Address" fullWidth />
+              <TextField label="Billing Address" fullWidth 
+               value={billingAddress}
+               onChange={(e)=> setBillingAddress(e.target.value)}
+              />
             </Grid>
             <Grid item md={4} xs={4}>
               <TextField
@@ -483,22 +575,34 @@ function SalesInvoice() {
                 </Grid>
               </Grid>
             </Modal>   
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3}
+              value={narration}
+              onChange={(e)=> setNarration(e.target.value)}
+            />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
-              <TextField label="Gross Amount" fullWidth />
-              <TextField label="GST Amount" fullWidth />
+              <TextField label="Gross Amount" fullWidth 
+                value={grossAmount}
+                onChange={(e)=>setGrossAmount(e.target.value)}
+              />
+              <TextField label="GST Amount" fullWidth 
+              value={gstAmount}
+              onChange={(e)=>setGstAmount(e.target.value)}
+              />
               <TextField label="Other Charge" 
               fullWidth 
               value={totalCharges}
               InputProps={{
                 readOnly: true,
               }} />
-              <TextField label="Net Amount" fullWidth />
+              <TextField label="Net Amount" fullWidth 
+              value={netAmount}
+              onChange={(e)=>setNetAmount(e.target.value)}
+              />
             </Box>
           </Grid>
         </Grid>
@@ -513,7 +617,7 @@ function SalesInvoice() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handleSubmit}>
               Save
             </Button>
 
