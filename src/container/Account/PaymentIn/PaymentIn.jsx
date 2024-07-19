@@ -284,6 +284,10 @@ function PaymentIn() {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [chequeNumber, setChequeNumber] = useState("");
+  const [receiptNo, setReceiptNo] = useState("");
+  const [customer, setCustomer] = useState("");
+  const [narration, setNarration] = useState("");
+
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -307,9 +311,9 @@ function PaymentIn() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
@@ -327,6 +331,53 @@ function PaymentIn() {
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+
+
+  const paymentData = {
+    date: date,
+    receiptNo: receiptNo,
+    customerDetail: customer,
+    receiptMode: receiptMode,
+    bank: bank,
+    paymentMethod: paymentMethod,
+    transaction: transactionNumber,
+    chequeNo: chequeNumber,
+    purchaseTable: tables[0].rows,
+  };
+
+    // purchaseTable: 
+    //   {
+    //     billNo: billNumber,
+    //     billAmount: billAmount,
+    //     recivedAmount: receivedAmount,
+    //     balanceAmount: balance,
+    //     total: total,
+    //     narration: narration
+    //   },
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(paymentData,"@@@@@");
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.post('http://localhost:4000/api/v1/payin/pay',
+        paymentData,
+        {
+          headers: {
+            "content-type": "application/json",
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log(response);
+      if (response.data.status === 201) {
+        console.log("purchase created successfully ");
+      }
+    } catch (error) {
+      console.log("something went wrong");
+    }
+  };
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -349,10 +400,16 @@ function PaymentIn() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Receipt No." fullWidth />
+              <TextField label="Receipt No."
+                value={receiptNo}
+                onChange={(e) => setReceiptNo(e.target.value)}
+                fullWidth />
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Select Customer" fullWidth>
+              <TextField select label="Select Customer"
+                value={customer}
+                onChange={(e) => setCustomer(e.target.value)}
+                fullWidth>
                 <MenuItem value="Customer1">Customer1</MenuItem>
                 <MenuItem value="Customer2">Customer2</MenuItem>
               </TextField>
@@ -412,7 +469,7 @@ function PaymentIn() {
                     label="Cheque Number"
                     fullWidth
                     value={chequeNumber}
-                    onChange={(e) => setChequeNumber(e.target.value)} 
+                    onChange={(e) => setChequeNumber(e.target.value)}
                   />
                 </Grid>
               )}
@@ -422,7 +479,7 @@ function PaymentIn() {
 
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
-         
+
           {tables.map((table) => (
             <ProductTable
               key={table.id}
@@ -439,7 +496,10 @@ function PaymentIn() {
         {/* Narration */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={3} xs={3}>
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration"
+              value={narration}
+              onChange={(e) => setNarration(e.target.value)}
+              fullWidth multiline rows={3} />
           </Grid>
         </Grid>
 
@@ -453,7 +513,8 @@ function PaymentIn() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design"
+              onClick={handleSubmit}>
               Save
             </Button>
           </Grid>
