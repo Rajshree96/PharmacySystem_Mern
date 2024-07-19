@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Button, Dialog, DialogContent, DialogContentText, DialogTitle, Box} from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CloseIcon from "@mui/icons-material/Close";
 import AddCategoryModal from "./addMedicineModals/AddCategoryModal";
 import AddMedicineModal from "./addMedicineModals/AddMedicineModal";
 import AddUnitsModal from "./addMedicineModals/AddUnitsModal";
@@ -39,6 +40,7 @@ const AllMedicineModals = ({open, handleClose, formType, selectedData, style}) =
 
     return (
         <Dialog open={open} onClose={handleDialogClose} PaperProps={{style}}>
+            <CloseIcon sx={{position: "absolute", top: 10, right: 10, cursor: "pointer"}} onClick={handleDialogClose} />
             <DialogTitle sx={{color: "#086070", fontWeight: "600"}}>
                 {formType.charAt(0).toUpperCase() + formType.slice(1)}
             </DialogTitle>

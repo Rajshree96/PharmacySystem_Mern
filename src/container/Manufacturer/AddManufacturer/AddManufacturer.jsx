@@ -315,13 +315,39 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
 
     const breadcrumbs = [ "Manufacturer", "Add Manufacturer" ];
 
+    // Edit mode -> Form styles changes conditionally
+
+    const editModeStyles =
+        formType === "edit manufacturer"
+            ? {
+                  padding: responsivePadding(16, 32), // Decrease padding in edit mode
+                  headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+                  buttonColor: "red !important", // Change button color in edit mode
+              }
+            : {};
+
+    const paperStyles =
+        formType === "edit manufacturer"
+            ? {
+                  padding: responsivePadding(0, 0),
+                  borderRadius: 2,
+                  boxShadow: "none",
+                  // backgroundColor:  "#f0f4f8",
+              }
+            : {};
+
     return (
         <Container maxWidth="lg">
             <Toaster />
             <Box className={classes.formContainer}>
-                <Paper elevation={3} sx={{p: responsivePadding(24, 48), borderRadius: 2}}>
+                <Paper elevation={3} sx={{p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles}}>
                     <motion.div initial="hidden" animate="visible" variants={containerVariants}>
-                        <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            component={motion.h4}
+                            variants={itemVariants}
+                        >
                             Manufacturer
                         </Typography>
                         <BreadcrumbContainer breadcrumbs={breadcrumbs} />
@@ -566,23 +592,22 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                             variant="contained"
                                             color="success"
                                             startIcon={<SaveIcon />}
-                                            // className={classes.button}
                                             className="btn-design-green"
-                                             sx={{mr: 2}}
                                             // onClick={handleSubmit}
                                             onClick={handleSaveCategory}
                                         >
-                                            {formType === "edit manufacturer" ? "Update Manufacturer" : "Create "}
+                                            {formType === "edit manufacturer" ? "Update " : "Create "}
                                         </Button>
                                     </Tooltip>
                                     <Tooltip title="Cancel">
                                         <Button
                                             type="reset"
                                             variant="outlined"
-                                            // color="secondary"
                                             startIcon={<CancelIcon />}
-                                            // className={classes.button}
-                                            className="btn-design"
+                                            sx={{
+                                                mx: 1,
+                                                backgroundColor: editModeStyles.buttonColor,
+                                            }}
                                             style={{backgroundColor: "#086070", color: "white"}}
                                         >
                                             Cancel
