@@ -499,6 +499,8 @@ function PurchaseOrder() {
    const[gstAmount,setGstAmount]=useState('')
    const[netAmount,setNetAmount]=useState('')
    const[narration,setNarration]=useState('');
+   const[taxType,setTaxType]=useState('');
+   
    const [transportDetails, setTransportDetails] = useState({
     receiptNumber: '',
     dispatchedThrough: '',
@@ -719,20 +721,20 @@ function PurchaseOrder() {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
             <TransportDetails
               transportDetails={transportDetails}
              setTransportDetails={setTransportDetails}
             />
 
             </Grid>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
               <TextField label="Billing Address" fullWidth 
               value={billingAddress}
               onChange={(e) => setBillingAddress(e.target.value)}
               />
             </Grid>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
               <TextField
                 id="outlined-select-currency"
                 select
@@ -743,6 +745,15 @@ function PurchaseOrder() {
               >
                 <MenuItem value="Yes">Yes</MenuItem>
                 <MenuItem value="No">No</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item md={3} xs={3}>
+            <TextField select label="Tax Type" fullWidth
+              value={taxType}
+              onChange={(e) => setTaxType(e.target.value)}
+              >
+                <MenuItem value="TaxType1">TaxType1</MenuItem>
+                <MenuItem value="TaxType2">TaxType2</MenuItem>
               </TextField>
             </Grid>
           </Grid>
