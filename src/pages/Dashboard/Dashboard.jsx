@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   styled,
   useTheme,
@@ -76,6 +76,7 @@ import ManageBankTransaction from "../../container/Bank/ManageBankTransaction/Ma
 // Cash
 import AddCash from "../../container/Bank/Cash/AddCash";
 import ManageCash from "../../container/Bank/Cash/ManageCash";
+import axios from "axios";
 
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
@@ -143,6 +144,34 @@ const Dashboard = () => {
 
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [businessDetails, setBusinessDetails] = useState({
+    name: "Loading...",
+    logo: "",
+});
+
+  useEffect(() => {
+    const fetchBusinessDetails = async () => {
+      try {
+        const auth = JSON.parse(localStorage.getItem('auth'));
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${auth.token}`
+          }
+        };
+        const response = await axios.get('http://localhost:4000/api/v1/business-setup/get', config);
+        console.log("response", response);
+
+        setBusinessDetails({
+          name: response.data.businessInfo.businessName,
+          logo: response.data.businessInfo.businessLogo,
+        });
+      } catch (error) {
+        console.error('Error fetching business details:', error);
+      }
+    };
+
+    fetchBusinessDetails();
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -295,11 +324,11 @@ const Dashboard = () => {
               alignItems: "center",
             }}
           >
-            <img src={logo} alt="logo" height="50px" width="50px" />
+            <img src={businessDetails.businessLogo}  height="50px" width="50px" />
             <Typography
               sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}
             >
-              Business Name
+             {businessDetails.name}
             </Typography>
           </Box>
           <IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>

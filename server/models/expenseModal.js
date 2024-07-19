@@ -1,28 +1,28 @@
 import mongoose from "mongoose";
-// import supplierModel from "./supplierModel.js";
-// import medicineModel from "./medicineModel.js";
 
-const payInSchema = new mongoose.Schema({
+const expenseSchema = new mongoose.Schema({
     date:{
         type:String,
         required:true,
     },
-    receiptNo:{
+    expenseNo:{
         type:Number,
         required:true,
         unique:true,
     },
-    customerDetail:{
-        type:String,
-        required:true,
-    },
-    receiptMode:{
+    paymentMode:{
         type:String,
         enum:["Cash", "Bank"],
         required:true,
     },
-    bank:{
+    taxType:{
         type:String,
+        enum:["CGST", "SGST", "IGST", "Non GST"],
+        required:true,
+    },
+    bank:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Bank",
         required:true,
     },
     paymentMethod:{
@@ -37,22 +37,30 @@ const payInSchema = new mongoose.Schema({
         type:String
     },
    purchaseTable:[{
-    billNo:{
+     account:{
+        type:String,
+        required:true,
+     },
+     product:{
+        type:String,
+        required:true,
+     },
+     description:{
+        type:String,
+        required:true,
+     },
+     amount:{
         type:Number,
         required:true,
-    },
-    billAmount:{
+     },
+     tax:{
+       type:String,
+       required:true, 
+     },
+     taxAmount:{
         type:Number,
         required:true,
-    },
-    recivedAmount:{
-        type:Number,
-        required:true
-    },
-    balanceAmount:{
-        type:Number,
-        required:true,
-    },
+     },
     total:{
         type:Number,
         required:true,
@@ -63,5 +71,5 @@ const payInSchema = new mongoose.Schema({
    }],
 },{timestamps:true})
 
-const PayIN  = mongoose.model("PayIN", payInSchema);
-export default PayIN;
+const Expense  = mongoose.model("Expense", expenseSchema);
+export default Expense;

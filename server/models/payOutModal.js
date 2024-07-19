@@ -2,27 +2,29 @@ import mongoose from "mongoose";
 // import supplierModel from "./supplierModel.js";
 // import medicineModel from "./medicineModel.js";
 
-const payInSchema = new mongoose.Schema({
+const payOutSchema = new mongoose.Schema({
     date:{
         type:String,
         required:true,
     },
-    receiptNo:{
+    paymentNo:{
         type:Number,
         required:true,
         unique:true,
     },
-    customerDetail:{
-        type:String,
+    supplierDetails:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Supplier",
         required:true,
     },
-    receiptMode:{
+    paymentMode:{
         type:String,
         enum:["Cash", "Bank"],
         required:true,
     },
     bank:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Bank",
         required:true,
     },
     paymentMethod:{
@@ -45,7 +47,7 @@ const payInSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    recivedAmount:{
+    paymentAmount:{
         type:Number,
         required:true
     },
@@ -63,5 +65,6 @@ const payInSchema = new mongoose.Schema({
    }],
 },{timestamps:true})
 
-const PayIN  = mongoose.model("PayIN", payInSchema);
-export default PayIN;
+const PayOut  = mongoose.model("PayOut", payOutSchema);
+export default PayOut;
+

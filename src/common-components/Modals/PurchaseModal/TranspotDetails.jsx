@@ -12,21 +12,21 @@ const style = {
   p: 4,
 };
 
-const TransportDetails = ({ transportDetails, setTransportDetails }) => {
+const TransportDetails = ({ transPortDetails, setTransPortDetails }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleChange = (field) => (e) => {
-    setTransportDetails({
-      ...transportDetails,
+    setTransPortDetails({
+      ...transPortDetails,
       [field]: e.target.value
     });
   };
 
   const handleSave = () => {
-    console.log('Transport Details:', transportDetails);
+    console.log('Transport Details:', transPortDetails);
     handleClose();
   };
 
@@ -45,7 +45,7 @@ const TransportDetails = ({ transportDetails, setTransportDetails }) => {
               label="Receipt Doc No."
               variant="outlined"
               fullWidth
-              value={transportDetails.receiptNumber}
+              value={transPortDetails.receiptNumber}
               onChange={handleChange('receiptNumber')}
               margin="normal"
             />
@@ -55,7 +55,7 @@ const TransportDetails = ({ transportDetails, setTransportDetails }) => {
               label="Dispatched through"
               variant="outlined"
               fullWidth
-              value={transportDetails.dispatchedThrough}
+              value={transPortDetails.dispatchedThrough}
               onChange={handleChange('dispatchedThrough')}
               margin="normal"
             />
@@ -65,7 +65,7 @@ const TransportDetails = ({ transportDetails, setTransportDetails }) => {
               label="Destination"
               variant="outlined"
               fullWidth
-              value={transportDetails.destination}
+              value={transPortDetails.destination}
               onChange={handleChange('destination')}
               margin="normal"
             />
@@ -75,7 +75,7 @@ const TransportDetails = ({ transportDetails, setTransportDetails }) => {
               label="Carrier Name/Agent"
               variant="outlined"
               fullWidth
-              value={transportDetails.carrierName}
+              value={transPortDetails.carrierName}
               onChange={handleChange('carrierName')}
               margin="normal"
             />
@@ -85,7 +85,7 @@ const TransportDetails = ({ transportDetails, setTransportDetails }) => {
               label="Bill of Lading/LR-RR No."
               variant="outlined"
               fullWidth
-              value={transportDetails.billOfLading}
+              value={transPortDetails.billOfLading}
               onChange={handleChange('billOfLading')}
               margin="normal"
             />
@@ -95,7 +95,7 @@ const TransportDetails = ({ transportDetails, setTransportDetails }) => {
               label="Motor Vehicle No."
               variant="outlined"
               fullWidth
-              value={transportDetails.vehicleNumber}
+              value={transPortDetails.vehicleNumber}
               onChange={handleChange('vehicleNumber')}
               margin="normal"
             />

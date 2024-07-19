@@ -47,3 +47,18 @@ export const addBusinessSetup = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
+// Get business setup details
+export const getBusinessSetup = async (req, res) => {
+  try {
+    const businessSetup = await SetUpBusiness.findOne();
+    if (!businessSetup) {
+      return res.status(404).json({ message: "Business setup not found" });
+    }
+    res.status(200).json(businessSetup);
+  } catch (error) {
+    console.error('Error in getBusinessSetup:', error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

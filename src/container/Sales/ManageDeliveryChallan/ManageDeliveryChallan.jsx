@@ -47,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManageDeliveryChallan = () => {
-  const [customers, setCustomers] = useState([]);
+  const [deliveryChallan, setDeliveryChallan] = useState([]);
   const breadcrumbs = ["Sales", "Manage Delivery Challan"];
 
   const [page, setPage] = useState(0);
@@ -61,59 +61,33 @@ const ManageDeliveryChallan = () => {
     setPage(0);
   };
 
-  const fetchCustomer = async () => {
+  const fetchDeliveryChallan = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
-    }
-      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
-        {
-          headers: { Authorization: `Bearer ${auth.token}`}
-         }
-      );
-      console.log("API Response:", response.data);
-
-      if (Array.isArray(response.data)) {
-        setCustomers(response.data);
-      } else {
-        console.error("API response does not contain cutomer array:", response.data.result);
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
       }
-    } catch (error) {
-      console.error("Error fetching manufacturer:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCustomer();
-    
-  }, []);
-  // console.log("customer data",customers);
-
-  const handleDeleteClick = async (_id) => {
-    const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
-    }
-
-    try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+  
+      const response = await axios.get("http://localhost:4000/api/v1/deliveryChallan/getAll", {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
-      console.log("API Response:", response);
-
-      if (response.data.status === "ok" || response.status === 200) {
-        console.log("Deleted customer with _id code:", _id);
-        fetchCustomer();
+      console.log("API Response:", response.data);
+  
+      if (Array.isArray(response.data)) {
+        setDeliveryChallan(response.data);
+      } else if (response.data && typeof response.data === 'object') {
+        setDeliveryChallan([response.data]);
       } else {
-        console.error("Failed to delete customer:", response.data);
+        console.error("API response does not contain deliveryChallan array:", response.data);
       }
     } catch (error) {
-      console.error("Error deleting customer:", error);
+      console.error("Error fetching deliveryChallan:", error);
     }
+    fetchDeliveryChallan();
   };
+  
+  
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -139,16 +113,17 @@ const ManageDeliveryChallan = () => {
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customers,index) => (
-                  <StyledTableRow key={customers._id}>
+              {deliveryChallan.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((delivery,index) => (
+                  <StyledTableRow key={deliveryChallan._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {customers.customerDetails.name}
+                      {delivery.date}
                     </StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.address}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.statutoryDetails.stateRegistrationType}</StyledTableCell>
+                    <StyledTableCell>{delivery.deliveryChallanNo}</StyledTableCell>
+                    <StyledTableCell>{delivery.customerName}</StyledTableCell>
+                    <StyledTableCell>{delivery.placeOfSupply}</StyledTableCell>
+                    <StyledTableCell>{delivery.dueDate}</StyledTableCell>
+                    <StyledTableCell>{delivery.purchaseTable[0].totalValue}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
@@ -167,7 +142,7 @@ const ManageDeliveryChallan = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(customers._id)}
+                          // onClick={() => handleDeleteClick(deliveryChallan._id)}
 
                         />
                         
@@ -180,7 +155,7 @@ const ManageDeliveryChallan = () => {
           </TableContainer>
          
          <TablePaginations
-        count={customers.length}
+        count={deliveryChallan.length}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}

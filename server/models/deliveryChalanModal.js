@@ -3,146 +3,46 @@ import mongoose from "mongoose";
 // import medicineModel from "./medicineModel.js";
 
 const deliveryChallanSchema = new mongoose.Schema({
-    date:{
-        type:String,
-        default: Date.now(),
-        required:true,
+    date: { type: String, required: true },
+    deliveryChallanNo: { type: String, required: true},
+    customerName: { type: String, required: true },
+    placeOfSupply: { type: String, required: true },
+    paymentTerm: { type: String, required: true },
+    dueDate: { type: String, required: true },
+    transPortDetails: {
+        receiptNumber: { type: String, required: true },
+        dispatchedThrough: { type: String, required: true },
+        destination: { type: String, required: true },
+        carrierName: { type: String, required: true },
+        billOfLading: { type: String, required: true }
     },
-    deliveryChallanNo:{
-        type:String,
-        unique:true,
-        required:true,
-
+    billingAddress: { type: String, required: true },
+    reverseCharge: { type: String, required: true },
+    purchaseTable: [{
+        sno: { type: String, required: true },
+        itemCode: { type: String, required: true },
+        productName: { type: String, required: true },
+        qty: { type: String, required: true },
+        // freeQty: { type: String, required: true },
+        mrp: { type: String, required: true },
+        retailPrice: { type: String },
+        // unitCost: { type: String, required: true },
+        taxableValue: { type: String, required: true },
+        totalValue: { type: String, required: true },
+        // discount1: { type: String },
+        // discount2: { type: String },
+        cgst: { type: String },
+        sgst: { type: String},
+        igst: { type: String },
+    }],
+    amounts: {
+        grossAmount: { type: String, required: true },
+        gstAmount: { type: String, required: true },
+        // otherCharge: { type: Number},
+        netAmount: { type: String, required: true }
     },
-    customerName:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Customer",
-        required:true,
-    },
-
-    placeOfSupply:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Supplier",
-        required:true,
-    },
-    paymentTerm:{
-        type:Date,
-        default:Date.now(),
-         required:true,
-    },
-    dueDate:{
-        type:Date,
-        required:true,
-    },
-
-   transPortDetails:{
-    ReceiptNo:{
-        type:String,
-        required:true,
-    },
-    dispatchedThrough:{
-        type:String,
-        required:true,
-    },
-    destination:{
-        type:String,
-        required:true,
-    },
-    carrierName:{
-        type:String,
-        required:true,
-    },
-    billOfLanding:{
-        type:String,
-        required:true,
-    },
-  motorNo:{
-    type:String,
-    required:true,
-  },
-
-
-   },
-   billingAddress:{
-    type:String,
-     required:true,
-   },
-   reverseCharge:{
-    type:String,
-    enum:["Yes", "No"],
-    required:true,
-   },
-
-   purchaseTable:{
-    itemCode:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Medicine",
-        required:true,
-        // type:String,
-        //  required:true,
-
-    },
-    productName:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Medicine",
-        required:true,
-    },
-    quantity:{
-        type:Number,
-        required:true,
-    },
-    mrp:{
-        type:Number,
-        required:true
-    },
-    retailPrice:{
-        type:String,
-        required:true,
-    },
-    taxableValue:{
-        type:Number,
-        required:true,
-    },
-    cGst:{
-        type:String,
-        required:true,
-    },
-    sGst:{
-       type:String,
-       required:true,
-    },
-    iGst:{
-        type:String,
-        required:true,
-    },
-    totalValue:{
-        type:Number,
-        required:true,
-    },
-   },
-
-   amounts:{
-    grossAmount:{
-        type:Number,
-        required:true,
-    },
-     gstAmount:{
-        type:Number,
-        required:true,
-     },
-     otherCharge:{
-        type:Number,
-        required:true,
-     },
-     netAmount:{
-        type:Number,
-        required:true,
-     },
-   },
-   Narration:{
-    type:String,
-   },
-},{timestamps:true})
+    Narration: { type: String }
+});
 
 const DeliveryChallan = mongoose.model("DeliveryChallan", deliveryChallanSchema);
 export default DeliveryChallan;
