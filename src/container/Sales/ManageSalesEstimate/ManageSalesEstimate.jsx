@@ -47,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManageSalesEstimate = () => {
-  const [customers, setCustomers] = useState([]);
+  const [saleEstimate, setSaleEstimate] = useState([]);
   const breadcrumbs = ["Sales", "Manage Sales Estimate"];
 
   const [page, setPage] = useState(0);
@@ -61,14 +61,14 @@ const ManageSalesEstimate = () => {
     setPage(0);
   };
 
-  const fetchCustomer = async () => {
+  const fetchSalesEstimate = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
     if (!auth || !auth.token) {
       console.error("No token found in local storage");
       return;
     }
-      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
+      const response = await axios.get("http://localhost:4000/api/v1/sales/getall",
         {
           headers: { Authorization: `Bearer ${auth.token}`}
          }
@@ -76,20 +76,20 @@ const ManageSalesEstimate = () => {
       console.log("API Response:", response.data);
 
       if (Array.isArray(response.data)) {
-        setCustomers(response.data);
+        setSaleEstimate(response.data);
       } else {
-        console.error("API response does not contain cutomer array:", response.data.result);
+        console.error("API response does not contain saleEstimate array:", response.data);
       }
     } catch (error) {
-      console.error("Error fetching manufacturer:", error);
+      console.error("Error fetching salesEstimate:", error);
     }
   };
 
   useEffect(() => {
-    fetchCustomer();
+    fetchSalesEstimate();
     
   }, []);
-  // console.log("customer data",customers);
+  // console.log("customer data",);
 
   const handleDeleteClick = async (_id) => {
     const auth = JSON.parse(localStorage.getItem('auth'));
@@ -99,20 +99,21 @@ const ManageSalesEstimate = () => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+      const response = await axios.delete(`http://localhost:4000/api/v1/sales/delete/${_id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
       console.log("API Response:", response);
 
       if (response.data.status === "ok" || response.status === 200) {
         console.log("Deleted customer with _id code:", _id);
-        fetchCustomer();
+        fetchSalesEstimate();
       } else {
         console.error("Failed to delete customer:", response.data);
       }
     } catch (error) {
       console.error("Error deleting customer:", error);
     }
+    
   };
 
   return (
@@ -139,16 +140,16 @@ const ManageSalesEstimate = () => {
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customers,index) => (
-                  <StyledTableRow key={customers._id}>
+              {saleEstimate.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((saleEstimate,index) => (
+                  <StyledTableRow key={saleEstimate._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {customers.customerDetails.name}
+                      {saleEstimate.estimateNo}
                     </StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.address}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
-                    <StyledTableCell>{customers.customerDetails.statutoryDetails.stateRegistrationType}</StyledTableCell>
+                    <StyledTableCell>{saleEstimate.customerName}</StyledTableCell>
+                    <StyledTableCell>{saleEstimate.placeOfSupply}</StyledTableCell>
+                    <StyledTableCell>{saleEstimate.dueDate}</StyledTableCell>
+                    <StyledTableCell>{saleEstimate.purchaseTable[0].totalValue}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
@@ -167,7 +168,7 @@ const ManageSalesEstimate = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(customers._id)}
+                           onClick={() => handleDeleteClick(saleEstimate._id)}
 
                         />
                         
@@ -180,7 +181,7 @@ const ManageSalesEstimate = () => {
           </TableContainer>
          
          <TablePaginations
-        count={customers.length}
+        count={saleEstimate.length}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}

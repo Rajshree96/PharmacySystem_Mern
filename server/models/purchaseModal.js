@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const PurchaseSchema = new mongoose.Schema({
@@ -23,7 +24,7 @@ const PurchaseSchema = new mongoose.Schema({
         qty: { type: String, required: true },
         freeQty: { type: String, required: true },
         mrp: { type: String, required: true },
-        retailPrice: { type: String },
+        // retailPrice: { type: String },
         unitCost: { type: String, required: true },
         taxableValue: { type: String, required: true },
         totalValue: { type: String, required: true },
@@ -42,6 +43,6 @@ const PurchaseSchema = new mongoose.Schema({
     Narration: { type: String }
 });
 
-const PurchaseModal = mongoose.model('Purchase', PurchaseSchema);
+const Purchase = mongoose.model('Purchase', PurchaseSchema);
 
-export default PurchaseModal;
+export default Purchase;

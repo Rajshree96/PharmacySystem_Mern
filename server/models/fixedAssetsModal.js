@@ -1,0 +1,94 @@
+import mongoose from "mongoose";
+
+const fixedAssetsSchema = new mongoose.Schema({
+    date:{
+        type:String,
+        required:true,
+    },
+    invoiceNo:{
+        type:Number,
+        required:true,
+        unique:true,
+    },
+    supplierInvoiceNo:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Supplier",
+        required:true,
+    },
+    supplierName:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Supplier",
+        required:true,
+    },
+    placeOfSupply:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Supplier",
+        required:true,
+    },
+    taxType:{
+        type:String,
+        required:true,
+    },
+   purchaseTable:[{
+    assetsName:{
+        type:String,
+        required:true,
+    },
+    qty:{
+        type:Number,
+        required:true,
+    },
+    udm:{
+        type:Number,
+        required:true
+    },
+    rate:{
+        type:Number,
+        required:true,
+    },
+    taxableValue:{
+        type:Number,
+        required:true,
+    },
+    cGst:{
+        type:String,
+        required:true,
+
+    },
+    sGst:{
+        type:String,
+        required:true,
+    },
+    iGst:{
+        type:String,
+        required:true,
+    },
+    totalValue:{
+        type:Number,
+        required:true,
+    },
+   }],
+    grossTotal:{
+        type:Number,
+        reuired:true,
+    },
+    gstAmount:{
+        type:Number,
+        reuired:true,
+    },
+    otherCharge:{
+        type:Number,
+        required:true,
+    },
+    netAmount:{
+        type:Number,
+        required:true,
+    },
+    narration:{
+        type:String,
+    }
+},{timestamps:true})
+
+const FixedAssets  = mongoose.model("FixedAssets", fixedAssetsSchema);
+export default FixedAssets;
+

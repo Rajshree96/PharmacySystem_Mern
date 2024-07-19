@@ -28,6 +28,7 @@ import { Edit, Delete, Visibility } from "@mui/icons-material";
 import { useEffect } from "react";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
+import AllSupplierModal from "../../../common-components/Modals/supplierModals/AllSupplierModal";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -61,11 +62,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 // ];
 
 const ManageSupplier = () => {
+  const [ modalType, setModalType ] = useState("");
+  const [ selectedSupplier, setSelectedSupplier ] = useState(null);
   const [suppliers, setSuppliers] = useState([]);
   const breadcrumbs = ["Supplier", "Manage Supplier"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleOpenModal = (type, supplier = null) => {
+    setModalType(type);
+    setSelectedSupplier(supplier);
+};
+
+const handleCloseModal = () => {
+    setModalType("");
+    setSelectedSupplier(null);
+};
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -180,6 +194,7 @@ const ManageSupplier = () => {
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
+                          onClick={() => handleOpenModal("edit supplier", suppliers)} // Pass the manufacturer object as a prop
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
@@ -204,6 +219,14 @@ const ManageSupplier = () => {
 
         </Paper>
       </Box>
+      {/* Modal */}
+      <AllSupplierModal
+       open={!!modalType}
+       handleClose={handleCloseModal}
+       formType={modalType}
+       selectedData={selectedSupplier}
+       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />
     </Container>
   );
 };
