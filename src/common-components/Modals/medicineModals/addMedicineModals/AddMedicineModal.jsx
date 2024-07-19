@@ -21,6 +21,22 @@ import toast, {Toaster} from "react-hot-toast";
 import {getAllBrand} from "../../../../brandApi";
 
 const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
+    const [ addMedicines, setAddMedicines ] = useState([]);
+
+    const [ medicines, setMedicines ] = useState([]);
+    const [ editingMedicine, setEditingMedicine ] = useState(null);
+    const [ openEditDialog, setOpenEditDialog ] = useState(false);
+
+    const handleEditClick = (medicine) => {
+        setEditingMedicine(medicine);
+        setOpenEditDialog(true);
+    };
+
+    const handleEditDialogClose = () => {
+        setOpenEditDialog(false);
+        setEditingMedicine(null);
+    };
+
     const [ medicineName, setMedicineName ] = useState(selectedData?.medicineName || "");
     const [ itemCode, setItemCode ] = useState(selectedData?.itemCode || "");
     const [ category, setCategory ] = useState([]);
@@ -46,6 +62,18 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
     const [ description, setDescription ] = useState(selectedData?.description || "");
     const [ purchaseTaxIncluded, setPurchaseTaxIncluded ] = useState(selectedData?.purchaseTaxIncluded || false);
     const [ salesTaxIncluded, setSalesTaxIncluded ] = useState(selectedData?.salesTaxIncluded || false);
+
+    const handleFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        setPhotos(files);
+        console.log(files, "@@@@@@");
+        setPhotoFileName(files.length ? files.map((file) => file.name).join(", ") : "none");
+    };
+
+    const handleTextFieldClick = () => {
+        document.getElementById("upload-photo").click();
+    };
+
     const [ priceDetails, setPriceDetails ] = useState({
         purchasePrice: selectedData?.priceDetails?.purchasePrice || "",
         landingCost: selectedData?.priceDetails?.landingCost || "",
@@ -54,7 +82,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         retailPrice: selectedData?.priceDetails?.retailPrice || "",
         retailMargin: selectedData?.priceDetails?.retailMargin || "",
         wholesalerDiscount: selectedData?.priceDetails?.wholesalerDiscount || "",
-        wholesalerPrice: selectedData?.priceDetails?.wholesalerPrice || "", 
+        wholesalerPrice: selectedData?.priceDetails?.wholesalerPrice || "",
         wholesalerMargin: selectedData?.priceDetails?.wholesalerMargin || "",
         minimumStock: selectedData?.priceDetails?.minimumStock || "",
     });
@@ -210,6 +238,29 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }, 300);
     };
 
+    const editMedicine = async (medicineData) => {
+        console.log("Medicine@@@@", medicineData.itemCode);
+
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+        }
+
+        try {
+            const response = await axios.put(`http://localhost:4000/api/v1/admin/medicine/testtyuhh`, medicineData, {
+                headers: {Authorization: `Bearer ${auth.token}`},
+            });
+            console.log("Medicine updated:", response.data);
+            setMedicines((prevMedicines) =>
+                prevMedicines.map((med) => (med.itemCode === medicineData.itemCode ? medicineData : med))
+            );
+            handleEditDialogClose();
+        } catch (error) {
+            console.error("Error updating medicine:", error);
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const gstRateNumber = parseFloat(gstRate.replace("%", ""));
@@ -253,11 +304,11 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
 
         try {
             if (formType === "edit medicine") {
-                
+                await editMedicine(medicineData);
                 console.log("Medicine updated successfully");
             }
             else {
-                 await addMedicine(medicineData);
+                await addMedicine(medicineData);
                 console.log("Medicine added successfully");
             }
             setSuccess(true);
@@ -276,112 +327,112 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
     }, [ formType, selectedData ]);
 
     const calculateLandingCost = (price, gst, taxIncluded) => {
-      const priceNumber = parseFloat(price);
-      const gstNumber = parseFloat(gst);
-  
-      if (isNaN(priceNumber) || isNaN(gstNumber)) {
-          return ''; // Return empty string if price or gst is not a number
-      }
-  
-      let landingCost;
-      if (taxIncluded) {
-          landingCost = (priceNumber / (100 + gstNumber)) * 100;
-      } else {
-          landingCost = (priceNumber / 100) * (100 + gstNumber);
-      }
-  
-      
-      if (typeof landingCost === 'number') {
-          return landingCost.toFixed(2); 
-      } else {
-          return ''; 
-      }
-  };
-  
-    
-    const handlePurchaseTaxIncludedChange = (e) => {
-      const taxIncluded = e.target.checked;
-      setPurchaseTaxIncluded(taxIncluded);
-      const landingCost = calculateLandingCost(priceDetails.purchasePrice, gstRate, taxIncluded);
-      setPriceDetails((prevDetails) => ({ ...prevDetails, landingCost}));
-    };
-  
-    const handleGstRateChange = (e) => {
-      const gstRateValue = e.target.value;
-      setGstRate(gstRateValue);
-      const landingCost = calculateLandingCost(priceDetails.purchasePrice, gstRateValue, purchaseTaxIncluded);
-      setPriceDetails((prevDetails) => ({ ...prevDetails, landingCost }));
-    };
-  
-    const handlePurchasePriceChange = (event) => {
-     
-      const purchasePrice = event.target.value;
-      setPriceDetails((prevDetails) => ({ ...prevDetails, purchasePrice }));
-      
-      const landingCost = calculateLandingCost(purchasePrice, gstRate, purchaseTaxIncluded);
-      setPriceDetails((prevDetails) => ({ ...prevDetails, landingCost}));
-    };
-    
-    
-    const calculateRetailPriceAndMargin = (retailDiscount, mrp) => {
-      const retailDiscountNumber = parseFloat(retailDiscount);
-      const mrpNumber = parseFloat(mrp);
-    
-      if (isNaN(retailDiscountNumber) || isNaN(mrpNumber)) {
-          return {
-              retailPrice: '',
-              retailMargin: ''
-          };
-      }
-  
-      const retailPrice = mrpNumber - (mrpNumber * (retailDiscountNumber / 100));
-      const retailMargin = Math.abs(retailPrice - mrpNumber);
-    
-      return {
-          retailPrice: retailPrice.toFixed(2),
-          retailMargin: retailMargin.toFixed(2)
-      };
-  };
-    const handleRetailDiscountChange = (e)=>{
-      const retailDiscount = e.target.value;
-      setPriceDetails((prevDetails) => ({ ...prevDetails, retailDiscount }));
-      const { retailPrice, retailMargin } = calculateRetailPriceAndMargin(retailDiscount,priceDetails.mrp);
-      setPriceDetails((prevDetails) => ({ ...prevDetails, retailPrice ,retailMargin}));
-    }
-  
-    const calculateWholeSalePriceAndMargin = (wholesalerDiscount, mrp) => {
-      const wholesalerDiscountNumber = parseFloat(wholesalerDiscount);
-      const mrpNumber = parseFloat(mrp);
-    
-      if (isNaN(wholesalerDiscountNumber) || isNaN(mrpNumber)) {
-          return {
-            wholesalerPrice: '',
-            wholesalerMargin: ''
-          };
-      }
-  
-      const wholesalerPrice = mrpNumber - (mrpNumber * (wholesalerDiscountNumber / 100));
-      const wholesalerMargin = Math.abs(wholesalerPrice - mrpNumber);
-      console.log(wholesalerMargin);
-      return {
-        wholesalerPrice: wholesalerPrice.toFixed(2),
-        wholesalerMargin: wholesalerMargin.toFixed(2)
-      };
-  };
-  const handleWholeSaleDiscountChange = (e)=>{
-    const wholesalerDiscount = e.target.value;
-    setPriceDetails((prevDetails) => ({ ...prevDetails, wholesalerDiscount }));
-    const { wholesalerPrice, wholesalerMargin} = calculateWholeSalePriceAndMargin(wholesalerDiscount,priceDetails.mrp);
-    setPriceDetails((prevDetails) => ({ ...prevDetails, wholesalerPrice ,wholesalerMargin}));
-  };
+        const priceNumber = parseFloat(price);
+        const gstNumber = parseFloat(gst);
 
+        if (isNaN(priceNumber) || isNaN(gstNumber)) {
+            return ""; // Return empty string if price or gst is not a number
+        }
+
+        let landingCost;
+        if (taxIncluded) {
+            landingCost = (priceNumber / (100 + gstNumber)) * 100;
+        }
+        else {
+            landingCost = (priceNumber / 100) * (100 + gstNumber);
+        }
+
+        if (typeof landingCost === "number") {
+            return landingCost.toFixed(2);
+        }
+        else {
+            return "";
+        }
+    };
+
+    const handlePurchaseTaxIncludedChange = (e) => {
+        const taxIncluded = e.target.checked;
+        setPurchaseTaxIncluded(taxIncluded);
+        const landingCost = calculateLandingCost(priceDetails.purchasePrice, gstRate, taxIncluded);
+        setPriceDetails((prevDetails) => ({...prevDetails, landingCost}));
+    };
+
+    const handleGstRateChange = (e) => {
+        const gstRateValue = e.target.value;
+        setGstRate(gstRateValue);
+        const landingCost = calculateLandingCost(priceDetails.purchasePrice, gstRateValue, purchaseTaxIncluded);
+        setPriceDetails((prevDetails) => ({...prevDetails, landingCost}));
+    };
+
+    const handlePurchasePriceChange = (event) => {
+        const purchasePrice = event.target.value;
+        setPriceDetails((prevDetails) => ({...prevDetails, purchasePrice}));
+
+        const landingCost = calculateLandingCost(purchasePrice, gstRate, purchaseTaxIncluded);
+        setPriceDetails((prevDetails) => ({...prevDetails, landingCost}));
+    };
+
+    const calculateRetailPriceAndMargin = (retailDiscount, mrp) => {
+        const retailDiscountNumber = parseFloat(retailDiscount);
+        const mrpNumber = parseFloat(mrp);
+
+        if (isNaN(retailDiscountNumber) || isNaN(mrpNumber)) {
+            return {
+                retailPrice: "",
+                retailMargin: "",
+            };
+        }
+
+        const retailPrice = mrpNumber - mrpNumber * (retailDiscountNumber / 100);
+        const retailMargin = Math.abs(retailPrice - mrpNumber);
+
+        return {
+            retailPrice: retailPrice.toFixed(2),
+            retailMargin: retailMargin.toFixed(2),
+        };
+    };
+    const handleRetailDiscountChange = (e) => {
+        const retailDiscount = e.target.value;
+        setPriceDetails((prevDetails) => ({...prevDetails, retailDiscount}));
+        const {retailPrice, retailMargin} = calculateRetailPriceAndMargin(retailDiscount, priceDetails.mrp);
+        setPriceDetails((prevDetails) => ({...prevDetails, retailPrice, retailMargin}));
+    };
+
+    const calculateWholeSalePriceAndMargin = (wholesalerDiscount, mrp) => {
+        const wholesalerDiscountNumber = parseFloat(wholesalerDiscount);
+        const mrpNumber = parseFloat(mrp);
+
+        if (isNaN(wholesalerDiscountNumber) || isNaN(mrpNumber)) {
+            return {
+                wholesalerPrice: "",
+                wholesalerMargin: "",
+            };
+        }
+
+        const wholesalerPrice = mrpNumber - mrpNumber * (wholesalerDiscountNumber / 100);
+        const wholesalerMargin = Math.abs(wholesalerPrice - mrpNumber);
+        console.log(wholesalerMargin);
+        return {
+            wholesalerPrice: wholesalerPrice.toFixed(2),
+            wholesalerMargin: wholesalerMargin.toFixed(2),
+        };
+    };
+    const handleWholeSaleDiscountChange = (e) => {
+        const wholesalerDiscount = e.target.value;
+        setPriceDetails((prevDetails) => ({...prevDetails, wholesalerDiscount}));
+        const {wholesalerPrice, wholesalerMargin} = calculateWholeSalePriceAndMargin(
+            wholesalerDiscount,
+            priceDetails.mrp
+        );
+        setPriceDetails((prevDetails) => ({...prevDetails, wholesalerPrice, wholesalerMargin}));
+    };
 
     const handleOpeningBalanceChange = (field, value) => {
-      setOpeningBalance((prevOpeningBalance) => ({
-          ...prevOpeningBalance,
-          [field]: value,
-      }));
-  };
+        setOpeningBalance((prevOpeningBalance) => ({
+            ...prevOpeningBalance,
+            [field]: value,
+        }));
+    };
 
     return (
         <>
@@ -519,9 +570,9 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={gstRate}
-            //  onChange={(e)=>setGstRate(e.target.value)}
-             
-                      onChange={handleGstRateChange}
+                            //  onChange={(e)=>setGstRate(e.target.value)}
+
+                            onChange={handleGstRateChange}
                             select
                         >
                             {/* {gstRateData.map((gst) => (
@@ -538,10 +589,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                     <Grid item xs={12}>
                         <FormControlLabel
                             control={
-                                <Checkbox
-                                checked={purchaseTaxIncluded}
-                                onChange={handlePurchaseTaxIncludedChange}
-                                />
+                                <Checkbox checked={purchaseTaxIncluded} onChange={handlePurchaseTaxIncludedChange} />
                             }
                             label="Purchase Tax Included"
                         />
@@ -557,15 +605,39 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                     </Grid>
                     {/* Product Photos */}
                     <Grid item xs={12} md={12} lg={12}>
-                        <TextField
+                        {/* <TextField
                             margin="dense"
                             label="Product Photo"
-                            type="file"
+                            type="text"
                             fullWidth
                             variant="standard"
                             inputProps={{ accept: "image/*", multiple: true }}
                             value = {photos}
                             onChange ={(e)=>setPhotos(e.target.value)}
+                            
+                        /> */}
+                        <TextField
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            style={{display: "none"}}
+                            id="upload-photo"
+                            onChange={handleFileChange}
+                        />
+                        <TextField
+                            label="Product Photo"
+                            variant="standard"
+                            type="text"
+                            fullWidth
+                            value={photoFileName}
+                            InputProps={{
+                                readOnly: true,
+                                endAdornment: (
+                                    <Button variant="contained" color="primary" onClick={handleTextFieldClick}>
+                                        Upload
+                                    </Button>
+                                ),
+                            }}
                         />
                     </Grid>
                     {/* Description */}
@@ -652,8 +724,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.purchasePrice}
-          
-                           onChange={handlePurchasePriceChange}
+                            onChange={handlePurchasePriceChange}
                         />
                     </Grid>
                     {/* Landing Cost */}
@@ -664,8 +735,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             type="text"
                             fullWidth
                             variant="standard"
-                        value={priceDetails.landingCost}
-                            
+                            value={priceDetails.landingCost}
                         />
                     </Grid>
                     {/* MRP */}
@@ -677,7 +747,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.mrp}
-                           onChange={(e) => setPriceDetails({ ...priceDetails, mrp: e.target.value })}
+                            onChange={(e) => setPriceDetails({...priceDetails, mrp: e.target.value})}
                         />
                     </Grid>
                     {/* Retail Discount */}
@@ -689,7 +759,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.retailDiscount}
-                           onChange={handleRetailDiscountChange}
+                            onChange={handleRetailDiscountChange}
                         />
                     </Grid>
                     {/* Retail Price */}
@@ -701,7 +771,6 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.retailPrice}
-                            
                         />
                     </Grid>
                     {/* Retail Margin */}
@@ -714,7 +783,6 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             variant="standard"
                             value={priceDetails.retailMargin}
                             // onChange={(e) => handlePriceDetailChange("retailMargin", e.target.value)}
-                            
                         />
                     </Grid>
 
@@ -725,8 +793,9 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             label="Wholesaler Discount (%)"
                             type="text"
                             fullWidth
+                            variant="standard"
                             value={priceDetails.wholesalerDiscount}
-                            onChange={handleWholeSaleDiscountChange} 
+                            onChange={handleWholeSaleDiscountChange}
                         />
                     </Grid>
                     {/* Wholesaler Price */}
@@ -738,8 +807,6 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.wholesalerPrice}
-                            
-                            
                         />
                     </Grid>
                     {/* Wholesaler Margin */}
@@ -751,8 +818,6 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.wholesalerMargin}
-                            
-                            
                         />
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -763,8 +828,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={priceDetails.minimumStock}
-                          onChange={(e) => setPriceDetails({ ...priceDetails, minimumStock: e.target.value })}
-                            
+                            onChange={(e) => setPriceDetails({...priceDetails, minimumStock: e.target.value})}
                         />
                     </Grid>
 

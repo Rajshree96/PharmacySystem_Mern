@@ -69,7 +69,7 @@ const ManageBank = () => {
       console.error("No token found in local storage");
       return;
     }
-      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
+      const response = await axios.get("http://localhost:4000/api/v1/bank/getAllBank",
         {
           headers: { Authorization: `Bearer ${auth.token}`}
          }
@@ -82,7 +82,7 @@ const ManageBank = () => {
         console.error("API response does not contain cutomer array:", response.data.result);
       }
     } catch (error) {
-      console.error("Error fetching manufacturer:", error);
+      console.error("Error fetching bank:", error);
     }
   };
 
@@ -141,10 +141,10 @@ const ManageBank = () => {
                   <StyledTableRow key={bank._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {bank.customerDetails.name}
+                      {bank.bankName}
                     </StyledTableCell>
-                    <StyledTableCell>{bank.customerDetails.bankDetails.accountNumber}</StyledTableCell>
-                    <StyledTableCell>{bank.customerDetails.address}</StyledTableCell>
+                    <StyledTableCell>{bank.accountNumber}</StyledTableCell>
+                    <StyledTableCell>{bank.ifscCode}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
