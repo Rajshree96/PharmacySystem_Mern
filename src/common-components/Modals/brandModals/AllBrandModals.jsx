@@ -4,49 +4,19 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import AddBrandModal from "./AddBrandModal";
 
 const AllBrandModals = ({open, handleClose, formType, brandData, style}) => {
-    const [ brandName, setBrandName ] = useState("");
-    const [ selectedManufacturer, setSelectedManufacturer ] = useState("");
     const [ success, setSuccess ] = useState(false);
-
-    useEffect(() => {
-        if (brandData && formType === "edit brand") {
-            setBrandName(brandData.brand);
-            setSelectedManufacturer(brandData.manufactureId);
-        }
-    }, [ brandData, formType ]);
-
-    const handleAddBrand = () => {
-        setTimeout(() => {
-            setSuccess(true);
-        }, 500);
-    };
-
     const resetForm = () => {
-        setBrandName("");
-        setSelectedManufacturer("");
         setSuccess(false);
     };
-
     const handleDialogClose = () => {
         resetForm();
-        handleClose();
+        handleClose(); 
     };
-
     const renderForm = () => {
         switch (formType) {
             case "add brand":
             case "edit brand":
-                return (
-                    <AddBrandModal
-                        brandName={brandName}
-                        setBrandName={setBrandName}
-                        selectedManufacturer={selectedManufacturer}
-                        setSelectedManufacturer={setSelectedManufacturer}
-                        setSuccess={setSuccess}
-                        formType={formType}
-                        brandData={brandData}
-                    />
-                );
+                return <AddBrandModal setSuccess={setSuccess} formType={formType} selectedData={selectedData} />;
             default:
                 return null;
         }

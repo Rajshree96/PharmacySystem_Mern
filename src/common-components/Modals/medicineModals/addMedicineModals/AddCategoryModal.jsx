@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
 import {addCategory, editCategory} from "../../../../categoriesApi";
 
-const AddCategoryModal = ({formType, selectedData, setSuccess, handleClose}) => {
+const AddCategoryModal = ({setSuccess, formType, selectedData}) => {
     const [ categoryName, setCategoryName ] = useState("");
 
     useEffect(() => {
@@ -10,16 +10,20 @@ const AddCategoryModal = ({formType, selectedData, setSuccess, handleClose}) => 
             setCategoryName(selectedData.name);
         }
         else {
-            setCategoryName("");
+            resetForm();
         }
     }, [ formType, selectedData ]);
+
+    const resetForm = () => {
+        setCategoryName("");
+    };
 
     const handleSaveCategory = async () => {
         try {
             if (formType === "edit category") {
                 await editCategory(selectedData._id, {name: categoryName});
                 console.log("Category updated successfully");
-            }   
+            }
             else {
                 await addCategory({name: categoryName});
                 console.log("Category added successfully");

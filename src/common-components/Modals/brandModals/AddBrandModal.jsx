@@ -3,16 +3,27 @@ import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from
 import {addbrand, editBrand} from "../../../brandApi";
 import axios from "axios";
 
-const AddBrandModal = ({
-    brandName,
-    setBrandName,
-    selectedManufacturer,
-    setSelectedManufacturer,
-    setSuccess,
-    formType,
-    brandData,
-}) => {
+const AddBrandModal = ({setSuccess, formType, selectedData}) => {
     const [ manufacturers, setManufacturers ] = useState([]);
+
+    const [ brandName, setBrandName ] = useState("");
+    const [ selectedManufacturer, setSelectedManufacturer ] = useState("");
+
+    useEffect(() => {
+        // Fetch brand data from the API
+        if (formType === "edit brand" && selectedData) {
+            setBrandName(selectedData.brand);
+            setSelectedManufacturer(selectedData.manufactureId);
+        }
+        else {
+            resetForm(); // Reset form if form type is not "edit brand"
+        }
+    }, [ formType, selectedData ]);
+
+    const resetForm = () => {
+        setBrandName("");
+        setSelectedManufacturer("");
+    };
 
     const fetchManufacturer = async () => {
         try {
