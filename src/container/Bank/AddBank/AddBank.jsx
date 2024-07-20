@@ -1,5 +1,5 @@
 // Import necessary packages and components
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -112,7 +112,7 @@ const validationSchema = Yup.object().shape({
 });
 
 // Main component
-const AddBank = () => {
+const AddBank = ({formType, selectedData, setSuccess}) => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -124,6 +124,39 @@ const AddBank = () => {
   const [accountHolderName, setAccountHolderName] = useState('')
   const [accountNumber, setAccountNumber] = useState('')
   const [openingBalance, setOpeningBalance] = useState('')
+
+  useEffect(() => {
+    if (formType === "edit bank" && "edit managebanktransaction" && selectedData) {
+        setSelectedCountry(selectedData.country); 
+        setSelectedState(selectedData.state);
+        setName(selectedData.bankName);
+        setAddress(selectedData.address);
+        setPinCode(selectedData.pinCode);
+        setContact(selectedData.mobileNo);
+        setIfscCode(selectedData.ifscCode);
+        setAccountHolderName(selectedData.accountHolderName);
+        setAccountNumber(selectedData.accountNumber);
+        setOpeningBalance(selectedData.openingBalance);
+    }
+    else {
+        resetForm();
+    }
+}, [ formType, selectedData ]);
+
+const resetForm = () => {
+  setSelectedCountry("");
+  setSelectedState("");
+  setName("");
+  setAddress("");
+  setPinCode("");
+  setContact("");
+  setIfscCode("");
+  setAccountHolderName("");
+  setAccountNumber("");
+  setOpeningBalance("");
+
+  
+};
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
     setSelectedState("");
@@ -146,7 +179,7 @@ const AddBank = () => {
   const handleSubmit = async (e) => {
     try {
     e.preventDefault();
-    const bankDetail = {
+    const bankDetailData = {
       bankName: name,
       address: address,
         state: selectedState,
@@ -158,11 +191,11 @@ const AddBank = () => {
         mobileNo: contact,
         openingBalance: openingBalance,
       };
-      console.log("data@@@@", bankDetail);
+      console.log("data@@@@", bankDetailData);
 
       const auth = JSON.parse(localStorage.getItem('auth'));
       const response = await axios.post('http://localhost:4000/api/v1/bank/add-bank',
-        bankDetail,
+        banbankDetailDatakDetail,
         {
           headers: {
             "Content-Type": "application/json",
@@ -181,10 +214,45 @@ const AddBank = () => {
     }
   };
 
+  const handleSaveAddBank = async () => {
+    try {
+        if (formType === "edit bank") {
+            console.log("Bank updated successfully");
+        }
+        else {
+            console.log("Bank added successfully");
+        }
+        setSuccess(true);
+        
+    } catch (error) {
+        console.error(`Error ${formType === "edit bank" ? "editing" : "adding"}  bank:`, error);
+    }
+};
+
+   // Edit mode -> Form styles changes conditionally
+   const editModeStyles =
+   formType === "edit bank"
+       ? {
+             padding: responsivePadding(16, 32), // Decrease padding in edit mode
+             headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+             buttonColor: "red !important", // Change button color in edit mode
+         }
+       : {};
+
+const paperStyles =
+   formType === "edit bank"
+       ? {
+             padding: responsivePadding(0, 0),
+             borderRadius: 2,
+             boxShadow: "none",
+             // backgroundColor:  "#f0f4f8",
+         }
+       : {};
+       
   return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
-        <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}>
+        <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles }}>
           <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
             Bank
           </Typography>
@@ -379,11 +447,12 @@ const AddBank = () => {
                           color="success"
                           startIcon={<SaveIcon />}
                           // className={classes.button}
-                          onClick={handleSubmit}
+                          // onClick={handleSubmit}
+                          onClick={handleSaveAddBank}
                           sx={{ mr: 2 }}
                           className="btn-design-green"
                         >
-                          Save
+                          {formType === "edit customer" ? "Update " : "Save "}
                         </Button>
                       </Tooltip>
                     </motion.div>

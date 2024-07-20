@@ -26,6 +26,7 @@ import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
+import AllBankModal from "../../../common-components/Modals/bankModals/AllBankModal";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,6 +49,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 const ManageBankTransaction = () => {
+  const [ modalType, setModalType ] = useState("");
+  const [ selectedManageBankTransaction, setSelectedManageBankTransaction ] = useState(null);
+
   const [transaction, setTransaction] = useState([]);
   const breadcrumbs = ["Bank", "Manage Bank Transaction"];
 
@@ -56,6 +60,16 @@ const ManageBankTransaction = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const handleOpenModal = (type, managebanktransaction = null) => {
+    setModalType(type);
+    setSelectedManageBankTransaction(managebanktransaction);
+};
+
+const handleCloseModal = () => {
+    setModalType("");
+    setSelectedManageBankTransaction(null);
+};
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -161,12 +175,13 @@ const ManageBankTransaction = () => {
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
+                          onClick={() => handleOpenModal("edit managebanktransaction", transaction)} // Pass the managebanktransaction object as a prop
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(customers._id)}
+                          onClick={() => handleDeleteClick(transaction._id)}
                         />                    
                       </Box>
                     </StyledTableCell>
@@ -186,6 +201,14 @@ const ManageBankTransaction = () => {
       />
         </Paper>
       </Box>
+      {/* Modal */}
+      <AllBankModal
+       open={!!modalType}
+       handleClose={handleCloseModal}
+       formType={modalType}
+       selectedData={selectedManageBankTransaction}
+       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />
     </Container>
   );
 };
