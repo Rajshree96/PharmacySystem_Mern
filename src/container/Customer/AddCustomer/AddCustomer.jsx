@@ -1,5 +1,5 @@
 // Import necessary packages and components
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -117,7 +117,7 @@ const validationSchema = Yup.object().shape({
 
 
 // Main component
-const AddCustomer = () => {
+const AddCustomer = ({formType, selectedData, setSuccess}) => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -140,6 +140,53 @@ const AddCustomer = () => {
   const [gstError, setGstError] = useState("");
   const [stateError, setStateError] = useState("");
   const [registrationTypeError, setRegistrationTypeError] = useState("");
+
+
+  useEffect(() => {
+    if (formType === "edit customer" && selectedData) {
+      setName(selectedData.customerDetails.name);
+      setAddress(selectedData.customerDetails.address);
+      setSelectedState(selectedData.customerDetails.state);
+      setPinCode(selectedData.customerDetails.pinCode);
+      setSelectedCountry(selectedData.customerDetails.country);
+      setContact(selectedData.customerDetails.contact);
+      setEmail(selectedData.customerDetails.email);
+      setWebsite(selectedData.customerDetails.website);
+      setBankName(selectedData.customerDetails.bankDetails.bankName);
+      setBankAddress(selectedData.customerDetails.bankDetails.bankAddress);
+      setIfscCode(selectedData.customerDetails.bankDetails.ifscCode);
+      setAccountHolderName(selectedData.customerDetails.bankDetails.accountHolderName);
+      setAccountNumber(selectedData.customerDetails.bankDetails.accountNumber);
+      setGstin(selectedData.customerDetails.statutoryDetails.gstin);
+      setRegistrationType(selectedData.customerDetails.statutoryDetails.stateRegistrationType);
+      setOpeningBalance(selectedData.customerDetails.openingBalance.asOnFirstDayOfFinancialYear);
+      
+      
+    }
+    else {
+        resetForm();
+    }
+}, [ formType, selectedData ]);
+
+const resetForm = () => {
+  setSelectedCountry("");
+  setSelectedState("");
+  setName("");
+  setAddress("");
+  setPinCode("");
+  setContact("");
+  setEmail("");
+  setWebsite("");
+  setBankName("");
+  setBankAddress("");
+  setIfscCode("");
+  setAccountHolderName("");
+  setAccountNumber("");
+  setGstin("");
+  setOpeningBalance("");
+  setRegistrationType("");
+  
+};
 
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
@@ -271,12 +318,47 @@ const AddCustomer = () => {
     }
   };
 
+  const handleSaveCustomer = async () => {
+    try {
+        if (formType === "edit customer") {
+            console.log("Customer updated successfully");
+        }
+        else {
+            console.log("Customer added successfully");
+        }
+        setSuccess(true);
+        
+    } catch (error) {
+        console.error(`Error ${formType === "edit customer" ? "editing" : "adding"}  manufacturer:`, error);
+    }
+};
+
+   // Edit mode -> Form styles changes conditionally
+   const editModeStyles =
+   formType === "edit customer"
+       ? {
+             padding: responsivePadding(16, 32), // Decrease padding in edit mode
+             headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+             buttonColor: "red !important", // Change button color in edit mode
+         }
+       : {};
+
+const paperStyles =
+   formType === "edit customer"
+       ? {
+             padding: responsivePadding(0, 0),
+             borderRadius: 2,
+             boxShadow: "none",
+             // backgroundColor:  "#f0f4f8",
+         }
+       : {};
+
   return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
         <Paper
           elevation={3}
-          sx={{ p: responsivePadding(24, 48), borderRadius: 2 }}
+          sx={{ p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles }}
         >
           <Typography
             variant="h4"
@@ -557,22 +639,24 @@ const AddCustomer = () => {
                       variant="contained"
                       color="success"
                       startIcon={<SaveIcon />}
-                      // className={classes.button}
-                      sx={{ mr: 2 }}
                       className="btn-design-green"
+                      // onClick={handleSubmit}
+                      onClick={handleSaveCustomer}
+                      sx={{ mr: 2 }}
                     >
-                      Create
+                     {formType === "edit customer" ? "Update " : "Create "}
                     </Button>
                   </Tooltip>
                   <Tooltip title="Cancel">
                     <Button
                       type="reset"
                       variant="outlined"
-                      // color="secondary"
                       startIcon={<CancelIcon />}
-                      // className={classes.button}
+                      sx={{
+                        mx: 1,
+                        backgroundColor: editModeStyles.buttonColor,
+                    }}
                       style={{ backgroundColor: "#086070", color: "white" }}
-                      className="btn-design"
                     >
                       Cancel
                     </Button>

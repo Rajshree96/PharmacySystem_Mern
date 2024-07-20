@@ -108,6 +108,7 @@ const validationSchema = Yup.object().shape({
 // Main component
 const AddSupplier = ({formType, selectedData, setSuccess}) => {
     const classes = useStyles();
+    const [ supplierName, setSupplierName ] = useState("");
     const [ selectedCountry, setSelectedCountry ] = useState("");
     const [ selectedState, setSelectedState ] = useState("");
     const [ name, setName ] = useState("");
@@ -121,7 +122,7 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
     const [ ifscCode, setIfscCode ] = useState("");
     const [ accountHolderName, setAccountHolderName ] = useState("");
     const [ accountNumber, setAccountNumber ] = useState("");
-    const [ gstin, setgstin ] = useState("");
+    const [ gstin, setGstin ] = useState("");
     const [ openingBalance, setOpeningBalance ] = useState("");
     const [ registrationType, setRegistrationType ] = useState("");
 
@@ -140,14 +141,15 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
             setContact(selectedData.contact);
             setEmail(selectedData.email);
             setWebsite(selectedData.website);
-            setBankName(selectedData.bank_name);
-            setBankAddress(selectedData.bank_address);
-            setIfscCode(selectedData.ifsc_code);
-            setAccountHolderName(selectedData.account_holder_name);
-            setAccountNumber(selectedData.account_number);
-            setgstin(selectedData.gstin);
-            setOpeningBalance(selectedData.opening_balance);
-            setRegistrationType(selectedData.registration_type);
+
+            setBankName(selectedData.bankingDetails.bankName);
+            setBankAddress(selectedData.bankingDetails.bankAddress);
+            setIfscCode(selectedData.bankingDetails.ifscCode);
+            setAccountHolderName(selectedData.bankingDetails.accountHolderName);
+            setAccountNumber(selectedData.bankingDetails.accountNumber);
+            setGstin(selectedData.statutoryDetails.gstin);
+            setOpeningBalance(selectedData.openingBalance.asOnFirstDayOfFinancialYear);
+            setRegistrationType(selectedData.statutoryDetails.registrationType);
         }
         else {
             resetForm();
@@ -231,7 +233,7 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
             // Handle any additional logic if the overall form is not valid
             return;
         }
-        const manufacturerData = {
+        const supplierData = {
             name: name,
             address: address,
             state: selectedState,
@@ -258,7 +260,7 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
 
         try {
             const auth = JSON.parse(localStorage.getItem("auth"));
-            const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", manufacturerData, {
+            const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${auth.token}`,
@@ -279,13 +281,28 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
                 setIfscCode("");
                 setAccountHolderName("");
                 setAccountNumber("");
-                setgstin("");
+                setGstin("");
                 setOpeningBalance("");
                 setRegistrationType("");
                 toast.success("supplier added successfully");
             }
         } catch (error) {
             console.log("Error adding supplier:", error);
+        }
+    };
+
+    const handleSaveSupplier = async () => {
+        try {
+            if (formType === "edit supplier") {
+                console.log("Supplier updated successfully");
+            }
+            else {
+                console.log("Supplier added successfully");
+            }
+            setSuccess(true);
+            
+        } catch (error) {
+            console.error(`Error ${formType === "edit supplier" ? "editing" : "adding"}  supplier:`, error);
         }
     };
 
@@ -538,7 +555,7 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
                                             error={!!gstError}
                                             helperText={gstError}
                                             value={gstin}
-                                            onChange={(e) => setgstin(e.target.value)}
+                                            onChange={(e) => setGstin(e.target.value)}
                                         />
                                     </Grid>
                                 </Grid>
@@ -573,11 +590,11 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
                                             startIcon={<SaveIcon />}
                                             sx={{mr: 2}}
                                             className="btn-design-green"
-                                            onClick={handleSubmit}
+                                            onClick={handleSaveSupplier}
                                             // onClick={handleSubmit}
                                             // disabled={isLoading || isSubmitting}
                                         >
-                                            Create
+                                            {formType === "edit supplier" ? "Update " : "Create "}
                                         </Button>
                                     </Tooltip>
                                     <Tooltip title="Cancel">
