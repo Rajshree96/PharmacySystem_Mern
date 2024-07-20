@@ -61,7 +61,7 @@ const AddBrandModal = ({setSuccess, formType, selectedData}) => {
 
         try {
             if (formType === "edit brand") {
-                // await editBrand(brandData._id, brandData);
+                 await editBrand(selectedData._id, brandData);
                 console.log("Brand edited successfully");
             }
             else {
