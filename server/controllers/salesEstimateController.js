@@ -2,82 +2,110 @@ import SalesEstimate from "../models/salesEstimateModal.js";
 // import Supplier from '../models/supplierModel.js';
 // import Medicine from '../models/medicineModel.js';
 
-export const salesEstimate = {
+export const salesEstimate = async(req, res)=>{
   // Create a new sales estimate
-  create: async (req, res) => {
-    try {
-      const newSalesEstimate = new SalesEstimate(req.body);
+  try {
+    console.log(req.body);
+    const newSalesEstimat = new SalesEstimate({
+        date: req.body.date,
+        estimateNo: req.body.estimateNo,
+        customerName: req.body.customerName,
+        placeOfSupply: req.body.placeOfSupply,
+        paymentTerm: req.body.paymentTerm,
+        dueDate: req.body.dueDate,
+        transPortDetails: {
+                            receiptNumber: req.body.transPortDetails.receiptNumber,
+                            dispatchedThrough: req.body.transPortDetails.dispatchedThrough,
+                            destination: req.body.transPortDetails.destination,
+                            carrierName: req.body.transPortDetails.carrierName,
+                            billOfLading: req.body.transPortDetails.billOfLading
+                      },
+        billingAddress: req.body.billingAddress,
+        reverseCharge: req.body.reverseCharge,
+        purchaseTable: req.body.purchaseTable,
+        amounts: req.body.amounts,
+        Narration: req.body.Narration
+    });
 
-      // Save the new sales estimate before populating
-      const savedSalesEstimate = await newSalesEstimate.save();
+    // Validate the newPurchase object against the PurchaseModal schema
+    const validationError = newSalesEstimat.validateSync(); // This will synchronously validate the schema
 
-      // Populate the referenced fields
-      await savedSalesEstimate.populate([
-        { path: 'customerName', select: 'name' },
-        { path: 'placeOfSupply', select: 'state' },
-        { path: 'purchaseTable.itemCode', select: 'itemCode' },
-        { path: 'purchaseTable.productName', select: 'medicineName' }
-      ]);
-
-      res.status(201).json({ message: "SalesEstimate added", savedSalesEstimate });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+    if (validationError) {
+        // If validation fails, respond with a 400 Bad Request status and error details
+        console.log(validationError.message)
+        return res.status(400).json({ message: validationError.message });
     }
-  },
 
-  // Get all sales estimates
-  getAll: async (req, res) => {
-    try {
-      const salesEstimates = await SalesEstimate.find()
-        .populate('customerName', 'name')
-        .populate('placeOfSupply', 'state')
-        .populate('purchaseTable.itemCode', 'itemCode')
-        .populate('purchaseTable.productName', 'medicineName');
-      
+    // If validation passes, save the new purchase
+    await newSalesEstimat.save();
+
+    // Respond with success message and the saved purchase object
+    res.status(201).json({ message: "SalesEstimate Successfully congrates", newSalesEstimat });
+} catch (error) {
+    // Handle any unexpected errors
+    console.error("Error adding salesEstimate:", error);
+    res.status(500).json({ message: "SalesEstimate Unsuccessful" });
+}
+}
+
+
+//getall purchesh 
+export const getSalesEstimate = async (req, res) => {
+  try {
+      const salesEstimates = await SalesEstimate.find();
       res.status(200).json(salesEstimates);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  // Edit a sales estimate by ID
-  edit: async (req, res) => {
-    try {
-      const updatedSalesEstimate = await SalesEstimate.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true, runValidators: true }
-      ).populate([
-        { path: 'customerName', select: 'name' },
-        { path: 'placeOfSupply', select: 'state' },
-        { path: 'purchaseTable.itemCode', select: 'itemCode' },
-        { path: 'purchaseTable.productName', select: 'medicineName' }
-      ]);
-
-      if (!updatedSalesEstimate) {
-        return res.status(404).json({ message: "SalesEstimate not found" });
-      }
-
-      res.status(200).json({ message: "SalesEstimate updated", updatedSalesEstimate });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  // Delete a sales estimate by ID
-  delete: async (req, res) => {
-    try {
-      const deletedSalesEstimate = await SalesEstimate.findByIdAndDelete(req.params.id);
-
-      if (!deletedSalesEstimate) {
-        return res.status(404).json({ message: "SalesEstimate not found" });
-      }
-
-      res.status(200).json({ message: "SalesEstimate deleted", deletedSalesEstimate });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
+  } catch (error) {
+      res.status(500).json({ message: "Failed to retrieve salesEstimate", error: error.message });
   }
 };
+
+  
+// Update a purchase record
+export const updatedSalesEstimate = async (req, res) => {
+  const { id } = req.params;
+  const updatedData = {
+      date: req.body.date,
+      estimateNo: req.body.estimateNo,
+      customerName : req.body.customerName,
+      // suuplierName: req.body.suuplierName,
+      placeOfSupply: req.body.placeOfSupply,
+      paymentTerm: req.body.paymentTerm,
+      dueDate: req.body.dueDate,
+      transPortDetails: req.body.transPortDetails,
+      billingAddress: req.body.billingAddress,
+      reverseCharge: req.body.reverseCharge,
+      purchaseTable: req.body.purchaseTable,
+      amounts: req.body.amounts,
+      Narration: req.body.Narration,
+      paymentStatus: req.body.paymentStatus
+  };
+
+  try {
+      const updatedSales = await SalesEstimate.findByIdAndUpdate(id, updatedData, { new: true });
+      if (!updatedSales) {
+          return res.status(404).json({ message: "salesEstimate not found" });
+      }
+      res.status(200).json({ message: "SalesEstimate updated successfully", updatedSales });
+  } catch (error) {
+      res.status(400).json({ message: "Failed to update SalesEstimate", error: error.message });
+  }
+};
+
+  // Delete a purchase record
+export const deleteSalesEstimate = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const deletedSales = await SalesEstimate.findByIdAndDelete(id);
+      if (!deletedSales) {
+          return res.status(404).json({ message: "salesEstimate not found" });
+      }
+      res.status(200).json({ message: "salesEstimate deleted successfully" });
+  } catch (error) {
+      res.status(400).json({ message: "Failed to delete SalesEstimate", error: error.message });
+  }
+};
+
+  
 
 export default salesEstimate;

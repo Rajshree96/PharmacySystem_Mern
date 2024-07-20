@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const PurchaseSchema = new mongoose.Schema({
@@ -16,6 +17,7 @@ const PurchaseSchema = new mongoose.Schema({
     },
     billingAddress: { type: String, required: true },
     reverseCharge: { type: String, required: true },
+    taxType:{type:String},
     purchaseTable: [{
         sno: { type: String, required: true },
         itemCode: { type: String, required: true },
@@ -38,9 +40,13 @@ const PurchaseSchema = new mongoose.Schema({
         otherCharge: { type: Array, required: true },
         netAmount: { type: String, required: true }
     },
-    Narration: { type: String }
+    Narration: { type: String },
+    paymentStatus:{
+        type:String,
+        default:"PENDING"
+    }
 });
 
-const PurchaseModal = mongoose.model('Purchase', PurchaseSchema);
+const Purchase = mongoose.model('Purchase', PurchaseSchema);
 
-export default PurchaseModal;
+export default Purchase;

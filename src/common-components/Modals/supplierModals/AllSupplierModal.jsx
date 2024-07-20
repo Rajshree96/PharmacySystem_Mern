@@ -2,9 +2,9 @@ import React, {useState} from "react";
 import {Button, Dialog, DialogContent, DialogContentText, DialogTitle, Box} from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import AddManufacturer from "../../../container/Manufacturer/AddManufacturer/AddManufacturer";
+import AddSupplier from "../../../container/Supplier/AddSupplier/AddSupplier";
 
-const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}) => {
+const AllSupplierModal = ({open, handleClose, formType, selectedData, style}) => {
     const [ success, setSuccess ] = useState(false);
 
     const resetForm = () => {
@@ -18,11 +18,11 @@ const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}
 
     const renderForm = () => {
         switch (formType) {
-            case "add manufacturer":
-            case "edit manufacturer":
+            case "add supplier":
+            case "edit supplier":
                 return (
                     <>
-                        <AddManufacturer setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                        <AddSupplier setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
                     </>
                 );
             default:
@@ -34,7 +34,7 @@ const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}
         <Dialog
             open={open}
             onClose={handleDialogClose}
-            // display popup width based on success state
+             // display popup width based on success state
             PaperProps={{
                 style: {
                     width: success ? "40%" : "80%", // Change Modal width based on success state
@@ -66,4 +66,4 @@ const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}
     );
 };
 
-export default AllManufacturerModal;
+export default AllSupplierModal;

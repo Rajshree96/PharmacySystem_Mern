@@ -34,11 +34,8 @@ const PurchaseOrderPayment = ({ onClick, netAmount,orderNo }) => {
   const [carrierName, setCarrierName] = useState("");
   const [billOfLading, setBillOfLading] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
-
-  const [paymentType, setPaymentType] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [amount, setAmount] = useState("");
-  const [advance, setAdvance] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [paid, setPaid] = useState("");
   const [balance, setBalance] = useState("");
   const [description, setDescription] = useState("");
@@ -126,14 +123,7 @@ console.log(paymentData)
 
   return (
     <div>
-      <Button
-        variant="contained"
-        className="btn-design"
-        onClick={(e) => {
-          onClick(e);
-          handleOpen();
-        }}
-      >
+      <Button variant="contained" className="btn-design" onClick={(e) => { onClick(e); handleOpen(); }}>
         Save & Payment
       </Button>
       <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
@@ -157,11 +147,8 @@ console.log(paymentData)
             {paymentType === "cash" && (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Amount"
-                    fullWidth
+                  <TextField label="Amount" fullWidth
                     value={netAmount}
-                    
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -238,7 +225,7 @@ console.log(paymentData)
                         value={transactionDate}
                         onChange={(e) => setTransactionDate(e.target.value)}
                       />
-                    </Grid>
+                    </Grid>                   
                     <Grid item xs={12} sm={6}>
                       <TextField
                         label="Transaction No"
@@ -248,12 +235,12 @@ console.log(paymentData)
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Advance"
-                        fullWidth
-                        value={advance}
-                        onChange={(e) => setAdvance(e.target.value)}
+                      <TextField label="Amount" fullWidth
+                        value={netAmount}
                       />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="Advance" fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -303,12 +290,12 @@ console.log(paymentData)
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Advance"
-                        fullWidth
-                        value={advance}
-                        onChange={(e) => setAdvance(e.target.value)}
+                      <TextField label="Amount" fullWidth
+                        value={netAmount}
                       />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="Advance" fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -338,7 +325,9 @@ console.log(paymentData)
                 )}
               </Grid>
             )}
-            <Button onClick={handleSave}>Save</Button>
+            <Button onClick={handleSave}
+              className="btn-design" sx={{ color: 'white', mt: 3 }}
+            >Save</Button>
           </FormControl>
         </Grid>
       </Modal>

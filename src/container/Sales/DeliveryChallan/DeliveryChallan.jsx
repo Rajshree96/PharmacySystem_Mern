@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -279,7 +280,7 @@ function DeliveryChallan() {
       rows: [initialRow],
     },
   ]);
-  const [otherCharges, setOtherCharges] = useState([]);
+  // const [otherCharges, setOtherCharges] = useState([]);
   const [reverseCharge, setReverseCharge] = useState("No");
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
@@ -287,6 +288,24 @@ function DeliveryChallan() {
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
+
+
+  const[deliveryChallanNo, setDeliveryChallanNo] =useState('');
+  const[customerName,setCustomerName]=useState('')
+  const[placeOfSupply,setPlaceOfSupply]=useState('')
+  const[billingAddress,setBillingAddress]=useState('')
+  const[grossAmount,setGrossAmount]=useState('')
+  const[gstAmount,setGstAmount]=useState('')
+  const[netAmount,setNetAmount]=useState('')
+  const[narration,setNarration]=useState('');
+  const [transPortDetails, setTransPortDetails] = useState({
+    receiptNumber: '',
+    dispatchedThrough: '',
+   destination: '',
+   carrierName: '',
+   billOfLading: '',
+   vehicleNumber: ''
+ });
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -354,6 +373,66 @@ function DeliveryChallan() {
     );
   };
 
+
+  const addDeliveryChallan = async(delivery)=>{
+    console.log(delivery);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/deliveryChallan/addChallan',
+        delivery,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("deliveryChallan  response", response);
+       if (response.data.status === 201) {
+        console.log("deliveryChallan created successfully ");
+        } 
+    } catch (error) {
+      console.log("Somthing went wrong");
+
+    }
+  }
+
+
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    const delivery = {
+      date: date,
+      deliveryChallanNo: deliveryChallanNo,
+      customerName: customerName,
+      placeOfSupply: placeOfSupply,
+      paymentTerm: paymentTerms,
+      dueDate: dueDate,
+      transPortDetails:transPortDetails,
+      billingAddress: billingAddress,
+      reverseCharge: reverseCharge,
+      purchaseTable: tables[0].rows,
+      amounts: {
+          grossAmount: grossAmount,
+          gstAmount: gstAmount,
+          netAmount: netAmount
+      },
+      Narration:narration
+  };
+  
+    try {
+      await addDeliveryChallan(delivery);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding deliveryChallan:', error);
+      
+    }
+  };
+  console.log(tables)
+  console.log(transPortDetails)
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -375,16 +454,16 @@ function DeliveryChallan() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Delivery Challan No." fullWidth />
+              <TextField label="Delivery Challan No." fullWidth  value={deliveryChallanNo} onChange={(e)=> setDeliveryChallanNo(e.target.value)}/>
             </Grid>           
             <Grid item xs={3}>
-              <TextField select label="Customer Name" fullWidth>
+              <TextField select label="Customer Name" fullWidth value={customerName} onChange={(e)=>setCustomerName(e.target.value)}>
                 <MenuItem value="CustomerName1">CustomerName1</MenuItem>
                 <MenuItem value="CustomerName2">CustomerName2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Place of Supply" fullWidth />
+              <TextField label="Place of Supply" fullWidth value={placeOfSupply} onChange={(e)=>setPlaceOfSupply(e.target.value)} />
             </Grid>
             <Grid item xs={3}>
               <TextField
@@ -416,10 +495,17 @@ function DeliveryChallan() {
 
           <Grid container spacing={2}>
             <Grid item md={4} xs={4}>
-              <TransportDetails />
+              <TransportDetails 
+               transPortDetails={transPortDetails}
+               setTransPortDetails={setTransPortDetails}
+              
+              />
             </Grid>
             <Grid item md={4} xs={4}>
-              <TextField label="Billing Address" fullWidth />
+              <TextField label="Billing Address" fullWidth 
+              value={billingAddress}
+              onChange={(e)=>setBillingAddress(e.target.value)}
+              />
             </Grid>
             <Grid item md={4} xs={4}>
               <TextField
@@ -459,7 +545,7 @@ function DeliveryChallan() {
         {/* Add Other Charges */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={4} xs={4}>
-            <Button
+            {/* <Button
               variant="contained"
               onClick={handleOpen}
               sx={{ mb: 2 }}
@@ -467,7 +553,7 @@ function DeliveryChallan() {
               className="btn-design"
             >
               Add Other Charges
-            </Button>
+            </Button> */}
             <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
               <Grid container spacing={1} sx={style} maxWidth="xl">
                 <Grid item md={12} xs={12} >
@@ -484,23 +570,35 @@ function DeliveryChallan() {
                 </Grid>
               </Grid>
             </Modal>   
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3} 
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
-              <TextField label="Gross Amount" fullWidth />
-              <TextField label="GST Amount" fullWidth />
-              <TextField label="Other Charge" 
+              <TextField label="Gross Amount" fullWidth
+              value={grossAmount}
+              onChange={(e)=>setGrossAmount(e.target.value)}
+              />
+              <TextField label="GST Amount" fullWidth 
+              value={gstAmount}
+              onChange={(e)=>setGstAmount(e.target.value)}
+              />
+              {/* <TextField label="Other Charge" 
               fullWidth
               value={totalCharges}
               InputProps={{
                 readOnly: true,
               }}
-               />
-              <TextField label="Net Amount" fullWidth />
+               /> */}
+              <TextField label="Net Amount" fullWidth 
+              value={netAmount}
+              onChange={(e)=>setNetAmount(e.target.value)}
+              />
             </Box>
           </Grid>
         </Grid>
@@ -515,7 +613,7 @@ function DeliveryChallan() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handleSubmit}>
               Save
             </Button>
 

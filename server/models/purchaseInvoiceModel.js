@@ -1,11 +1,10 @@
-import mongoose from "mongoose";
-// import supplierModel from "./supplierModel.js";
-// import medicineModel from "./medicineModel.js";
 
-const deliveryChallanSchema = new mongoose.Schema({
+import mongoose from 'mongoose';
+
+const PurchaseInvoiceSchema = new mongoose.Schema({
     date: { type: String, required: true },
-    deliveryChallanNo: { type: String, required: true},
-    customerName: { type: String, required: true },
+    invoiceNo: { type: String, required: true },
+    supplierName: { type: String, required: true },
     placeOfSupply: { type: String, required: true },
     paymentTerm: { type: String, required: true },
     dueDate: { type: String, required: true },
@@ -18,19 +17,19 @@ const deliveryChallanSchema = new mongoose.Schema({
     },
     billingAddress: { type: String, required: true },
     reverseCharge: { type: String, required: true },
+    taxType:{type:String},
     purchaseTable: [{
         sno: { type: String, required: true },
         itemCode: { type: String, required: true },
         productName: { type: String, required: true },
         qty: { type: String, required: true },
-        // freeQty: { type: String, required: true },
+        freeQty: { type: String, required: true },
         mrp: { type: String, required: true },
-        retailPrice: { type: String },
-        // unitCost: { type: String, required: true },
+        unitCost: { type: String, required: true },
         taxableValue: { type: String, required: true },
         totalValue: { type: String, required: true },
-        // discount1: { type: String },
-        // discount2: { type: String },
+        discount1: { type: String },
+        discount2: { type: String },
         cgst: { type: String },
         sgst: { type: String},
         igst: { type: String },
@@ -38,11 +37,16 @@ const deliveryChallanSchema = new mongoose.Schema({
     amounts: {
         grossAmount: { type: String, required: true },
         gstAmount: { type: String, required: true },
-        // otherCharge: { type: Number},
+        otherCharge: { type: Array, required: true },
         netAmount: { type: String, required: true }
     },
-    Narration: { type: String }
+    Narration: { type: String },
+    paymentStatus:{
+        type:String,
+        default:"PENDING"
+    }
 });
 
-const DeliveryChallan = mongoose.model("DeliveryChallan", deliveryChallanSchema);
-export default DeliveryChallan;
+const PurchaseInvoice = mongoose.model('PurchaseInvoice', PurchaseInvoiceSchema);
+
+export default PurchaseInvoice;

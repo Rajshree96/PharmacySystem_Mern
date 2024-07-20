@@ -60,7 +60,7 @@ const AddBrand = () => {
                 open={!!modalType}
                 handleClose={handleCloseModal}
                 formType={modalType}
-                brandData={selectedBrand}
+                selectedData={selectedBrand}
                 style={{width: "100%"}}
             />
         </>

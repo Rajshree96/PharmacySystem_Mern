@@ -49,6 +49,7 @@ const responsiveWidth = (minWidth, maxWidth) => {
 const registrationTypes = [
   { value: "Composition", label: "Composition" },
   { value: "Regular", label: "Regular" },
+  { value: "Consumer", label: "Consumer" },
 ];
 
 const theme = createTheme({
