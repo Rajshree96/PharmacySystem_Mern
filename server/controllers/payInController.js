@@ -3,6 +3,7 @@ import PayIN from "../models/payInModal.js";
 // Add a new pay-in record with all fields
 export const addPayIn = async (req, res) => {
   try {
+    console.log(req.body)
     const newPayIn = new PayIN({
       date: req.body.date,
       receiptNo: req.body.receiptNo,
@@ -14,6 +15,9 @@ export const addPayIn = async (req, res) => {
       chequeNo: req.body.chequeNo,
       purchaseTable: req.body.purchaseTable,
     });
+    if (!date || !receiptNo || !customerDetail || !receiptMode || !paymentMethod || !purchaseTable) {
+      return res.status(400).json({ message: "All required fields must be provided and non-empty" });
+    }
 
     await newPayIn.save();
     res.status(201).json({ message: "Pay-in added successfully", newPayIn });

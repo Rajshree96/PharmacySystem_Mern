@@ -56,11 +56,11 @@ const payInSchema = new mongoose.Schema({
     total:{
         type:Number,
         required:true,
-    },
-    narration:{
-        type:String,
     }
    }],
+   narration:{
+    type:String,
+},
 },{timestamps:true})
 
 const PayIN  = mongoose.model("PayIN", payInSchema);

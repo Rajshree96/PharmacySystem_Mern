@@ -36,13 +36,14 @@ const style = {
   p: 4,
 };
 
+
 const initialRow = {
   sno: "",
-  itemCode: "",
-  billNumber: "",
+  billNo: "",
   billAmount: "",
   receivedAmount: "",
-  balance: "",
+  balanceAmount: "",
+  total:400
 };
 
 const billOptions = [
@@ -52,6 +53,8 @@ const billOptions = [
 ];
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
+  const [total, setBalanceTotal] = useState(0);
+
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -63,6 +66,10 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
     updatedRows[index][field] = value;
     onRowChange(updatedRows);
   };
+  
+  useEffect(() => {
+    setBalanceTotal(calculateTotal("balanceAmount"));
+  }, [rows]);
 
   return (
     <TableContainer sx={{ mb: 2 }} maxWidth="xl">
@@ -148,9 +155,9 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
-                  value={row.billNumber}
+                  value={row.billNo}
                   onChange={(e) =>
-                    handleInputChange(index, "billNumber", e.target.value)
+                    handleInputChange(index, "billNo", e.target.value)
                   }
                   fullWidth
                   size="small"
@@ -206,11 +213,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.balance}
+                  value={row.balanceAmount}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "balance", e.target.value)
+                    handleInputChange(index, "balanceAmount", e.target.value)
                   }
                   InputProps={{
                     sx: {
@@ -259,7 +266,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               {calculateTotal("receivedAmount")}
             </TableCell>
             <TableCell sx={{ border: "1px solid grey" }}>
-              {calculateTotal("balance")}
+               {total}
             </TableCell>
           </TableRow>
         </TableBody>
@@ -332,7 +339,6 @@ function PaymentIn() {
     content: () => resumeRef.current,
   });
 
-
   const paymentData = {
     date: date,
     receiptNo: receiptNo,
@@ -342,6 +348,7 @@ function PaymentIn() {
     paymentMethod: paymentMethod,
     transaction: transactionNumber,
     chequeNo: chequeNumber,
+    narration: narration,
     purchaseTable: tables[0].rows,
   };
 
@@ -355,11 +362,9 @@ function PaymentIn() {
     //     narration: narration
     //   },
 
-
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log(paymentData,"@@@@@");
     try {
+    event.preventDefault();
       const auth = JSON.parse(localStorage.getItem('auth'));
       const response = await axios.post('http://localhost:4000/api/v1/payin/pay',
         paymentData,
@@ -370,9 +375,9 @@ function PaymentIn() {
           }
         }
       );
-      console.log(response);
+      console.log(response.data,"@@@@@@@@");
       if (response.data.status === 201) {
-        console.log("purchase created successfully ");
+        console.log("paymentIn created successfully ");
       }
     } catch (error) {
       console.log("something went wrong");
