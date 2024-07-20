@@ -25,6 +25,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
 import PurchasePayment from "./PurchasePayment";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -61,6 +62,9 @@ const productOptions = [
 ];
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
+
+  const[medicine,setMedicine]=useState([]);
+  const [ selectedMedicine, setSelectedMedicine ] = useState ("");
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -70,6 +74,47 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
     const updatedRows = [...rows];
     updatedRows[index][field] = value;
     onRowChange(updatedRows);
+  };
+
+  const config = () => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    return {
+        headers: {
+            Authorization: `Bearer ${auth.token}`,
+            "Content-Type": "application/json",
+        },
+    };
+};
+  const fetchMedicine = async () => {
+    try {
+        const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", config());
+        
+        if (Array.isArray(response.data.result)) {
+            setMedicine(response.data.result);
+        }
+        else {
+            console.error("Error: Fetched data is not an array");
+        }
+    } catch (error) {
+        console.error("Error fetching medicine:", error);
+        setMedicine([]);
+    }
+  };
+ 
+  useEffect(() => {
+   fetchMedicine();
+  }, []);
+  
+  const handleProductChange = (event) => {
+    const productId = event.target.value;
+    setSelectedMedicine(productId);
+    initialRow.productName= productId;
+    const selectedProduct = medicine.find(product => product._id === productId);
+    initialRow.productName= selectedProduct.medicineName;
+    if (selectedProduct) {
+      initialRow.itemCode=selectedProduct.itemCode
+      initialRow.mrp=selectedProduct.priceDetails.mrp
+    }
   };
 
   return (
@@ -137,24 +182,23 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.itemCode} fullWidth size="small" 
-                onChange={(e) =>
-                  handleInputChange(index, "itemCode", e.target.value)
-                } />
+                // onChange={(e) =>
+                //   handleInputChange(index, "itemCode", e.target.value)
+                // }
+                 />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <Select
-                  value={row.productName}
-                  onChange={(e) =>
-                    handleInputChange(index, "productName", e.target.value)
-                  }
+                 value={selectedMedicine}
+                 onChange={handleProductChange}
                   fullWidth
                   size="small"
                 >
-                  {productOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                  {medicine.map((med) => (
+                    <MenuItem key={med._id} value={med._id}>
+                      {med.medicineName}
                     </MenuItem>
                   ))}
                 </Select>
@@ -179,9 +223,10 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.mrp} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "mrp", e.target.value)
-                }/>
+                //  onChange={(e) =>
+                //   handleInputChange(index, "mrp", e.target.value)
+                // }
+                />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
@@ -330,6 +375,25 @@ function PurchaseOrder() {
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
+  const[invoiceNo, setInvoiceNo]=useState('')
+   const[supplier,setSupplier]=useState([])
+   const [ selectedSupplier, setSelectedSupplier ] = useState ("");
+   const[placeOfSupply,setPlaceOfSupply]=useState("")
+   const[billingAddress,setBillingAddress]=useState('')
+   const[grossAmount,setGrossAmount]=useState('')
+   const[gstAmount,setGstAmount]=useState('')
+   const[netAmount,setNetAmount]=useState('')
+   const[narration,setNarration]=useState('');
+   const[taxType,setTaxType]=useState('');
+   
+   const [transPortDetails, setTransPortDetails] = useState({
+    receiptNumber: '',
+    dispatchedThrough: '',
+    destination: '',
+    carrierName: '',
+    billOfLading: '',
+    vehicleNumber: ''
+  });
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -387,6 +451,109 @@ function PurchaseOrder() {
     }
     setOpen(false);
   };
+  const addPurchase = async (purchaseData) => {
+    console.log(purchaseData);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.post('http://localhost:4000/api/v1/purchase/add',
+         purchaseData,
+        { 
+          
+          headers: {
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log(response);
+      if (response.data.status === 201) {
+      console.log("purchase created successfully ");
+      } 
+      
+
+    } catch (error) {
+     
+      console.log("something went wrong")
+      
+    }
+  };
+
+  // const handleAddMedicine = () => {
+  //   setTimeout(() => {     
+  //     setSuccess(true);
+  //   }, 300);
+  // };
+
+  const purchaseData = {
+    date: date,
+    invoiceNo: invoiceNo,
+    supplierName: selectedSupplier,
+    placeOfSupply: placeOfSupply,
+    paymentTerm: paymentTerms,
+    dueDate: dueDate,
+    transPortDetails:transPortDetails,
+    billingAddress: billingAddress,
+    reverseCharge: reverseCharge,
+    purchaseTable: tables[0].rows,
+    amounts: {
+        grossAmount: grossAmount,
+        gstAmount: gstAmount,
+        otherCharge: otherCharges,
+        netAmount: netAmount
+    },
+    Narration:narration
+};
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    
+  console.log(tables);
+  
+    try {
+      await addPurchase(purchaseData);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding purchase:', error);
+      
+    }
+  };
+  const config = () => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    return {
+        headers: {
+            Authorization: `Bearer ${auth.token}`,
+            "Content-Type": "application/json",
+        },
+    };
+};
+  const fetchSupplier = async () => {
+    try {
+        const response = await axios.get("http://localhost:4000/api/v1/admin/getAllSupplier", config());
+        
+        if (Array.isArray(response.data.result)) {
+            setSupplier(response.data.result);
+        }
+        else {
+            console.error("Error: Fetched data is not an array");
+        }
+    } catch (error) {
+        console.error("Error fetching supplier:", error);
+        setSupplier([]);
+    }
+};
+useEffect(() => {
+  fetchSupplier();
+}, []);
+
+
+const handleSupplierChange = (event) => {
+  const supp = supplier.find(s => s._id === event.target.value);
+  setSelectedSupplier(event.target.value);
+  setPlaceOfSupply(supp ? supp.address : '');
+};
+
   
 
   return (
@@ -413,16 +580,28 @@ function PurchaseOrder() {
               <TextField label="Invoice No." fullWidth />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Supplier Invoice No." fullWidth />
+              <TextField label="Supplier Invoice No." fullWidth
+              
+              value={invoiceNo}
+              onChange={(e) => setInvoiceNo(e.target.value)}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Supplier Name" fullWidth>
-                <MenuItem value="SupplierName1">SupplierName1</MenuItem>
-                <MenuItem value="SupplierName2">SupplierName2</MenuItem>
+              <TextField select label="Supplier Name" fullWidth
+              value={selectedSupplier}
+              onChange={handleSupplierChange}
+              >
+                {supplier.map((supp) => (
+                                <MenuItem key={supp._id} value={supp._id}>
+                                    {supp.name}
+                                </MenuItem>
+                            ))}
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Place of Supply" fullWidth />
+              <TextField label="Place of Supply" fullWidth 
+              value={placeOfSupply}
+              />
             </Grid>
             <Grid item xs={3}>
               <TextField
@@ -455,8 +634,8 @@ function PurchaseOrder() {
           <Grid container spacing={2}>
             <Grid item md={4} xs={4}>
             <TransportDetails
-              transportDetails={transportDetails}
-             setTransportDetails={setTransportDetails}
+              transPortDetails={transPortDetails}
+              setTransPortDetails={setTransPortDetails}
             />
             </Grid>
             <Grid item md={4} xs={4}>
@@ -473,6 +652,15 @@ function PurchaseOrder() {
               >
                 <MenuItem value="Yes">Yes</MenuItem>
                 <MenuItem value="No">No</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item md={3} xs={3}>
+            <TextField select label="Tax Type" fullWidth
+              value={taxType}
+              onChange={(e) => setTaxType(e.target.value)}
+              >
+                <MenuItem value="TaxType1">TaxType1</MenuItem>
+                <MenuItem value="TaxType2">TaxType2</MenuItem>
               </TextField>
             </Grid>
           </Grid>
@@ -553,19 +741,19 @@ function PurchaseOrder() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handleSubmit} >
               Save
             </Button>
 
             <Button
               variant="contained"
               className="btn-design"
-              onClick={handlePrint}
+              onClick={(e)=>{handleSubmit(e); handlePrint();}}
             >
               Save & Print
             </Button>
 
-            <PurchasePayment />
+            <PurchasePayment  onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo} />
           </Grid>
         </Grid>
       </Paper>

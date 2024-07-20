@@ -14,7 +14,12 @@ const style = {
 
 const TransportDetails = ({ transPortDetails, setTransPortDetails }) => {
   const [open, setOpen] = useState(false);
-
+  const [receiptNumber, setReceiptNumber] = useState("");
+  const [dispatchedThrough, setDispatchedThrough] = useState("");
+  const [destination, setDestination] = useState("");
+  const [carrierName, setCarrierName] = useState("");
+  const [billOfLading, setBillOfLading] = useState("");
+  const [vehicleNumber, setVehicleNumber] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 

@@ -59,8 +59,6 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   
   const[medicine,setMedicine]=useState([]);
   const [ selectedMedicine, setSelectedMedicine ] = useState ("");
-  // const [itemCode, setItemCode] = useState('');
-  // const [mrp, setMrp] = useState('');
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -545,7 +543,7 @@ function PurchaseOrder() {
    const[narration,setNarration]=useState('');
    const[taxType,setTaxType]=useState('');
    
-   const [transportDetails, setTransportDetails] = useState({
+   const [transPortDetails, setTransPortDetails] = useState({
     receiptNumber: '',
     dispatchedThrough: '',
     destination: '',
@@ -663,7 +661,7 @@ function PurchaseOrder() {
     placeOfSupply: placeOfSupply,
     paymentTerm: paymentTerms,
     dueDate: dueDate,
-    transPortDetails:transportDetails,
+    transPortDetails:transPortDetails,
     billingAddress: billingAddress,
     reverseCharge: reverseCharge,
     purchaseTable: tables[0].rows,
@@ -803,8 +801,8 @@ const handleSupplierChange = (event) => {
           <Grid container spacing={2}>
             <Grid item md={3} xs={3}>
             <TransportDetails
-              transportDetails={transportDetails}
-             setTransportDetails={setTransportDetails}
+              transPortDetails={transPortDetails}
+              setTransPortDetails={setTransPortDetails}
             />
 
             </Grid>

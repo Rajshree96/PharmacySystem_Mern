@@ -28,15 +28,12 @@ const style = {
 
 const PurchaseOrderPayment = ({ onClick, netAmount,orderNo }) => {
   const [open, setOpen] = useState(false);
-  const [receiptNumber, setReceiptNumber] = useState("");
-  const [dispatchedThrough, setDispatchedThrough] = useState("");
-  const [destination, setDestination] = useState("");
-  const [carrierName, setCarrierName] = useState("");
-  const [billOfLading, setBillOfLading] = useState("");
-  const [vehicleNumber, setVehicleNumber] = useState("");
+  const [paymentType, setPaymentType] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");  
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [paid, setPaid] = useState("");
+  const [advance, setAdvance] = useState("");
   const [balance, setBalance] = useState("");
   const [description, setDescription] = useState("");
   const [selectBank, setSelectBank] = useState("");
@@ -44,8 +41,7 @@ const PurchaseOrderPayment = ({ onClick, netAmount,orderNo }) => {
   const [transactionNo, setTransactionNo] = useState("");
   const [chequeNo, setChequeNo] = useState("");
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  
   console.log(orderNo)
   const handleSave = async () => {
     let paymentData = {
@@ -136,7 +132,7 @@ console.log(paymentData)
           <FormControl component="fieldset">
             <RadioGroup
               row
-              value={paymentType}
+              // value={paymentType}
               onChange={handlePaymentTypeChange}
               sx={{ m: 1 }}
             >

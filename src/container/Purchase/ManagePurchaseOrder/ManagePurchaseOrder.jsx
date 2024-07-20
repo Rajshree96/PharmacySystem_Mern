@@ -150,7 +150,7 @@ const ManagePurchaseOrder = () => {
                     <StyledTableCell>{purchaseData.supplierName}</StyledTableCell>
                     <StyledTableCell>{purchaseData.placeOfSupply}</StyledTableCell>
                     <StyledTableCell>{purchaseData.dueDate}</StyledTableCell>
-                    <StyledTableCell>{purchaseData.dueDate}</StyledTableCell>
+                    <StyledTableCell>{purchaseData.paymentStatus}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
