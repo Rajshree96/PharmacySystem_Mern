@@ -129,6 +129,7 @@ const ManageSalesEstimate = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                <StyledTableCell>S No</StyledTableCell>
                   <StyledTableCell>Date</StyledTableCell>
                   <StyledTableCell>Estimate No.</StyledTableCell>
                   <StyledTableCell>Customer Name</StyledTableCell>
@@ -144,8 +145,9 @@ const ManageSalesEstimate = () => {
                   <StyledTableRow key={saleEstimate._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {saleEstimate.estimateNo}
+                      {saleEstimate.date}
                     </StyledTableCell>
+                    <StyledTableCell>{saleEstimate.estimateNo}</StyledTableCell>
                     <StyledTableCell>{saleEstimate.customerName}</StyledTableCell>
                     <StyledTableCell>{saleEstimate.placeOfSupply}</StyledTableCell>
                     <StyledTableCell>{saleEstimate.dueDate}</StyledTableCell>

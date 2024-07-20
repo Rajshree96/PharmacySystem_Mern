@@ -23,6 +23,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const initialRow = {
   sno: "",
@@ -32,8 +33,8 @@ const initialRow = {
   freeQty: "",
   mrp: "",
   retailPrice: "",
-  discount1: "",
-  discount2: "",
+  // discount1: "",
+  // discount2: "",
   taxableValue: "",
   cgst: "",
   sgst: "",
@@ -58,6 +59,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
     updatedRows[index][field] = value;
     onRowChange(updatedRows);
   };
+ 
+  
+ 
+
+
 
   return (
     <TableContainer sx={{ mb: 2 }} maxWidth="xl">
@@ -266,11 +272,16 @@ function SalesReturn() {
       rows: [initialRow],
     },
   ]);
-  const [otherCharges, setOtherCharges] = useState([]);
-  const [reverseCharge, setReverseCharge] = useState("No");
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
   const [dueDate, setDueDate] = useState("");
+
+  const[creditNoteNo, setcreditNoteNo] =useState('');
+   const[customerName,setCustomerName]=useState('')
+   const[billingAddress,setBillingAddress]=useState('')
+   const [selectedSales, setSelectedSales] = useState('')
+   const[reasonForReturn, setReason]=useState('');
+  
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -323,7 +334,60 @@ function SalesReturn() {
       )
     );
   };
+  const addSalesReturn = async(salesReturn)=>{
+    console.log(salesReturn);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/salesreturn/add',
+        salesReturn,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("salesReturn response", response);
+       if (response.data.status === 201) {
+        console.log("salesReturn created successfully ");
+        } 
+    } catch (error) {
+      console.log("Somthing went wrong");
 
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    const salesReturn = {
+      date: date,
+     customerName: customerName,
+     creditNoteNo: creditNoteNo,
+      
+      paymentTerm: paymentTerms,
+      dueDate: dueDate,
+      
+      billingAddress: billingAddress,
+      selectedSales:selectedSales,
+      reasonForReturn:reasonForReturn,
+     purchaseTable: tables[0].rows,
+
+   
+  };
+  
+    try {
+      await addSalesReturn(salesReturn);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding salesEstimate:', error);
+      
+    }
+  };
+  console.log(tables)
+  
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -335,7 +399,10 @@ function SalesReturn() {
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
           <Grid item xs={3}>
-              <TextField select label="Customer Name" fullWidth>
+              <TextField select label="Customer Name" fullWidth
+              value={customerName}
+              onChange={(e)=>setCustomerName(e.target.value)}
+              >
                 <MenuItem value="CustomerName1">CustomerName1</MenuItem>
                 <MenuItem value="CustomerName2">CustomerName2</MenuItem>
               </TextField>
@@ -351,7 +418,10 @@ function SalesReturn() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Credit Note No." fullWidth />
+              <TextField label="Credit Note No." fullWidth 
+              value={creditNoteNo}
+              onChange={(e)=>setcreditNoteNo(e.target.value)}
+              />
             </Grid>                        
             <Grid item xs={3}>
               <TextField
@@ -375,12 +445,18 @@ function SalesReturn() {
           {/* Billing Address */}
           <Grid container spacing={2} sx={{mt:1}}>
           <Grid item md={3} xs={3}>
-              <TextField label="Billing Address" fullWidth />
+              <TextField label="Billing Address" fullWidth 
+              value={billingAddress}
+              onChange={(e)=>setBillingAddress(e.target.value)}
+              />
             </Grid>
             <Grid item md={3} xs={3}>
             <TextField label="Select Sales" 
               select
-              fullWidth >
+              fullWidth
+              value={selectedSales}
+              onChange={(e)=>setSelectedSales(e.target.value)}
+               >
                 <MenuItem value="INV452325">INV452325</MenuItem>
                 <MenuItem value="INV452325">INV452325</MenuItem>
                 <MenuItem value="INV452325">INV452325</MenuItem>
@@ -388,7 +464,10 @@ function SalesReturn() {
               </TextField>
             </Grid>
             <Grid item md={3} xs={3}>
-              <TextField label="Reason for Return" fullWidth />
+              <TextField label="Reason for Return" fullWidth 
+              value={reasonForReturn}
+              onChange={(e)=>setReason(e.target.value)}
+              />
             </Grid>
           </Grid>
         </Box>
@@ -410,8 +489,20 @@ function SalesReturn() {
               }
             />
           ))}
-        </Box>
+           <Grid container spacing={2}>
+          <Grid
+            item
+            md={12}
+            xs={12}
+            sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
+          >
+            <Button variant="contained" className="btn-design" onClick={handleSubmit}>
+              Save
+            </Button>
+            </Grid>
+</Grid>
 
+        </Box>
       </Paper>
     </Container>
   );
