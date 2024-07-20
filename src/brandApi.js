@@ -28,8 +28,8 @@ export const getAllBrand = async () => {
   return axios.get(`${API_URL}/getAll`, config());
 };
 
-export const editBrand = async (id, unitData) => {
-    return axios.put(`${API_URL}/edit/${id}`, unitData, config());
+export const editBrand = async (id, brandData) => {
+    return axios.put(`${API_URL}/edit/${id}`, brandData, config());
   };
   
   export const deleteBrand = async (id) => {

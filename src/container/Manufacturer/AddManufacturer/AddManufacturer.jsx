@@ -129,7 +129,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
     const [ ifscCode, setIfscCode ] = useState("");
     const [ accountHolderName, setAccountHolderName ] = useState("");
     const [ accountNumber, setAccountNumber ] = useState("");
-    const [ gstin, setgstin ] = useState("");
+    const [ gstin, setGstin ] = useState("");
     const [ openingBalance, setOpeningBalance ] = useState("");
     const [ registrationType, setRegistrationType ] = useState("");
     const [ nameError, setNameError ] = useState("");
@@ -153,7 +153,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
             setIfscCode(selectedData.bankingDetails.ifscCode);
             setAccountHolderName(selectedData.bankingDetails.accountHolderName);
             setAccountNumber(selectedData.bankingDetails.accountNumber);
-            setgstin(selectedData.statutoryDetails.gstin);
+            setGstin(selectedData.statutoryDetails.gstin);
             setOpeningBalance(selectedData.openingBalance.asOnFirstDayOfFinancialYear);
             setRegistrationType(selectedData.statutoryDetails.registrationType);
         }
@@ -177,7 +177,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         setIfscCode("");
         setAccountHolderName("");
         setAccountNumber("");
-        setgstin("");
+        setGstin("");
         setOpeningBalance("");
         setRegistrationType("");
     };
@@ -280,7 +280,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                 setIfscCode("");
                 setAccountHolderName("");
                 setAccountNumber("");
-                setgstin("");
+                setGstin("");
                 setOpeningBalance("");
                 setRegistrationType("");
                 toast.success("manufacturer added successfully");
@@ -298,7 +298,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                 console.log("Manufacturer added successfully");
             }
             setSuccess(true);
-            setManufacturersName("");
+            // setManufacturersName("");
         } catch (error) {
             console.error(`Error ${formType === "edit manufacturer" ? "editing" : "adding"}  manufacturer:`, error);
         }
@@ -558,7 +558,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                             error={!!gstError}
                                             helperText={gstError}
                                             value={gstin}
-                                            onChange={(e) => setgstin(e.target.value)}
+                                            onChange={(e) => setGstin(e.target.value)}
                                         />
                                     </Grid>
                                 </Grid>

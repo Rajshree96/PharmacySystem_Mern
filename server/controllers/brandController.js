@@ -20,7 +20,7 @@ export const addBrand = async (req, res) => {
 // Get all Brands
 export const getAllBrands = async (req, res) => {
     try {
-        const brands = await Brand.find();
+        const brands = await Brand.find().populate('manufactureId');
         return res.status(200).json(brands);
     } catch (error) {
         return res.status(500).json({ error: error.message });

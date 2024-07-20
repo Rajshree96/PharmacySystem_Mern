@@ -43,7 +43,7 @@ import Purchase from "../models/purchaseModal.js";
 export const addPurchase = async (req, res) => {
     try {
         
-        const newPurchase =  new PurchaseModal({
+        const newPurchase =  new Purchase({
             date: req.body.date,
             orderNo: req.body.orderNo,
             supplierName: req.body.supplierName,
