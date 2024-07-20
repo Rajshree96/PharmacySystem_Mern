@@ -1,9 +1,9 @@
 
 import mongoose from 'mongoose';
 
-const PurchaseSchema = new mongoose.Schema({
+const PurchaseInvoiceSchema = new mongoose.Schema({
     date: { type: String, required: true },
-    orderNo: { type: String, required: true },
+    invoiceNo: { type: String, required: true },
     supplierName: { type: String, required: true },
     placeOfSupply: { type: String, required: true },
     paymentTerm: { type: String, required: true },
@@ -47,6 +47,6 @@ const PurchaseSchema = new mongoose.Schema({
     }
 });
 
-const Purchase = mongoose.model('Purchase', PurchaseSchema);
+const PurchaseInvoice = mongoose.model('PurchaseInvoice', PurchaseInvoiceSchema);
 
-export default Purchase;
+export default PurchaseInvoice;
