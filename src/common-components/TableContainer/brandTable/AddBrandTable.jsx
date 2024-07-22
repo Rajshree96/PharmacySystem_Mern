@@ -45,6 +45,16 @@ const AddBrandTable = ({onEditBrand, refreshData}) => {
             console.error("Error deleting brand:", error);
         }
     };
+    
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
     return (
         <>
@@ -58,7 +68,7 @@ const AddBrandTable = ({onEditBrand, refreshData}) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow key={row._id}>
                                 <TableCell>{row.brand}</TableCell>
                                 <TableCell>{row.manufactureId.name}</TableCell>
@@ -81,6 +91,13 @@ const AddBrandTable = ({onEditBrand, refreshData}) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePaginations
+            count={rows.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </>
     );
 };

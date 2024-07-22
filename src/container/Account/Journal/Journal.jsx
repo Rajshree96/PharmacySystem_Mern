@@ -99,15 +99,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "sno", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -137,15 +129,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "amount", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>            
               <TableCell sx={{ border: "1px solid white" }}>
