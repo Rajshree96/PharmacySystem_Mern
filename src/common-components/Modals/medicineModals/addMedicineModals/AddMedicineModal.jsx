@@ -21,22 +21,22 @@ import toast, {Toaster} from "react-hot-toast";
 import {getAllBrand} from "../../../../brandApi";
 
 const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
-    const [ addMedicines, setAddMedicines ] = useState([]);
+    // const [ addMedicines, setAddMedicines ] = useState([]);
 
+    // const [ medicines, setMedicines ] = useState([]);
+    // const [ editingMedicine, setEditingMedicine ] = useState(null);
+    // const [ openEditDialog, setOpenEditDialog ] = useState(false);
+
+    // const handleEditClick = (medicine) => {
+    //     setEditingMedicine(medicine);
+    //     setOpenEditDialog(true);
+    // };
+
+    // const handleEditDialogClose = () => {
+    //     setOpenEditDialog(false);
+    //     setEditingMedicine(null);
+    // };
     const [ medicines, setMedicines ] = useState([]);
-    const [ editingMedicine, setEditingMedicine ] = useState(null);
-    const [ openEditDialog, setOpenEditDialog ] = useState(false);
-
-    const handleEditClick = (medicine) => {
-        setEditingMedicine(medicine);
-        setOpenEditDialog(true);
-    };
-
-    const handleEditDialogClose = () => {
-        setOpenEditDialog(false);
-        setEditingMedicine(null);
-    };
-
     const [ medicineName, setMedicineName ] = useState(selectedData?.medicineName || "");
     const [ itemCode, setItemCode ] = useState(selectedData?.itemCode || "");
     const [ category, setCategory ] = useState([]);
@@ -108,6 +108,10 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
 
     useEffect(() => {
         fetchCategories();
+        fetchMedicineType();
+        fetchManufacturer();
+        fetchUnit();
+        fetchBrand();
     }, []);
 
     const fetchCategories = async () => {
@@ -126,9 +130,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }
     };
 
-    useEffect(() => {
-        fetchMedicineType();
-    }, []);
+ 
 
     const fetchMedicineType = async () => {
         try {
@@ -146,9 +148,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }
     };
 
-    useEffect(() => {
-        fetchManufacturer();
-    }, []);
+ 
 
     const config = () => {
         const auth = JSON.parse(localStorage.getItem("auth"));
@@ -175,9 +175,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }
     };
 
-    useEffect(() => {
-        fetchUnit();
-    }, []);
+   
 
     const fetchUnit = async () => {
         try {
@@ -195,9 +193,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }
     };
 
-    useEffect(() => {
-        fetchBrand();
-    }, []);
+ 
 
     const fetchBrand = async () => {
         try {
@@ -224,6 +220,8 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                     Authorization: `Bearer ${auth.token}`,
                 },
             });
+            console.log(medicineData);
+            console.log(response);
             if (response.data.statusCode === 201) {
                 toast.success("Medicine added successfully");
             }
@@ -232,11 +230,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }
     };
 
-    const handleAddMedicine = () => {
-        setTimeout(() => {
-            setSuccess(true);
-        }, 300);
-    };
+   
 
     const editMedicine = async (medicineData) => {
         console.log("Medicine@@@@", medicineData.itemCode);
@@ -248,14 +242,14 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }
 
         try {
-            const response = await axios.put(`http://localhost:4000/api/v1/admin/medicine/testtyuhh`, medicineData, {
+            const response = await axios.put(`http://localhost:4000/api/v1/admin/medicine/${medicineData.itemCode}`, medicineData, {
                 headers: {Authorization: `Bearer ${auth.token}`},
             });
             console.log("Medicine updated:", response.data);
             setMedicines((prevMedicines) =>
                 prevMedicines.map((med) => (med.itemCode === medicineData.itemCode ? medicineData : med))
             );
-            handleEditDialogClose();
+            
         } catch (error) {
             console.error("Error updating medicine:", error);
         }

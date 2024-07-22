@@ -77,32 +77,32 @@
 //     setEditingMedicine(null);
 //   };
 
-//   const handleEditSave = async () => {
-//     const auth = JSON.parse(localStorage.getItem('auth'));
-//     if (!auth || !auth.token) {
-//       console.error("No token found in local storage");
-//       return;
-//     }
+  // const handleEditSave = async () => {
+  //   const auth = JSON.parse(localStorage.getItem('auth'));
+  //   if (!auth || !auth.token) {
+  //     console.error("No token found in local storage");
+  //     return;
+  //   }
 
-//     try {
-//       const response = await axios.put(
-//         `http://localhost:4000/api/v1/admin/medicine/${editingMedicine.itemCode}`,
-//         editingMedicine,
-//         {
-//           headers: { Authorization: `Bearer ${auth.token}` }
-//         }
-//       );
-//       console.log("Medicine updated:", response.data);
-//       setMedicines((prevMedicines) =>
-//         prevMedicines.map((med) =>
-//           med.itemCode === editingMedicine.itemCode ? editingMedicine : med
-//         )
-//       );
-//       handleEditDialogClose();
-//     } catch (error) {
-//       console.error("Error updating medicine:", error);
-//     }
-//   };
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:4000/api/v1/admin/medicine/${editingMedicine.itemCode}`,
+  //       editingMedicine,
+  //       {
+  //         headers: { Authorization: `Bearer ${auth.token}` }
+  //       }
+  //     );
+  //     console.log("Medicine updated:", response.data);
+      // setMedicines((prevMedicines) =>
+      //   prevMedicines.map((med) =>
+      //     med.itemCode === editingMedicine.itemCode ? editingMedicine : med
+      //   )
+      // );
+  //     handleEditDialogClose();
+  //   } catch (error) {
+  //     console.error("Error updating medicine:", error);
+  //   }
+  // };
 
 //   const handleDeleteClick = async (itemCode) => {
 //     const auth = JSON.parse(localStorage.getItem('auth'));
@@ -630,6 +630,158 @@
 // };
 
 // export default AddMedicineTable;
+// import React, { useState, useEffect } from "react";
+// import {
+//   Paper,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableHead,
+//   TableRow,
+//   Box,
+//   IconButton
+// } from "@mui/material";
+// import EditIcon from '@mui/icons-material/Edit';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import { getAllCategories, deleteCategory } from "../../categoriesApi";
+// import EditButton from "../ButtonContainer/EditButton";
+// import DeleteButton from "../ButtonContainer/DeleteButton";
+// import axios from "axios";
+// import TablePaginations from "../TablePagination/TablePaginations";
+
+// const AddMedicineTable = ({ onEditAddMedicine }) => {
+//   const [medicines, setMedicines] = useState([]);
+//   const [page, setPage] = useState(0);
+//   const [rowsPerPage, setRowsPerPage] = useState(5);
+//   const handleChangePage = (event, newPage) => {
+//     setPage(newPage);
+//   };
+
+//   const handleChangeRowsPerPage = (event) => {
+//     setRowsPerPage(parseInt(event.target.value, 10));
+//     setPage(0);
+//   };
+
+//   const fetchMedicines = async () => {
+//     try {
+//       const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine");
+//       console.log("API Response:", response.data.result);
+
+//       if (Array.isArray(response.data.result)) {
+//         setMedicines(response.data.result);
+//       } else {
+//         console.error("API response does not contain medicines array:", response.data);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching medicines:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchMedicines();
+//   }, []);
+
+//   const handleDeleteClick = async (itemCode) => {
+//     const auth = JSON.parse(localStorage.getItem('auth'));
+//     if (!auth || !auth.token) {
+//       console.error("No token found in local storage");
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.delete(`http://localhost:4000/api/v1/admin/delete/${itemCode}`, {
+//         headers: { Authorization: `Bearer ${auth.token}` }
+//       });
+//       console.log("API Response:", response);
+
+//       if (response.data.status === "ok" || response.status === 200) {
+//         console.log("Deleted medicine with item code:", itemCode);
+//         fetchMedicines();
+//       } else {
+//         console.error("Failed to delete medicine:", response.data);
+//       }
+//     } catch (error) {
+//       console.error("Error deleting medicine:", error);
+//     }
+//   };
+
+//   return (
+//     <Box sx={{ overflowX: "auto" }}>
+//         <TableContainer component={Paper} elevation={3}>
+//         <Table>
+//           <TableHead>
+//             <TableRow sx={{ bgcolor: "#004d40" }}>
+//             <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Sno.</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Item Code</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Medicine Name</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Batch No.</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Expiry Date</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Category</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Medicine Type</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Brand</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Unit</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Net Weight</TableCell>
+//               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Action</TableCell>
+//             </TableRow>
+//           </TableHead>
+//           <TableBody>
+//             {Array.isArray(medicines) && medicines.length > 0 ? (
+//               medicines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicine,index) => (
+//                 <TableRow key={medicine._id}>
+//                  <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+//                   <TableCell>{medicine.itemCode}</TableCell>
+//                   <TableCell>{medicine.medicineName}</TableCell>
+//                   <TableCell>{medicine.batchNo}</TableCell>
+//                   <TableCell>{medicine.expiryDate}</TableCell>
+//                   <TableCell>{medicine.medicineCategory.name}</TableCell>
+//                   <TableCell>{medicine.medicineType.mediType}</TableCell>
+//                   <TableCell>{medicine.brand.brand}</TableCell>
+//                   <TableCell>{medicine.unit.name}</TableCell>
+//                   <TableCell>{medicine.netWeight}</TableCell>
+//                   <TableCell>
+
+//                      <EditButton
+//                     label={"edit"}
+//                     icon={EditIcon}
+//                     sx={{ mr: 1, color: "#1976d2" }}
+//                     onClick={() => onEditAddMedicine(medicine)}
+//                   />
+//                   <DeleteButton
+//                     label={"delete"}
+//                     icon={DeleteIcon}
+//                     sx={{ mr: 1, color: "red" }}
+//                     onClick={() => handleDeleteClick(medicine.itemCode)}
+//                   />
+
+//                   </TableCell>
+//                 </TableRow>
+//               ))
+//             ) : (
+//               <TableRow>
+//                 <TableCell colSpan={10} align="center">
+//                   No medicines found.
+//                 </TableCell>
+//               </TableRow>
+//             )}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+//       <TablePaginations
+//         count={medicines.length}
+//         page={page}
+//         rowsPerPage={rowsPerPage}
+//         onPageChange={handleChangePage}
+//         onRowsPerPageChange={handleChangeRowsPerPage}
+//       />
+     
+//     </Box>
+//   );
+// };
+
+// export default AddMedicineTable;
+
+
 import React, { useState, useEffect } from "react";
 import {
   Paper,
@@ -649,11 +801,15 @@ import EditButton from "../ButtonContainer/EditButton";
 import DeleteButton from "../ButtonContainer/DeleteButton";
 import axios from "axios";
 import TablePaginations from "../TablePagination/TablePaginations";
+import io from "socket.io-client";
+
+
 
 const AddMedicineTable = ({ onEditAddMedicine }) => {
   const [medicines, setMedicines] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -680,7 +836,49 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
 
   useEffect(() => {
     fetchMedicines();
+    const socket = io("http://localhost:4000");
+  
+    socket.on('connect', () => {
+      console.log("Socket connected");
+    });
+  
+    socket.on('newMedicine', (newMedicine) => {
+      console.log('New medicine received:', newMedicine);
+      if (newMedicine) {
+        setMedicines((prevMedicines) => [...prevMedicines, newMedicine]);
+      }
+    });
+  
+    socket.on('updateMedicine', (updatedMedicine) => {
+      console.log('Updated medicine received:', updatedMedicine);
+      if (updatedMedicine && updatedMedicine._id) {
+        setMedicines((prevMedicines) =>
+          prevMedicines.map((med) =>
+            med._id === updatedMedicine._id ? updatedMedicine : med
+          )
+        );
+      }
+    });
+  
+    socket.on('deleteMedicine', (deletedMedicineId) => {
+      console.log('Deleted medicine ID received:', deletedMedicineId);
+      if (deletedMedicineId) {
+        setMedicines((prevMedicines) => 
+          prevMedicines.filter(medicine => medicine._id !== deletedMedicineId)
+        );
+      }
+    });
+  
+    socket.on('disconnect', () => {
+      console.log("Socket disconnected");
+    });
+  
+    return () => {
+      socket.disconnect();
+      console.log("Socket disconnected on cleanup");
+    };
   }, []);
+  
 
   const handleDeleteClick = async (itemCode) => {
     const auth = JSON.parse(localStorage.getItem('auth'));
@@ -706,13 +904,14 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
     }
   };
 
+ 
   return (
     <Box sx={{ overflowX: "auto" }}>
-        <TableContainer component={Paper} elevation={3}>
+      <TableContainer component={Paper} elevation={3}>
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: "#004d40" }}>
-            <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Sno.</TableCell>
+              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Sno.</TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Item Code</TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Medicine Name</TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>Batch No.</TableCell>
@@ -727,9 +926,9 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
           </TableHead>
           <TableBody>
             {Array.isArray(medicines) && medicines.length > 0 ? (
-              medicines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicine,index) => (
+              medicines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicine, index) => (
                 <TableRow key={medicine._id}>
-                 <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                  <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                   <TableCell>{medicine.itemCode}</TableCell>
                   <TableCell>{medicine.medicineName}</TableCell>
                   <TableCell>{medicine.batchNo}</TableCell>
@@ -740,20 +939,18 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
                   <TableCell>{medicine.unit.name}</TableCell>
                   <TableCell>{medicine.netWeight}</TableCell>
                   <TableCell>
-
-                     <EditButton
-                    label={"edit"}
-                    icon={EditIcon}
-                    sx={{ mr: 1, color: "#1976d2" }}
-                    onClick={() => onEditAddMedicine(medicine)}
-                  />
-                  <DeleteButton
-                    label={"delete"}
-                    icon={DeleteIcon}
-                    sx={{ mr: 1, color: "red" }}
-                    onClick={() => handleDeleteClick(medicine.itemCode)}
-                  />
-
+                    <EditButton
+                      label={"edit"}
+                      icon={EditIcon}
+                      sx={{ mr: 1, color: "#1976d2" }}
+                      onClick={() => onEditAddMedicine(medicine)}
+                    />
+                    <DeleteButton
+                      label={"delete"}
+                      icon={DeleteIcon}
+                      sx={{ mr: 1, color: "red" }}
+                      onClick={() => handleDeleteClick(medicine)}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -774,7 +971,6 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-     
     </Box>
   );
 };
