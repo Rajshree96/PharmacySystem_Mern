@@ -47,7 +47,7 @@ const TaxType = () => {
               Create Tax Type
             </Typography>
             <Box component="form" noValidate autoComplete="off">
-                <Grid item md={3}>
+                <Grid item md={4}>
               <TextField
                 fullWidth
                 label="Name"

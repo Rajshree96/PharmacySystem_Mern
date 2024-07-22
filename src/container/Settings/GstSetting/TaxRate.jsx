@@ -55,7 +55,7 @@ const TaxRate = () => {
             <Box component="form" noValidate autoComplete="off">
               <Grid container spacing={2}>
                
-                <Grid item md={6}>
+                <Grid item md={4}>
                   <TextField
                     fullWidth
                     label="Tax Rate (%)"
