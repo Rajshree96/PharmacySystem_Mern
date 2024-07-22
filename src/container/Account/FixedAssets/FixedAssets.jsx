@@ -184,15 +184,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "sno", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -204,15 +196,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "assetsName", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -224,15 +208,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "qty", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -244,15 +220,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "uom", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -264,15 +232,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "rate", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>              
               <TableCell
@@ -284,15 +244,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "taxableValue", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -304,15 +256,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "cGst", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -324,15 +268,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "sGst", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -344,15 +280,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "iGst", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -364,15 +292,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "totalValue", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>              
               <TableCell sx={{ border: "1px solid white" }}>

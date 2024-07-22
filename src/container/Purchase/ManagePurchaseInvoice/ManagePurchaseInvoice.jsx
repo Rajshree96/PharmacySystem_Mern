@@ -83,7 +83,7 @@ const ManagePurchaseInvoice = () => {
                 console.error("No token found in local storage");
                 return;
             }
-            const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall", {
+            const response = await axios.get("http://localhost:4000/api/v1/customer/getall", {
                 headers: {Authorization: `Bearer ${auth.token}`},
             });
             console.log("API Response:", response.data);

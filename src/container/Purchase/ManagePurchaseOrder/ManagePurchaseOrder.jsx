@@ -194,7 +194,7 @@ const handleCloseModal = () => {
                     <StyledTableCell>{purchaseData.paymentStatus}</StyledTableCell>
                     <StyledTableCell>
                       <Box
-                        style={{ display: "flex", justifyContent: "space-between" }}
+                        style={{ display: "flex", justifyContent: "space-between",gap:"2px" }}
                       >
                         <ViewButton
                           sx={{ mr: 1, color: "green  " }}

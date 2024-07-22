@@ -160,8 +160,7 @@ const AddCustomer = ({formType, selectedData, setSuccess}) => {
       setGstin(selectedData.customerDetails.statutoryDetails.gstin);
       setRegistrationType(selectedData.customerDetails.statutoryDetails.stateRegistrationType);
       setOpeningBalance(selectedData.customerDetails.openingBalance.asOnFirstDayOfFinancialYear);
-      
-      
+            
     }
     else {
         resetForm();
@@ -355,6 +354,7 @@ const paperStyles =
 
   return (
     <Container maxWidth="lg">
+            <Toaster />
       <Box className={classes.formContainer}>
         <Paper
           elevation={3}

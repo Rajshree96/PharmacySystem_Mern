@@ -357,7 +357,46 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
     };
 
     const handleSaveCategory = async (e) => {
-        e.preventDefault();
+        try {
+            e.preventDefault();
+            // Validate name
+            await validationSchema.validateAt("name", {name});
+            setNameError(""); // Clear any previous error
+        } catch (err) {
+            setNameError(err.message); // Set error message for name
+        }
+
+        try {
+            // Validate gstin
+            await validationSchema.validateAt("gstin", {gstin});
+            setGstError("");
+        } catch (err) {
+            setGstError(err.message);
+        }
+
+        try {
+            // Validate state
+            await validationSchema.validateAt("state", {state: selectedState});
+            setStateError("");
+        } catch (err) {
+            setStateError(err.message);
+        }
+
+        try {
+            // Validate registration type
+            await validationSchema.validateAt("registrationType", {registrationType});
+            setRegistrationTypeError("");
+        } catch (err) {
+            setRegistrationTypeError(err.message);
+        }
+
+        // Check overall validity after individual validations
+        const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
+
+        if (!isValid) {
+            // Handle any additional logic if the overall form is not valid
+            return;
+        }
         const manufacturerData = {
             name: name,
             address: address,
