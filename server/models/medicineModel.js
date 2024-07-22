@@ -46,10 +46,7 @@ const PriceDetailsSchema = new mongoose.Schema({
 
 // Define sub-schema for Opening Balance
 const OpeningBalanceSchema = new mongoose.Schema({
-  particular: {
-    type: String,
-    required: true,
-  },
+ 
   quantity: {
     type: Number,
     required: true,
@@ -118,7 +115,7 @@ const MedicineSchema = new mongoose.Schema({
     default:false,
   },
   productPhotos: {
-    type: [String], 
+    type: [{}], 
     validate: [arrayLimit, '{PATH} exceeds the limit of 4'],
   },
   description: {

@@ -137,7 +137,7 @@ export async function deleteMedicineController(req, res) {
 
         
         const deletedMedicine = await medicineModel.findOneAndDelete({ itemCode });
-
+        
         
         if (!deletedMedicine) {
             return res.send(error(404, "Medicine not found."));
@@ -251,7 +251,7 @@ export async function updateManufacturerController(req,res){
             updateData,
             { new: true }
         );
-
+        console.log(updatedManufacturer);
        
         if (!updatedManufacturer ) {
             return res.send(error(404, "Manufacturer not found."));

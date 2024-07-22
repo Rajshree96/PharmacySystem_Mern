@@ -100,25 +100,12 @@ export const getAllPurchases = async (req, res) => {
 // Update a purchase record
 export const updatePurchase = async (req, res) => {
     const { id } = req.params;
-    const updatedData = {
-        date: req.body.date,
-        invoiceNumber: req.body.invoiceNumber,
-        supplierInvoiceNo: req.body.supplierInvoiceNo,
-        suuplierName: req.body.suuplierName,
-        placeOfSupply: req.body.placeOfSupply,
-        paymentTerm: req.body.paymentTerm,
-        dueDate: req.body.dueDate,
-        transPortDetails: req.body.transPortDetails,
-        billingAddress: req.body.billingAddress,
-        reverseCharge: req.body.reverseCharge,
-        purchaseTable: req.body.purchaseTable,
-        amounts: req.body.amounts,
-        Narration: req.body.Narration,
-        paymentStatus: req.body.paymentStatus
-    };
+    const {...updatedData}= req.body;
 
     try {
-        const updatedPurchase = await Purchase.findByIdAndUpdate(id, updatedData, { new: true });
+        const updatedPurchase = await Purchase.findByIdAndUpdate({ _id:id },
+            updatedData,
+            { new: true } );
         if (!updatedPurchase) {
             return res.status(404).json({ message: "Purchase not found" });
         }

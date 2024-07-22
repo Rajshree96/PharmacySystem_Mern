@@ -257,6 +257,41 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
             },
         };
 
+        // try {
+        //     const auth = JSON.parse(localStorage.getItem("auth"));
+        //     const response = await axios.post("http://localhost:4000/api/v1/admin/add-manufacturer", manufacturerData, {
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             Authorization: `Bearer ${auth.token}`,
+        //         },
+        //     });
+        //     if (response.status === 201) {
+        //         console.log("Manufacturer added successfully:", response.data);
+        //         setSelectedCountry("");
+        //         setSelectedState("");
+        //         setName("");
+        //         setAddress("");
+        //         setPinCode("");
+        //         setContact("");
+        //         setEmail("");
+        //         setWebsite("");
+        //         setBankName("");
+        //         setBankAddress("");
+        //         setIfscCode("");
+        //         setAccountHolderName("");
+        //         setAccountNumber("");
+        //         setGstin("");
+        //         setOpeningBalance("");
+        //         setRegistrationType("");
+        //         toast.success("manufacturer added successfully");
+        //     }
+        // } catch (error) {
+        //     console.log("Error adding manufacturer:", error);
+        // }
+    };
+
+
+    const addManufacturer = async (manufacturerData) => {
         try {
             const auth = JSON.parse(localStorage.getItem("auth"));
             const response = await axios.post("http://localhost:4000/api/v1/admin/add-manufacturer", manufacturerData, {
@@ -265,6 +300,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                     Authorization: `Bearer ${auth.token}`,
                 },
             });
+            console.log("response-----  ", response);
             if (response.status === 201) {
                 console.log("Manufacturer added successfully:", response.data);
                 setSelectedCountry("");
@@ -288,16 +324,83 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         } catch (error) {
             console.log("Error adding manufacturer:", error);
         }
+    }
+
+
+    const editManufacturer = async (id, manufacturer) => {
+        console.log("Manufacturer@@@@", manufacturer._id);
+    
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+        }
+    
+        // // Check if the _id field is defined
+        // if (!manufacturer.id) {
+        //     console.error("Manufacturer _id is undefined");
+        //     return;
+        // }
+    
+        try {
+            const response = await axios.put(`http://localhost:4000/api/v1/admin/update/manufacturer/${id}`, manufacturer, {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            });
+            console.log("Manufacturer updated:", response.data);
+            console.log(manufacturer);
+            // setManufacturers((prevManufacturer) =>
+            //     prevManufacturer.map((manu) => (manu._id === manufacturer._id ? manufacturer : manu))
+            // );
+        } catch (error) {
+            console.error("Error updating manufacturer:", error);
+        }
     };
-    const handleSaveCategory = async () => {
+
+    const handleSaveCategory = async (e) => {
+        e.preventDefault();
+        const manufacturerData = {
+            name: name,
+            address: address,
+            state: selectedState,
+            pincode: pinCode,
+            country: selectedCountry,
+            contact: contact,
+            email: email,
+            website: website,
+            bankingDetails: {
+                bankName: bankName,
+                bankAddress: bankAddress,
+                ifscCode: ifscCode,
+                accountHolderName: accountHolderName,
+                accountNumber: accountNumber,
+            },
+            statutoryDetails: {
+                registrationType: registrationType,
+                gstin: gstin,
+            },
+            openingBalance: {
+                asOnFirstDayOfFinancialYear: openingBalance,
+            },
+        };
         try {
             if (formType === "edit manufacturer") {
+
+              await editManufacturer(selectedData._id, manufacturerData);
                 console.log("Manufacturer updated successfully");
+                setSuccess(true);
+                // toast.success("Manufacturer edited successfully");
+
+
             }
             else {
+
+               await addManufacturer(manufacturerData);
                 console.log("Manufacturer added successfully");
+                setSuccess(true);
+                // toast.success("Manufacturer added successfully");
             }
-            setSuccess(true);
+
+           
             // setManufacturersName("");
         } catch (error) {
             console.error(`Error ${formType === "edit manufacturer" ? "editing" : "adding"}  manufacturer:`, error);
@@ -351,7 +454,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                             Manufacturer
                         </Typography>
                         <BreadcrumbContainer breadcrumbs={breadcrumbs} />
-                        <form onSubmit={handleSubmit}>
+                        <form >
                             <motion.div variants={itemVariants}>
                                 <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
                                     <BusinessIcon className={classes.sectionIcon} /> Manufacturer Details
