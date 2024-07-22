@@ -28,6 +28,7 @@ import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 import PurchasePayment from "../PurchaseInvoice/PurchasePayment";
 import { useReactToPrint } from "react-to-print";
+import AllPurchaseModal from "../../../common-components/Modals/PurchaseModal/AllPurchaseModal";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -50,6 +51,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManagePurchaseOrder = () => {
+  const [ modalType, setModalType ] = useState("");
+  const [ selectedPurchaseOrder, setSelectedPurchaseOrder] = useState(null);
+
   const [purchaseData, setPurchaseData] = useState([]);
   const breadcrumbs = ["Purchase", "Manage Purchase Order"];
 
@@ -58,6 +62,16 @@ const ManagePurchaseOrder = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const handleOpenModal = (type, purchaseorder = null) => {
+    setModalType(type);
+    setSelectedPurchaseOrder(purchaseorder);
+};
+
+const handleCloseModal = () => {
+    setModalType("");
+    setSelectedPurchaseOrder(null);
+};
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -191,6 +205,7 @@ const ManagePurchaseOrder = () => {
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
+                          onClick={() => handleOpenModal("edit purchaseorder", purchaseData)} // Pass the supplier object as a prop
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
@@ -243,6 +258,15 @@ const ManagePurchaseOrder = () => {
 
         </Paper>
       </Box>
+
+      {/* Modal */}
+      <AllPurchaseModal
+       open={!!modalType}
+       handleClose={handleCloseModal}
+       formType={modalType}
+       selectedData={selectedPurchaseOrder}
+       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />
     </Container>
   );
 };
