@@ -17,24 +17,29 @@ const expenseSchema = new mongoose.Schema({
     },
     taxType:{
         type:String,
-        enum:["CGST", "SGST", "IGST", "Non GST"],
+        enum:["CGST/SGST", "IGST", "Non GST"],
         required:true,
     },
     bank:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Bank",
-        required:true,
+        type:String,
+        required: function() { return this.receiptMode === "Bank"; }
+
     },
     paymentMethod:{
         type:String,
         enum:["Online", "Cheque"],
-        required:true,
+        required: function() { return this.receiptMode === "Bank"; }
+
     },
     transaction:{
         type:String,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Online"; }
+
     },
     chequeNo:{
-        type:String
+        type:String,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Cheque"; }
+
     },
    purchaseTable:[{
      account:{

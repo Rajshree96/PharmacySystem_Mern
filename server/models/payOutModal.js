@@ -13,8 +13,7 @@ const payOutSchema = new mongoose.Schema({
         unique:true,
     },
     supplierDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Supplier",
+        type:String,
         required:true,
     },
     paymentMode:{
@@ -23,20 +22,23 @@ const payOutSchema = new mongoose.Schema({
         required:true,
     },
     bank:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Bank",
-        required:true,
+        type:String,
+        required: function() { return this.receiptMode === "Bank"; }
     },
     paymentMethod:{
         type:String,
         enum:["Online", "Cheque"],
-        required:true,
+        required: function() { return this.receiptMode === "Bank"; }
     },
     transaction:{
         type:String,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Online"; }
+
     },
     chequeNo:{
-        type:String
+        type:String,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Cheque"; }
+
     },
    purchaseTable:[{
     billNo:{
@@ -55,10 +57,10 @@ const payOutSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    total:{
-        type:Number,
-        required:true,
-    },
+    // total:{
+    //     type:Number,
+    //     required:true,
+    // },
     narration:{
         type:String,
     }

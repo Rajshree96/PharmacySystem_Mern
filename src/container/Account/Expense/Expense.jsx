@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -38,9 +39,8 @@ const style = {
 
 const initialRow = {
   sno: "",
-  itemCode: "",
-  accountNumber: "",
-  service: "",
+  account: "",
+  product: "",
   amount: "",
   description: "",
   tax: "",
@@ -181,9 +181,9 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
-                  value={row.accountNumber}
+                  value={row.account}
                   onChange={(e) =>
-                    handleInputChange(index, "accountNumber", e.target.value)
+                    handleInputChange(index, "account", e.target.value)
                   }
                   fullWidth
                   size="small"
@@ -199,11 +199,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.service}
+                  value={row.product}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "service", e.target.value)
+                    handleInputChange(index, "product", e.target.value)
                   }
                   InputProps={{
                     sx: {
@@ -379,20 +379,22 @@ function Expense() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [expenseNo , setExpenseNo] = useState("");
+  const [taxType, setTaxType] = useState("");
   const [paymentMode, setPaymentMode] = useState("");
   const [bank, setBank] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [chequeNumber, setChequeNumber] = useState("");
+  const [narration , setNarration] = useState("");
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -430,6 +432,56 @@ function Expense() {
     content: () => resumeRef.current,
   });
 
+
+  const handelSubmit = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      let paymentData = {
+        date,
+        expenseNo,
+        paymentMode,
+        taxType,
+        bank,
+        paymentMethod,
+        narration,
+        purchaseTable: tables[0].rows.map(row => ({
+          account: row.account,
+          product: parseFloat(row.product) || 0,
+          description: parseFloat(row.description) || 0,
+          amount: parseFloat(row.amount) || 0,
+          tax:parseFloat(row.tax) || 0,
+          taxAmount: parseFloat(row.taxAmount) || 0,
+          total: parseFloat(row.total) || 0,
+        })),
+      };
+       if(paymentMode === 'Bank')
+       {
+        paymentData.bank =bank;
+        paymentData.paymentMethod = paymentMethod;
+        if(paymentMethod === "Online")
+        {
+          paymentData.transaction =  transactionNumber;
+        } else if(paymentMethod === 'Cheque')
+        {
+          paymentData.chequeNo = chequeNumber;
+        }
+       }
+       const response = await axios.post("http://localhost:4000/api/v1/expense/add",
+        paymentData,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("Expense added Successfully:", response.data);
+
+    } catch (error) {
+      console.error('Error adding expense:', error)
+    }
+  }
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -451,7 +503,10 @@ function Expense() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Expense No." fullWidth />
+              <TextField label="Expense No." fullWidth
+              value={expenseNo}
+              onChange={(e)=>setExpenseNo(e.target.value)}
+              />
             </Grid>           
             <Grid item xs={3}>
               <TextField
@@ -466,7 +521,10 @@ function Expense() {
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Tax Type" fullWidth>
+              <TextField select label="Tax Type" fullWidth
+               value={taxType}
+               onChange={(e)=>setTaxType(e.target.value)}
+              >
                 <MenuItem value="CGST/SGST">CGST/SGST</MenuItem>
                 <MenuItem value="IGST">IGST</MenuItem>
                 <MenuItem value="Non GST">Non GST</MenuItem>
@@ -541,7 +599,10 @@ function Expense() {
         {/* Narration */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={3} xs={3}>
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3} 
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
         </Grid>
 
@@ -555,7 +616,7 @@ function Expense() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handelSubmit}>
               Save
             </Button>
           </Grid>
