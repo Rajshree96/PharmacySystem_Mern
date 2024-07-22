@@ -27,6 +27,8 @@ import * as Yup from "yup";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
+
 
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
@@ -225,10 +227,13 @@ const AddBank = ({ formType, selectedData, setSuccess }) => {
         }
       );
       console.log("API Response:", response.data);
-
+      toast.success("manufacturer added successfully");
+      resetForm();
+      
       if (response.data.status === 201) {
         console.log("Bank added successfully:", response.data);
         setSuccess(true);
+        toast.success("manufacturer added successfully");
         resetForm();
       }
     } catch (error) {
@@ -274,6 +279,7 @@ const AddBank = ({ formType, selectedData, setSuccess }) => {
 
   return (
     <Container maxWidth="lg">
+            <Toaster />
       <Box className={classes.formContainer}>
         <Paper
           elevation={3}

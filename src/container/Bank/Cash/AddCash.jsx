@@ -27,7 +27,7 @@ import ViewButton from "../../../common-components/ButtonContainer/ViewButton";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
-import toast, { Toaster } from "react-hot-toast";
+import toast, { Toaster } from 'react-hot-toast';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -83,7 +83,7 @@ const AddCash = () => {
 
       if (response.data && Array.isArray(response.data.cash)) {
         setCash(response.data.cash);
-        console.log("####",response);
+        // console.log("####",response);
       } else {
         console.error("API response does not contain cash array:", response.data);
       }
@@ -107,11 +107,13 @@ const AddCash = () => {
       const response = await axios.delete(`http://localhost:4000/api/v1/cash/delete/${_id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
+      toast.success("manufacturer added successfully");
+      handleClose();
 
       if (response.data.statusText === "ok" || response.status === 200) {
         console.log("Deleted cash entry with _id:", _id);
         fetchCash();
-        toast.success("Cash entry deleted successfully!");
+        // toast.success("Cash entry deleted successfully!");
       } else {
         toast.error("Failed to delete cash entry.");
       }
@@ -154,6 +156,8 @@ const AddCash = () => {
             headers: { Authorization: `Bearer ${auth.token}` }
           }
         );
+        toast.success("manufacturer added successfully");
+        handleClose();
       } else {
         response = await axios.post(
           "http://localhost:4000/api/v1/cash/addcash",
@@ -162,15 +166,10 @@ const AddCash = () => {
             headers: { Authorization: `Bearer ${auth.token}` }
           }
         );
-      }
-
-      if (response.data.statusText === "ok") {
-        toast.success(isEditing ? "Cash entry updated successfully!" : "Cash entry added successfully!");
-        fetchCash();
+        toast.success("manufacturer added successfully");
         handleClose();
-      } else {
-        toast.error(isEditing ? "Failed to update cash entry." : "Failed to add cash entry.");
       }
+     
     } catch (error) {
       toast.error(isEditing ? "Error updating cash entry." : "Error adding cash entry.");
     }

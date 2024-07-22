@@ -354,6 +354,7 @@ const paperStyles =
 
   return (
     <Container maxWidth="lg">
+            <Toaster />
       <Box className={classes.formContainer}>
         <Paper
           elevation={3}

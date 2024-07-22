@@ -27,6 +27,7 @@ import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import axios from "axios";
 import toast, {Toaster} from "react-hot-toast";
+
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
     return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - 320px) / (1280 - 320)))`;
@@ -349,8 +350,46 @@ const editSupplier = async (id, supplier) => {
 
 
     const handleSaveSupplier = async (e) => {
-
+        try {
         e.preventDefault();
+            // Validate name
+            await validationSchema.validateAt("name", {name});
+            setNameError(""); // Clear any previous error
+        } catch (err) {
+            setNameError(err.message); // Set error message for name
+        }
+
+        try {
+            // Validate gstin
+            await validationSchema.validateAt("gstin", {gstin});
+            setGstError("");
+        } catch (err) {
+            setGstError(err.message);
+        }
+
+        try {
+            // Validate state
+            await validationSchema.validateAt("state", {state: selectedState});
+            setStateError("");
+        } catch (err) {
+            setStateError(err.message);
+        }
+
+        try {
+            // Validate registration type
+            await validationSchema.validateAt("registrationType", {registrationType});
+            setRegistrationTypeError("");
+        } catch (err) {
+            setRegistrationTypeError(err.message);
+        }
+
+        // Check overall validity after individual validations
+        const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
+
+        if (!isValid) {
+            // Handle any additional logic if the overall form is not valid
+            return;
+        }
 
         const supplierData = {
             name: name,
@@ -435,7 +474,7 @@ const editSupplier = async (id, supplier) => {
               </Typography>
             )} */}
 
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSaveSupplier}>
                             <motion.div variants={itemVariants}>
                                 <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
                                     <BusinessIcon className={classes.sectionIcon} /> Supplier Details
