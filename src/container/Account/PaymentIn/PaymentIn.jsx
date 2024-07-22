@@ -149,13 +149,14 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
-                  value={row.billNo}
+                  value={row.billNo}                  
                   onChange={(e) =>
                     handleInputChange(index, "billNo", e.target.value)
                   }
                   fullWidth
                   size="small"
                 >
+                                <MenuItem value="" disabled>Select Bill No.</MenuItem>
                   {billOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}

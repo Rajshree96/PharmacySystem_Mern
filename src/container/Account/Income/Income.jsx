@@ -181,6 +181,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   fullWidth
                   size="small"
                 >
+                                <MenuItem value="" disabled>Select Account No.</MenuItem>
                   {accounts.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
