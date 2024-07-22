@@ -11,7 +11,7 @@ const GstSetting = () => {
 
     return (
         <Container>
-            <Typography variant="h4" align="center" gutterBottom mt={4} mb={3}>
+            <Typography variant="h5" align="center" gutterBottom mt={4} mb={3}>
                 GST Settings
             </Typography>
             <TaxType />
