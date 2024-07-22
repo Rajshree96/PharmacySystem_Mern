@@ -13,7 +13,7 @@ const AllBrandModals = ({open, handleClose, formType, selectedData, style}) => {
 
     const handleDialogClose = () => {
         resetForm();
-        handleClose(); 
+        handleClose();
     };
     const renderForm = () => {
         switch (formType) {
@@ -27,7 +27,7 @@ const AllBrandModals = ({open, handleClose, formType, selectedData, style}) => {
 
     return (
         <Dialog open={open} onClose={handleDialogClose} PaperProps={{style}}>
-             <CloseIcon sx={{position: "absolute", top: 10, right: 10, cursor: "pointer"}} onClick={handleDialogClose} />
+            <CloseIcon sx={{position: "absolute", top: 10, right: 10, cursor: "pointer"}} onClick={handleDialogClose} />
             <DialogTitle sx={{color: "#086070", fontWeight: "600"}}>
                 {formType.charAt(0).toUpperCase() + formType.slice(1)}
             </DialogTitle>

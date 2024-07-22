@@ -19,15 +19,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AddBrandTable = ({onEditBrand}) => {
+const AddBrandTable = ({onEditBrand, refreshData}) => {
+    // Added refreshData as a prop
     const classes = useStyles();
     const [ rows, setRows ] = useState([]);
-  
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 const response = await getAllBrand();
                 console.log("response-", response.data);
                 setRows(response.data);
@@ -36,7 +35,7 @@ const AddBrandTable = ({onEditBrand}) => {
             }
         };
         fetchData();
-    }, [ rows ]);
+    }, [ refreshData ]); // Added refreshData as a dependency
 
     const handleDelete = async (id) => {
         try {
@@ -49,41 +48,40 @@ const AddBrandTable = ({onEditBrand}) => {
 
     return (
         <>
-        <TableContainer component={Paper} className={classes.tableContainer}>
-            <Table aria-label="simple table">
-                <TableHead>
-                    <TableRow className="table-design">
-                        <TableCell className={classes.tableHeaderCell}>Brand Name</TableCell>
-                        <TableCell className={classes.tableHeaderCell}>Manufacturer</TableCell>
-                        <TableCell className={classes.tableHeaderCell}>Action</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row._id}>
-                            <TableCell>{row.brand}</TableCell>
-                            <TableCell>{row.manufactureId.name}</TableCell>
-                            <TableCell>
-                                <EditButton
-                                    label={"edit"}
-                                    icon={EditIcon}
-                                    sx={{mr: 1, color: "#1976d2"}}
-                                    onClick={() => onEditBrand(row)}
-                                />
-                                <DeleteButton
-                                    label={"delete"}
-                                    icon={DeleteIcon}
-                                    sx={{mr: 1, color: "red"}}
-                                    onClick={() => handleDelete(row._id)}
-                                />
-                            </TableCell>
+            <TableContainer component={Paper} className={classes.tableContainer}>
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow className="table-design">
+                            <TableCell className={classes.tableHeaderCell}>Brand Name</TableCell>
+                            <TableCell className={classes.tableHeaderCell}>Manufacturer</TableCell>
+                            <TableCell className={classes.tableHeaderCell}>Action</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-      
-</>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow key={row._id}>
+                                <TableCell>{row.brand}</TableCell>
+                                <TableCell>{row.manufactureId.name}</TableCell>
+                                <TableCell>
+                                    <EditButton
+                                        label={"edit"}
+                                        icon={EditIcon}
+                                        sx={{mr: 1, color: "#1976d2"}}
+                                        onClick={() => onEditBrand(row)}
+                                    />
+                                    <DeleteButton
+                                        label={"delete"}
+                                        icon={DeleteIcon}
+                                        sx={{mr: 1, color: "red"}}
+                                        onClick={() => handleDelete(row._id)}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     );
 };
 
