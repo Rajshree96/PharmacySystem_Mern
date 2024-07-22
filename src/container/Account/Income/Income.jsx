@@ -382,6 +382,7 @@ function Income() {
   const [paymentTerms, setPaymentTerms] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [receivedMode, setReceivedMode] = useState("");
+  const [receivedMethod, setReceivedMethod] = useState("");
   const [bank, setBank] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
@@ -492,14 +493,14 @@ function Income() {
                   select
                   label="Payment Method"
                   fullWidth
-                  value={receivedMode}
-                  onChange={(e) => setReceivedMode(e.target.value)}
+                  value={receivedMethod}
+                  onChange={(e) => setReceivedMethod(e.target.value)}
                 >
                   <MenuItem value="Online">Online</MenuItem>
                   <MenuItem value="Cheque">Cheque</MenuItem>
                 </TextField>
               </Grid>
-              {receivedMode === "Online" && (
+              {receivedMethod === "Online" && (
                 <Grid item xs={3}>
                   <TextField
                     label="Transaction Number"
@@ -509,7 +510,7 @@ function Income() {
                   />
                 </Grid>
               )}
-              {receivedMode === "Cheque" && (
+              {receivedMethod === "Cheque" && (
                 <Grid item xs={3}>
                   <TextField
                     label="Cheque Number"
