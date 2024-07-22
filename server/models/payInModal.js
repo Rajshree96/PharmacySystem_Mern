@@ -23,18 +23,22 @@ const payInSchema = new mongoose.Schema({
     },
     bank:{
         type:String,
-        required:true,
+        required: function() { return this.receiptMode === "Bank"; }
     },
     paymentMethod:{
         type:String,
         enum:["Online", "Cheque"],
-        required:true,
+        required: function() { return this.receiptMode === "Bank"; }
     },
     transaction:{
         type:String,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Online"; }
+
     },
     chequeNo:{
-        type:String
+        type:String,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Cheque"; }
+
     },
    purchaseTable:[{
     billNo:{
@@ -45,7 +49,7 @@ const payInSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    recivedAmount:{
+    receivedAmount:{
         type:Number,
         required:true
     },
@@ -53,14 +57,15 @@ const payInSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    total:{
-        type:Number,
-        required:true,
-    },
-    narration:{
-        type:String,
-    }
+    // total:{
+    //     type:Number,
+    //     required:true,
+    // },
+   
    }],
+   narration:{
+    type:String,
+}
 },{timestamps:true})
 
 const PayIN  = mongoose.model("PayIN", payInSchema);

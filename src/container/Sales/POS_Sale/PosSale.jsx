@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -437,15 +438,29 @@ function PosSale() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [paymentType, setPaymentType] = useState("");
+  // const [dueDate, setDueDate] = useState("");
+  const[invoiceNo, setInvoiceNo] =useState('');
+  const[customerName,setCustomerName]=useState('')
+  const[grossAmount,setGrossAmount]=useState('')
+  const[gstAmount,setGstAmount]=useState('')
+  const[netAmount,setNetAmount]=useState('')
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+//   const [transPortDetails, setTransPortDetails] = useState({
+//     receiptNumber: '',
+//     dispatchedThrough: '',
+//    destination: '',
+//    carrierName: '',
+//    billOfLading: '',
+//    vehicleNumber: ''
+//  });
+
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -483,6 +498,62 @@ function PosSale() {
     );
   };
 
+
+  const addPos = async(pos)=>{
+    console.log(pos);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/pos/addpos',
+        pos,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("salesInvoice response", response);
+       if (response.data.status === 201) {
+        console.log("salesInvoice created successfully ");
+        } 
+    } catch (error) {
+      console.log("Somthing went wrong");
+
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    const pos = {
+      date: date,
+      // invoiceNo: invoiceNo,
+      paymentType:paymentType,
+      invoiceNo:invoiceNo,
+      customerName: customerName,
+      // dueDate: dueDate,
+      // transPortDetails:transPortDetails,
+      purchaseTable: tables[0].rows,
+      amounts: {
+          grossAmount: grossAmount,
+          gstAmount: gstAmount,
+          netAmount: netAmount
+      },
+  };
+  
+    try {
+      await addPos(pos);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding salesInvoice:', error);
+      
+    }
+  };
+  console.log(tables)
+  // console.log(transPortDetails)
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -504,13 +575,15 @@ function PosSale() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Invoice No." fullWidth />
+              <TextField label="Invoice No." fullWidth  value={invoiceNo}
+                onChange={(e)=>setInvoiceNo(e.target.value)}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Customer Detail" fullWidth />
+              <TextField label="Customer Detail" fullWidth value={customerName} onChange={(e)=>setCustomerName(e.target.value)} />
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Payment Type" fullWidth>
+              <TextField select label="Payment Type" fullWidth value={paymentType} onChange={(e)=>setPaymentType(e.target.value)}>
                 <MenuItem value="Cash">Cash</MenuItem>
                 <MenuItem value="Online">Online</MenuItem>
               </TextField>
@@ -522,7 +595,7 @@ function PosSale() {
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
           <Typography variant="h5" gutterBottom>
-            Product Tables
+            Product Details
           </Typography>
           {tables.map((table) => (
             <ProductTable
@@ -543,9 +616,18 @@ function PosSale() {
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
-              <TextField label="Gross Amount" fullWidth />
-              <TextField label="GST Amount" fullWidth />
-              <TextField label="Net Amount" fullWidth />
+              <TextField label="Gross Amount" fullWidth 
+               value={grossAmount}
+               onChange={(e)=>setGrossAmount(e.target.value)}
+              />
+              <TextField label="GST Amount" fullWidth 
+             value={gstAmount}
+             onChange={(e)=>setGstAmount(e.target.value)}
+             />
+              <TextField label="Net Amount" fullWidth 
+              value={netAmount}
+              onChange={(e)=>setNetAmount(e.target.value)}
+              />
             </Box>
           </Grid>
         </Grid>
@@ -563,7 +645,8 @@ function PosSale() {
             <Button
               variant="contained"
               className="btn-design"
-              onClick={handlePrint}
+              // onClick={handlePrint}
+              onClick={handleSubmit}
             >
               Save & Print
             </Button>

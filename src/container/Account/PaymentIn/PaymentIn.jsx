@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -36,13 +37,15 @@ const style = {
   p: 4,
 };
 
+
 const initialRow = {
   sno: "",
-  itemCode: "",
+  // itemCode: "",
   billNumber: "",
   billAmount: "",
   receivedAmount: "",
-  balance: "",
+  balanceAmount: "",
+  total:400
 };
 
 const billOptions = [
@@ -52,6 +55,8 @@ const billOptions = [
 ];
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
+  const [total, setBalanceTotal] = useState(0);
+
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -63,6 +68,10 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
     updatedRows[index][field] = value;
     onRowChange(updatedRows);
   };
+  
+  useEffect(() => {
+    setBalanceTotal(calculateTotal("balanceAmount"));
+  }, [rows]);
 
   return (
     <TableContainer sx={{ mb: 2 }} maxWidth="xl">
@@ -148,9 +157,9 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
-                  value={row.billNumber}
+                  value={row.billNo}
                   onChange={(e) =>
-                    handleInputChange(index, "billNumber", e.target.value)
+                    handleInputChange(index, "billNo", e.target.value)
                   }
                   fullWidth
                   size="small"
@@ -206,11 +215,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.balance}
+                  value={row.balanceAmount}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "balance", e.target.value)
+                    handleInputChange(index, "balanceAmount", e.target.value)
                   }
                   InputProps={{
                     sx: {
@@ -259,7 +268,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               {calculateTotal("receivedAmount")}
             </TableCell>
             <TableCell sx={{ border: "1px solid grey" }}>
-              {calculateTotal("balance")}
+               {total}
             </TableCell>
           </TableRow>
         </TableBody>
@@ -277,20 +286,23 @@ function PaymentIn() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [receiptMode, setReceiptMode] = useState("");
+  const [receiptNo, setReciptNo] = useState('');
+  const[customerDetail, setCustomerDetail] = useState("");
   const [bank, setBank] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [receiptMode, setReceiptMode] = useState("");
+  const[paymentMethod, setPaymentMethod] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [chequeNumber, setChequeNumber] = useState("");
+  // const [total , setTotal] = useState("");
+  const [narration , setNarration] = useState("");
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -307,9 +319,9 @@ function PaymentIn() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
@@ -327,6 +339,51 @@ function PaymentIn() {
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
+
+
+  const handelSubmit = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      let paymentData = {
+        date,
+        receiptNo,
+        customerDetail,
+        receiptMode,
+        narration,
+        purchaseTable: tables[0].rows.map(row => ({
+          billNo: row.billNumber,
+          billAmount: parseFloat(row.billAmount) || 0,
+          receivedAmount: parseFloat(row.receivedAmount) || 0,
+          balanceAmount: parseFloat(row.balance) || 0,
+        })),
+      };
+       if(receiptMode === 'Bank')
+       {
+        paymentData.bank =bank;
+        paymentData.paymentMethod = paymentMethod;
+        if(paymentMethod === "Online")
+        {
+          paymentData.transaction =  transactionNumber;
+        } else if(paymentMethod === 'Cheque')
+        {
+          paymentData.chequeNo = chequeNumber;
+        }
+       }
+       const response = await axios.post("http://localhost:4000/api/v1/payin/pay",
+        paymentData,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("PaymentIn added Successfully:", response.data);
+
+    } catch (error) {
+      console.error('Error adding paymentIn:', error)
+    }
+  }
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -349,10 +406,17 @@ function PaymentIn() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Receipt No." fullWidth />
+              <TextField label="Receipt No." fullWidth 
+              value={receiptNo}
+              onChange={(e)=>setReciptNo(e.target.value)}
+
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Select Customer" fullWidth>
+              <TextField select label="Select Customer" fullWidth
+              value={customerDetail}
+              onChange={(e)=>setCustomerDetail(e.target.value)}
+              >
                 <MenuItem value="Customer1">Customer1</MenuItem>
                 <MenuItem value="Customer2">Customer2</MenuItem>
               </TextField>
@@ -412,7 +476,7 @@ function PaymentIn() {
                     label="Cheque Number"
                     fullWidth
                     value={chequeNumber}
-                    onChange={(e) => setChequeNumber(e.target.value)} 
+                    onChange={(e) => setChequeNumber(e.target.value)}
                   />
                 </Grid>
               )}
@@ -422,7 +486,7 @@ function PaymentIn() {
 
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
-         
+
           {tables.map((table) => (
             <ProductTable
               key={table.id}
@@ -439,7 +503,10 @@ function PaymentIn() {
         {/* Narration */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={3} xs={3}>
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3} 
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
         </Grid>
 
@@ -453,7 +520,7 @@ function PaymentIn() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handelSubmit}>
               Save
             </Button>
           </Grid>

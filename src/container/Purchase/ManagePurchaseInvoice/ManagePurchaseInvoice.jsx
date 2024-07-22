@@ -135,7 +135,9 @@ const ManagePurchaseInvoice = () => {
                   <StyledTableCell>Place of Supply</StyledTableCell>
                   <StyledTableCell>Due Date</StyledTableCell>
                   <StyledTableCell>Payment Status</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell >
+                    <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>
+                    </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
