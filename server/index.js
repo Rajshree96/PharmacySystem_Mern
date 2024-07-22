@@ -47,7 +47,7 @@ app.use("/api/v1/unit", unitRoutes);
 app.use('/api/v1/business-setup', businessSetupRoutes);
 app.use('/api/v1/medicine-type', medicineRouter);
 app.use("/api/v1/brand", brandRoutes);
-app.use("/api/v1/cutomer", cutomerRouter);
+app.use("/api/v1/customer", cutomerRouter);
 app.use("/api/v1/purchase", purchaseRoute);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/purchase-retrun", purchaseRouter);
