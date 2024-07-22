@@ -160,8 +160,7 @@ const AddCustomer = ({formType, selectedData, setSuccess}) => {
       setGstin(selectedData.customerDetails.statutoryDetails.gstin);
       setRegistrationType(selectedData.customerDetails.statutoryDetails.stateRegistrationType);
       setOpeningBalance(selectedData.customerDetails.openingBalance.asOnFirstDayOfFinancialYear);
-      
-      
+            
     }
     else {
         resetForm();

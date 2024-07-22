@@ -53,8 +53,7 @@ const TaxRate = () => {
               Create Tax Rate
             </Typography>
             <Box component="form" noValidate autoComplete="off">
-              <Grid container spacing={2}>
-               
+              <Grid container spacing={2}>               
                 <Grid item md={4}>
                   <TextField
                     fullWidth
@@ -63,8 +62,7 @@ const TaxRate = () => {
                     margin="normal"
                     value={taxRate}
                     onChange={(e) => setTaxRate(e.target.value)}
-                  />
-               
+                  />               
                   <Box display="flex" justifyContent="start" mt={2}>
                     <Button variant="contained" color="primary" onClick={handleSave}>
                       {editIndex !== null ? 'Update' : 'Save'}

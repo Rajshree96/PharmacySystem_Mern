@@ -26,6 +26,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import PurchasePayment from "../PurchaseInvoice/PurchasePayment";
 
 import axios from "axios"
 const style = {
@@ -955,7 +956,8 @@ function PurchaseOrder() {
               Save & Print
             </Button>
 
-            {/* <PurchaseOrderPayment onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}/> */}
+            <PurchasePayment label="Save & Payment"
+            onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}/>
 
           </Grid>
         </Grid>
