@@ -83,7 +83,13 @@ const searchs = [
   { label: "Supplier" },
   { label: "Purchase" },
 ];
-const settings = [{ label: "Profile" }];
+const settings = [
+  { label: "Business Setup" },
+  { label: "GST Settings" },
+  { label: "Accounts Settings" },
+  { label: "Inventory Settings" },
+  { label: "User Settings" },
+];
 
 const style = {
   position: "absolute",
@@ -714,6 +720,7 @@ const Menu = ({ setActiveComponent }) => {
             <ListItemButton
               key={item.label}
               sx={{ pl: 6, minHeight: 32, color: "white" }}
+              onClick={() => handleMenuItemClick(item.label)} 
             >
               <ListItemText
                 primary={item.label}
@@ -823,10 +830,11 @@ const Menu = ({ setActiveComponent }) => {
         </ListItemButton>
         {setting &&
           settings.map((item) => (
-            <Link to="/admin/setupbusiness" style={{ textDecoration: "none" }}>
+            // <Link to="/admin/setupbusiness" style={{ textDecoration: "none" }}>
               <ListItemButton
                 key={item.label}
                 sx={{ pl: 6, minHeight: 32, color: "white" }}
+                onClick={() => handleMenuItemClick(item.label)}
               >
                 <ListItemText
                   primary={item.label}
@@ -838,7 +846,7 @@ const Menu = ({ setActiveComponent }) => {
                   }}
                 />
               </ListItemButton>
-            </Link>
+            // </Link>
           ))}
       </Box>
 
