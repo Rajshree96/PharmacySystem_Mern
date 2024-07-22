@@ -72,7 +72,7 @@ const Login = () => {
   });
 
   return (
-    <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'auto', bgcolor: "#e0f7fa", padding: "121px 0 121px 0" }}>
+    <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',maxWidth:'auto', bgcolor: "#e0f7fa", padding: "121px 0 121px 0" }}>
       <Grid item lg={4} md={5} sm={7} xs={12} m={1}>
         <Card>
           <CardContent>
