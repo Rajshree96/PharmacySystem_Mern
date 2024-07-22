@@ -361,7 +361,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   );
 }
 
-function PurchaseInvoice() {
+function PurchaseInvoice({formType, selectedData, setSuccess}) {
   const breadcrumbs = ["Purchase", "Purchase Invoice"];
   const [tables, setTables] = useState([
     {
@@ -397,6 +397,26 @@ function PurchaseInvoice() {
     billOfLading: '',
     vehicleNumber: ''
   });
+
+  useEffect(() => {
+    if (formType === "edit purchaseinvoice" && selectedData) {
+       
+        
+
+    }
+    else {
+        resetForm();
+    }
+}, [ formType, selectedData ]);
+
+const resetForm = () => {
+
+
+
+};
+
+
+
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -467,7 +487,7 @@ function PurchaseInvoice() {
     }
   };
 
-  const addPurchase = async (purchaseData) => {
+  const addPurchaseInvoice = async (purchaseData) => {
     console.log(purchaseData);
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
@@ -531,6 +551,29 @@ function PurchaseInvoice() {
 
     }
   };
+
+
+  const handleSavePurchaseInvoice = async (e) => {
+    e.preventDefault();
+    try {
+        if (formType === "edit purchaseinvoice") {
+            // await editPurchaseInvoice(selectedData._id, purchaseData);
+            console.log("Purchase Invoice updated successfully");
+        }
+        else {
+          await addPurchaseInvoice(purchaseData);
+            console.log("Purchase Invoice added successfully");
+        }
+        setSuccess(true);
+    } catch (error) {
+        console.error(`Error ${formType === "edit purchaseinvoice" ? "editing" : "adding"}  purchaseinvoice:`, error);
+    }
+};
+  
+
+
+
+
   const config = () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     return {
@@ -566,10 +609,19 @@ function PurchaseInvoice() {
     setPlaceOfSupply(supp ? supp.address : '');
   };
 
+  const paperStyles =
+        formType === "edit purchaseinvoice"
+            ? {
+                  padding: 0,
+                  borderRadius: 2,
+                  boxShadow: "none",
+                  // backgroundColor:  "#f0f4f8",
+              }
+            : {};
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
-      <Paper sx={{ p: 2, mb: 2 }}>
+      <Paper sx={{ p: 2, mb: 2, ...paperStyles }}>
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
           <Typography variant="h4" gutterBottom>
@@ -779,14 +831,20 @@ function PurchaseInvoice() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design" onClick={handleSubmit} >
-              Save
+            <Button variant="contained"
+            className="btn-design" 
+            // onClick={handleSubmit} 
+            onClick={handleSavePurchaseInvoice} 
+            >
+            {formType === "edit purchaseinvoice" ? "Update " : "Save "}
+              
             </Button>
 
             <Button
               variant="contained"
               className="btn-design"
-              onClick={(e) => { handleSubmit(e); handlePrint(); }}
+              // onClick={(e) => { handleSubmit(e); handlePrint(); }}
+              onClick={(e) => { handleSavePurchaseInvoice(e); handlePrint(); }}
             >
               Save & Print
             </Button>
