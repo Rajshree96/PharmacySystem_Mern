@@ -63,12 +63,12 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     marginBottom: responsiveMargin(16, 32),
-    color: '#086070'
+    color: "#086070",
   },
   sectionIcon: {
     marginRight: responsiveMargin(8, 16),
     fontSize: responsiveFontSize(20, 30),
-    color: '#086070'
+    color: "#086070",
   },
   // divider: {
   //   marginTop:'30px',
@@ -86,16 +86,15 @@ const useStyles = makeStyles({
   button: {
     fontSize: responsiveFontSize(10, 15),
     padding: responsivePadding(5, 8),
-    color: 'white',
-
+    color: "white",
   },
   textFieldStyle: {
-    height: '50px',
-    width: '100%',
-    border: '1px solid #c4c4c4',
-    borderRadius: '4px',
-    color: 'grey'
-  }
+    height: "50px",
+    width: "100%",
+    border: "1px solid #c4c4c4",
+    borderRadius: "4px",
+    color: "grey",
+  },
 });
 
 // Validation schema using Yup
@@ -116,9 +115,8 @@ const validationSchema = Yup.object().shape({
   openingBalance: Yup.number().required("Opening Balance is required"),
 });
 
-
 // Main component
-const AddBank = ({formType, selectedData, setSuccess}) => {
+const AddBank = ({ formType, selectedData, setSuccess }) => {
   const classes = useStyles();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -152,22 +150,20 @@ const AddBank = ({formType, selectedData, setSuccess}) => {
     }
   }, [formType, selectedData]);
 
-const resetForm = () => {
-  setSelectedCountry("");
-  setSelectedState("");
-  setBankDetails({
-    bankName: "",
-    address: "",
-    pinCode: "",
-    contact: "",
-    ifscCode: "",
-    accountHolderName: "",
-    accountNumber: "",
-    openingBalance: "",
-  });
-
-  
-};
+  const resetForm = () => {
+    setSelectedCountry("");
+    setSelectedState("");
+    setBankDetails({
+      bankName: "",
+      address: "",
+      pinCode: "",
+      contact: "",
+      ifscCode: "",
+      accountHolderName: "",
+      accountNumber: "",
+      openingBalance: "",
+    });
+  };
   const handleCountryChange = (val) => {
     setSelectedCountry(val);
     setSelectedState("");
@@ -179,7 +175,10 @@ const resetForm = () => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.1 } },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, staggerChildren: 0.1 },
+    },
   };
 
   const itemVariants = {
@@ -198,38 +197,39 @@ const resetForm = () => {
   const breadcrumbs = ["Bank", "Add Bank"];
   const handleSubmit = async (e) => {
     try {
-    e.preventDefault();
-    
-      const bankDetailData = {
-      bankName: bankDetails.bankName,
-      address: bankDetails.address,
-      state: selectedState,
-      country: selectedCountry,
-      pinCode: bankDetails.pinCode,
-      accountHolderName: bankDetails.accountHolderName,
-      accountNumber: bankDetails.accountNumber,
-      ifscCode: bankDetails.ifscCode,
-      mobileNo: bankDetails.contact,
-      openingBalance: bankDetails.openingBalance,
-      }
-console.log("bank data", bankDetailData);
+      e.preventDefault();
 
-      const auth = JSON.parse(localStorage.getItem('auth'));
-      const response = await axios.post('http://localhost:4000/api/v1/bank/add-bank',
+      const bankDetailData = {
+        bankName: bankDetails.bankName,
+        address: bankDetails.address,
+        state: selectedState,
+        country: selectedCountry,
+        pinCode: bankDetails.pinCode,
+        accountHolderName: bankDetails.accountHolderName,
+        accountNumber: bankDetails.accountNumber,
+        ifscCode: bankDetails.ifscCode,
+        mobileNo: bankDetails.contact,
+        openingBalance: bankDetails.openingBalance,
+      };
+      console.log("bank data", bankDetailData);
+
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/bank/add-bank",
         bankDetailData,
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${auth.token}`
-          }
+            Authorization: `Bearer ${auth.token}`,
+          },
         }
       );
       console.log("API Response:", response.data);
 
       if (response.data.status === 201) {
         console.log("Bank added successfully:", response.data);
-      setSuccess(true);
-      resetForm();
+        setSuccess(true);
+        resetForm();
       }
     } catch (error) {
       console.log("Error adding Bank:", error);
@@ -238,61 +238,74 @@ console.log("bank data", bankDetailData);
 
   const handleSaveAddBank = async () => {
     try {
-        if (formType === "edit bank") {
-            console.log("Bank updated successfully");
-        }
-        else {
-            console.log("Bank added successfully");
-        }
-        // setSuccess(true);
-        
+      if (formType === "edit bank") {
+        console.log("Bank updated successfully");
+      } else {
+        console.log("Bank added successfully");
+      }
+      // setSuccess(true);
     } catch (error) {
-        console.error(`Error ${formType === "edit bank" ? "editing" : "adding"}  bank:`, error);
+      console.error(
+        `Error ${formType === "edit bank" ? "editing" : "adding"}  bank:`,
+        error
+      );
     }
-};
+  };
 
-   // Edit mode -> Form styles changes conditionally
-   const editModeStyles =
-   formType === "edit bank"
-       ? {
-             padding: responsivePadding(16, 32), // Decrease padding in edit mode
-             headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
-             buttonColor: "red !important", // Change button color in edit mode
-         }
-       : {};
+  // Edit mode -> Form styles changes conditionally
+  const editModeStyles =
+    formType === "edit bank"
+      ? {
+          padding: responsivePadding(16, 32), // Decrease padding in edit mode
+          headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+          buttonColor: "red !important", // Change button color in edit mode
+        }
+      : {};
 
-const paperStyles =
-   formType === "edit bank"
-       ? {
-             padding: responsivePadding(0, 0),
-             borderRadius: 2,
-             boxShadow: "none",
-             // backgroundColor:  "#f0f4f8",
-         }
-       : {};
-       
+  const paperStyles =
+    formType === "edit bank"
+      ? {
+          padding: responsivePadding(0, 0),
+          borderRadius: 2,
+          boxShadow: "none",
+          // backgroundColor:  "#f0f4f8",
+        }
+      : {};
+
   return (
     <Container maxWidth="lg">
       <Box className={classes.formContainer}>
-        <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles }}>
-          <Typography variant="h4" gutterBottom component={motion.h4} variants={itemVariants}>
+        <Paper
+          elevation={3}
+          sx={{ p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles }}
+        >
+          <Typography
+            variant="h4"
+            gutterBottom
+            component={motion.h4}
+            variants={itemVariants}
+          >
             Bank
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
-          <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             <Formik
               initialValues={{
                 bankName: bankDetails.bankName,
-    address: bankDetails.address,
-    state: selectedState,
-    country: selectedCountry,
-    pinCode: bankDetails.pinCode,
-    accountHolderName: bankDetails.accountHolderName,
-    accountNumber: bankDetails.accountNumber,
-    ifscCode: bankDetails.ifscCode,
-    contact: bankDetails.contact,
-    openingBalance: bankDetails.openingBalance,
-               
+                address: bankDetails.address,
+                state: selectedState,
+                country: selectedCountry,
+                pinCode: bankDetails.pinCode,
+                accountHolderName: bankDetails.accountHolderName,
+                accountNumber: bankDetails.accountNumber,
+                ifscCode: bankDetails.ifscCode,
+                contact: bankDetails.contact,
+                openingBalance: bankDetails.openingBalance,
+
                 // name: "",
                 // address: "",
                 // state: "",
@@ -309,7 +322,7 @@ const paperStyles =
                 // gstin: "",
                 // openingBalance: "",
                 // registrationType: "",
-                bankDetails
+                bankDetails,
               }}
               validationSchema={validationSchema}
               // onSubmit={(values) => {
@@ -395,12 +408,17 @@ const paperStyles =
                       </Grid>
                     </Grid>
                   </motion.div>
-                  <Divider sx={{ marginTop: '40px', marginBottom: '30px' }} />
+                  <Divider sx={{ marginTop: "40px", marginBottom: "30px" }} />
 
                   <motion.div variants={itemVariants}>
                     {/* Bank Details */}
-                    <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
-                      <AccountBalanceIcon className={classes.sectionIcon} /> Bank Details
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={classes.sectionTitle}
+                    >
+                      <AccountBalanceIcon className={classes.sectionIcon} />{" "}
+                      Bank Details
                     </Typography>
                     {/* Bank Name */}
                     <Grid container spacing={3}>
@@ -456,15 +474,21 @@ const paperStyles =
                           onChange={handleChange}
                         />
                       </Grid>
-
                     </Grid>
                   </motion.div>
-                  <Divider sx={{ marginTop: '40px', marginBottom: '30px' }} />
+                  <Divider sx={{ marginTop: "40px", marginBottom: "30px" }} />
 
                   <motion.div variants={itemVariants}>
                     {/* Opening Balance */}
-                    <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
-                      <AccountBalanceWalletIcon className={classes.sectionIcon} /> Opening Balance
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={classes.sectionTitle}
+                    >
+                      <AccountBalanceWalletIcon
+                        className={classes.sectionIcon}
+                      />{" "}
+                      Opening Balance
                     </Typography>
                     {/* Opening Balance */}
                     <Grid container spacing={3}>
@@ -482,9 +506,9 @@ const paperStyles =
                       </Grid>
                     </Grid>
                   </motion.div>
-                  <Box className={classes.buttonContainer} >
-                    <motion.div variants={itemVariants} >
-                      <Tooltip title="Save" >
+                  <Box className={classes.buttonContainer}>
+                    <motion.div variants={itemVariants}>
+                      <Tooltip title="Save">
                         <Button
                           type="submit"
                           variant="contained"

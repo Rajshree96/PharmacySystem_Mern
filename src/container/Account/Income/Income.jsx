@@ -19,11 +19,12 @@ import {
   TableRow,
   Modal,
 } from "@mui/material";
-import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import { AddCircle, ReceiptRounded, RemoveCircle } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -40,12 +41,12 @@ const initialRow = {
   sno: "",
   // itemCode: "",
   account: "",
-  service: "",
+  product: "",
   amount: "",
   description: "",
   tax: "",
   taxAmount: "",
-  total: "",  
+  totalValue: "",  
 };
 
 const accounts = [
@@ -181,9 +182,9 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
-                  value={row.accountNumber}
+                  value={row.accounts}
                   onChange={(e) =>
-                    handleInputChange(index, "accountNumber", e.target.value)
+                    handleInputChange(index, "account", e.target.value)
                   }
                   fullWidth
                   size="small"
@@ -199,11 +200,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.service}
+                  value={row.product}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "service", e.target.value)
+                    handleInputChange(index, "product", e.target.value)
                   }
                   InputProps={{
                     sx: {
@@ -299,11 +300,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.total}
+                  value={row.totalValue}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "total", e.target.value)
+                    handleInputChange(index, "totalValue", e.target.value)
                   }
                   InputProps={{
                     sx: {
@@ -379,21 +380,23 @@ function Income() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [receivedMode, setReceivedMode] = useState("");
-  const [receivedMethod, setReceivedMethod] = useState("");
+  const [incomeNo, setIncomeNo] = useState("");
+  const [taxType, setTaxType] = useState("");
+  const [narration, setNarration] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
+
+  // const [receivedMethod, setReceivedMethod] = useState("");
   const [bank, setBank] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [chequeNumber, setChequeNumber] = useState("");
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -431,6 +434,54 @@ function Income() {
     content: () => resumeRef.current,
   });
 
+  const handelSubmit = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      let paymentData = {
+        date,
+        incomeNo,
+        paymentMode,
+        paymentMethod,
+        taxType,
+        narration,
+        purchaseTable: tables[0].rows.map(row => ({
+          account: row.account,
+          product: parseFloat(row.product) || 0,
+          description: parseFloat(row.description) || 0,
+          amount: row.amount || 0,
+          tax:parseFloat(row.tax) || 0,
+          taxAmount: parseFloat(row.taxAmount) || 0,
+          totalValue: parseFloat(row.totalValue) || 0,
+        })),
+      };
+       if(paymentMode === 'Bank')
+       {
+        paymentData.bank =bank;
+        paymentData.paymentMethod = paymentMethod;
+        if(paymentMethod === "Online")
+        {
+          paymentData.transaction =  transactionNumber;
+        } else if(paymentMethod === 'Cheque')
+        {
+          paymentData.chequeNo = chequeNumber;
+        }
+       }
+       const response = await axios.post("http://localhost:4000/api/v1/income/add",
+        paymentData,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("income added Successfully:", response.data);
+
+    } catch (error) {
+      console.error('Error adding income:', error)
+    }
+  }
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -452,29 +503,35 @@ function Income() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Income No." fullWidth />
+              <TextField label="Income No." fullWidth
+              value={incomeNo}
+              onChange={(e)=>setIncomeNo(e.target.value)}
+              />
             </Grid>           
             <Grid item xs={3}>
               <TextField
                 select
                 label="Received Mode"
                 fullWidth
-                value={receivedMode}
-                onChange={(e) => setReceivedMode(e.target.value)}
+                value={paymentMode}
+                onChange={(e) => setPaymentMode(e.target.value)}
               >
                 <MenuItem value="Cash">Cash</MenuItem>
                 <MenuItem value="Bank">Bank</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Tax Type" fullWidth>
+              <TextField select label="Tax Type" fullWidth
+              value={taxType}
+              onChange={(e)=>setTaxType(e.target.value)}
+              >
                 <MenuItem value="CGST/SGST">CGST/SGST</MenuItem>
                 <MenuItem value="IGST">IGST</MenuItem>
                 <MenuItem value="Non GST">Non GST</MenuItem>
               </TextField>
             </Grid>
           </Grid>
-          {receivedMode === "Bank" && (
+          {paymentMode === "Bank" && (
             <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={3}>
                 <TextField
@@ -493,14 +550,14 @@ function Income() {
                   select
                   label="Payment Method"
                   fullWidth
-                  value={receivedMethod}
-                  onChange={(e) => setReceivedMethod(e.target.value)}
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
                 >
                   <MenuItem value="Online">Online</MenuItem>
                   <MenuItem value="Cheque">Cheque</MenuItem>
                 </TextField>
               </Grid>
-              {receivedMethod === "Online" && (
+              {paymentMethod === "Online" && (
                 <Grid item xs={3}>
                   <TextField
                     label="Transaction Number"
@@ -510,7 +567,7 @@ function Income() {
                   />
                 </Grid>
               )}
-              {receivedMethod === "Cheque" && (
+              {paymentMethod === "Cheque" && (
                 <Grid item xs={3}>
                   <TextField
                     label="Cheque Number"
@@ -542,7 +599,10 @@ function Income() {
         {/* Narration */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={3} xs={3}>
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3} 
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
         </Grid>
 
@@ -556,7 +616,7 @@ function Income() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handelSubmit}>
               Save
             </Button>
           </Grid>

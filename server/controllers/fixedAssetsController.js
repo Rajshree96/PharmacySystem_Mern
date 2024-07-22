@@ -18,6 +18,15 @@ export const addFixedAsset = async (req, res) => {
       narration: req.body.narration,
     });
 
+       // Validate the newPurchase object against the PurchaseModal schema
+   const validationError = newFixedAsset.validateSync(); // This will synchronously validate the schema
+ 
+   if (validationError) {
+       // If validation fails, respond with a 400 Bad Request status and error details
+       console.log(validationError.message)
+       return res.status(400).json({ message: validationError.message });
+   }
+
     await newFixedAsset.save();
     res.status(201).json({ message: "Fixed asset added successfully", newFixedAsset });
   } catch (error) {
