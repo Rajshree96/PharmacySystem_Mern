@@ -38,8 +38,8 @@ const style = {
 
 const initialRow = {
   sno: "",
-  itemCode: "",
-  accountNumber: "",
+  // itemCode: "",
+  account: "",
   service: "",
   amount: "",
   description: "",
