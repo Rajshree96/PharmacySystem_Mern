@@ -104,7 +104,7 @@ const ManageManufacturer = () => {
 
     useEffect(() => {
         fetchManufacturer();
-    }, []);
+    }, [manufacturer]);
 
     const handleDeleteClick = async (_id) => {
         const auth = JSON.parse(localStorage.getItem("auth"));
@@ -228,7 +228,7 @@ const ManageManufacturer = () => {
                                                     sx={{mr: 1, color: "red  "}}
                                                     label="delete"
                                                     icon={Delete}
-                                                    onClick={() => handleDeleteClick(suppliers._id)}
+                                                    onClick={() => handleDeleteClick(manufacturer._id)}
                                                 />
                                             </Box>
                                         </StyledTableCell>
