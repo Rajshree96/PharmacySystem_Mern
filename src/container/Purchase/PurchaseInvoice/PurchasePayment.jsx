@@ -12,7 +12,7 @@ import {
   InputLabel,
   Radio,
   Select,
-MenuItem,
+  MenuItem,
 } from "@mui/material";
 
 const style = {
@@ -26,29 +26,88 @@ const style = {
   p: 4,
 };
 
-const PurchasePayment = () => {
+const PurchasePayment = ({ onClick, netAmount,orderNo,label  }) => {
   const [open, setOpen] = useState(false);
-  const [receiptNumber, setReceiptNumber] = useState("");
-  const [dispatchedThrough, setDispatchedThrough] = useState("");
-  const [destination, setDestination] = useState("");
-  const [carrierName, setCarrierName] = useState("");
-  const [billOfLading, setBillOfLading] = useState("");
-  const [vehicleNumber, setVehicleNumber] = useState("");
-
+  const [paymentType, setPaymentType] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");  
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [paid, setPaid] = useState("");
+  const [advance, setAdvance] = useState("");
+  const [balance, setBalance] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectBank, setSelectBank] = useState("");
+  const [transactionDate, setTransactionDate] = useState("");
+  const [transactionNo, setTransactionNo] = useState("");
+  const [chequeNo, setChequeNo] = useState("");
 
-  const handleSave = () => {
-    console.log("Receipt Number:", receiptNumber);
-    console.log("Dispatched Through:", dispatchedThrough);
-    console.log("Destination:", destination);
-    console.log("Carrier Name/Agent:", carrierName);
-    console.log("Bill of Lading/LR-RR No.:", billOfLading);
-    console.log("Motor Vehicle No.:", vehicleNumber);
+  
+  console.log(orderNo)
+  const handleSave = async () => {
+    let paymentData = {
+      paymentType,
+      orderNo: orderNo,
+    };
+
+    if (paymentType === "cash") {
+      paymentData.cash = {
+        amount:netAmount,
+        advance,
+        paid,
+        balance,
+        description,
+      };
+    } else if (paymentType === "bank") {
+      paymentData.bank = {
+        selectBank,
+        paymentMethod,
+      };
+      if (paymentMethod === "online") {
+        paymentData.bank.online = {
+          transactionDate,
+          transactionNo,
+          amount:netAmount,
+          advance,
+          paid,
+          balance,
+          description,
+        };
+      } else if (paymentMethod === "cheque") {
+        paymentData.bank.cheque = {
+          transactionDate,
+          chequeNo,
+          amount:netAmount,
+          advance,
+          paid,
+          balance,
+          description,
+        };
+      }
+    }
+console.log(paymentData)
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await fetch("http://localhost:4000/api/v1/payment/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${auth.token}`
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Payment added successfully:", data);
+      } else {
+        console.error("Error adding payment:", data.message);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+
     handleClose();
   };
-  const [paymentType, setPaymentType] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
 
   const handlePaymentTypeChange = (event) => {
     setPaymentType(event.target.value);
@@ -58,27 +117,25 @@ const PurchasePayment = () => {
     setPaymentMethod(event.target.value);
   };
 
-  const [onlineTransaction, setOnlineTransaction] = useState("");
-  const [chequeTransaction, setChequeTransaction] = useState("");
-
   return (
     <div>
-      <Button variant="contained" className="btn-design" onClick={handleOpen}>
-        Save & Payment
+      <Button variant="contained" className="btn-design"       
+      onClick={(e) => { onClick(e); handleOpen(); }}>
+        {label}
       </Button>
-      <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>          
+      <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
         <Grid container spacing={1} sx={style} maxWidth="xl">
-            <Grid item md={12} xs={12}>
+          <Grid item md={12} xs={12}>
             <Typography variant="h6" component="h2">
-            Payment
-          </Typography>
-            </Grid>
+              Payment
+            </Typography>
+          </Grid>
           <FormControl component="fieldset">
             <RadioGroup
               row
-              value={paymentType}
+              // value={paymentType}
               onChange={handlePaymentTypeChange}
-              sx={{m: 1}}
+              sx={{ m: 1 }}
             >
               <FormControlLabel value="cash" control={<Radio />} label="Cash" />
               <FormControlLabel value="bank" control={<Radio />} label="Bank" />
@@ -87,27 +144,55 @@ const PurchasePayment = () => {
             {paymentType === "cash" && (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Amount" fullWidth />
+                  <TextField label="Amount" fullWidth
+                    value={netAmount}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Advance" fullWidth />
+                  <TextField
+                    label="Advance"
+                    fullWidth
+                    value={advance}
+                    onChange={(e) => setAdvance(e.target.value)}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Paid" fullWidth />
+                  <TextField
+                    label="Paid"
+                    fullWidth
+                    value={paid}
+                    onChange={(e) => setPaid(e.target.value)}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Balance" fullWidth />
+                  <TextField
+                    label="Balance"
+                    fullWidth
+                    value={balance}
+                    onChange={(e) => setBalance(e.target.value)}
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField label="Description" fullWidth />
+                  <TextField
+                    label="Description"
+                    fullWidth
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
                 </Grid>
               </Grid>
             )}
 
             {paymentType === "bank" && (
-              <Grid container spacing={2} >
-                <Grid item xs={12} sm={12} >
-                  <TextField select label="Select Bank" fullWidth>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
+                  <TextField
+                    select
+                    label="Select Bank"
+                    fullWidth
+                    value={selectBank}
+                    onChange={(e) => setSelectBank(e.target.value)}
+                  >
                     <MenuItem value="bank1">Bank 1</MenuItem>
                     <MenuItem value="bank2">Bank 2</MenuItem>
                     <MenuItem value="bank3">Bank 3</MenuItem>
@@ -115,11 +200,11 @@ const PurchasePayment = () => {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <TextField
-                   select 
-                  label="Payment Method"
-                   fullWidth
+                    select
+                    label="Payment Method"
+                    fullWidth
                     value={paymentMethod}
-                    onChange={handlePaymentMethodChange}                    
+                    onChange={handlePaymentMethodChange}
                   >
                     <MenuItem value="online">Online</MenuItem>
                     <MenuItem value="cheque">Cheque</MenuItem>
@@ -127,66 +212,119 @@ const PurchasePayment = () => {
                 </Grid>
 
                 {paymentMethod === "online" && (
-                  <Grid container spacing={2} sx={{m: 1}}>
+                  <Grid container spacing={2} sx={{ m: 1 }}>
                     <Grid item xs={12} sm={6}>
-                    <TextField
+                      <TextField
                         label="Transaction Date"
                         type="date"
                         fullWidth
                         InputLabelProps={{ shrink: true }}
-                        value={onlineTransaction}
-                        onChange={(e) => setOnlineTransaction(e.target.value)}
+                        value={transactionDate}
+                        onChange={(e) => setTransactionDate(e.target.value)}
+                      />
+                    </Grid>                   
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Transaction No"
+                        fullWidth
+                        value={transactionNo}
+                        onChange={(e) => setTransactionNo(e.target.value)}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Transaction No" fullWidth />
+                      <TextField label="Amount" fullWidth
+                        value={netAmount}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField label="Advance" fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Paid" fullWidth />
+                      <TextField
+                        label="Paid"
+                        fullWidth
+                        value={paid}
+                        onChange={(e) => setPaid(e.target.value)}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Balance" fullWidth />
+                      <TextField
+                        label="Balance"
+                        fullWidth
+                        value={balance}
+                        onChange={(e) => setBalance(e.target.value)}
+                      />
                     </Grid>
                     <Grid item xs={12}>
-                      <TextField label="Description" fullWidth />
+                      <TextField
+                        label="Description"
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
                     </Grid>
                   </Grid>
                 )}
 
                 {paymentMethod === "cheque" && (
-                  <Grid container spacing={2} sx={{m: 1}}>
+                  <Grid container spacing={2} sx={{ m: 1 }}>
                     <Grid item xs={12} sm={6}>
-                    <TextField
+                      <TextField
                         label="Transaction Date"
                         type="date"
                         fullWidth
                         InputLabelProps={{ shrink: true }}
-                        value={chequeTransaction}
-                        onChange={(e) => setChequeTransaction(e.target.value)}
+                        value={transactionDate}
+                        onChange={(e) => setTransactionDate(e.target.value)}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Cheque No" fullWidth />
+                      <TextField
+                        label="Cheque No"
+                        fullWidth
+                        value={chequeNo}
+                        onChange={(e) => setChequeNo(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="Amount" fullWidth
+                        value={netAmount}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField label="Advance" fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Paid" fullWidth />
+                      <TextField
+                        label="Paid"
+                        fullWidth
+                        value={paid}
+                        onChange={(e) => setPaid(e.target.value)}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Balance" fullWidth />
+                      <TextField
+                        label="Balance"
+                        fullWidth
+                        value={balance}
+                        onChange={(e) => setBalance(e.target.value)}
+                      />
                     </Grid>
                     <Grid item xs={12}>
-                      <TextField label="Description" fullWidth />
+                      <TextField
+                        label="Description"
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
                     </Grid>
                   </Grid>
                 )}
               </Grid>
             )}
+            <Button onClick={handleSave}
+              className="btn-design" sx={{ color: 'white', mt: 3 }}
+            >Save</Button>
           </FormControl>
         </Grid>
       </Modal>

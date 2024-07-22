@@ -18,6 +18,8 @@ import {
   TableHead,
   TableRow,
   Modal,
+  List,
+  ListItem,
 } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
@@ -63,8 +65,8 @@ const productOptions = [
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
 
-  const[medicine,setMedicine]=useState([]);
-  const [ selectedMedicine, setSelectedMedicine ] = useState ("");
+  const [medicine, setMedicine] = useState([]);
+  const [selectedMedicine, setSelectedMedicine] = useState("");
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -79,41 +81,41 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   const config = () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     return {
-        headers: {
-            Authorization: `Bearer ${auth.token}`,
-            "Content-Type": "application/json",
-        },
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+        "Content-Type": "application/json",
+      },
     };
-};
+  };
   const fetchMedicine = async () => {
     try {
-        const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", config());
-        
-        if (Array.isArray(response.data.result)) {
-            setMedicine(response.data.result);
-        }
-        else {
-            console.error("Error: Fetched data is not an array");
-        }
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", config());
+
+      if (Array.isArray(response.data.result)) {
+        setMedicine(response.data.result);
+      }
+      else {
+        console.error("Error: Fetched data is not an array");
+      }
     } catch (error) {
-        console.error("Error fetching medicine:", error);
-        setMedicine([]);
+      console.error("Error fetching medicine:", error);
+      setMedicine([]);
     }
   };
- 
+
   useEffect(() => {
-   fetchMedicine();
+    fetchMedicine();
   }, []);
-  
+
   const handleProductChange = (event) => {
     const productId = event.target.value;
     setSelectedMedicine(productId);
-    initialRow.productName= productId;
+    initialRow.productName = productId;
     const selectedProduct = medicine.find(product => product._id === productId);
-    initialRow.productName= selectedProduct.medicineName;
+    initialRow.productName = selectedProduct.medicineName;
     if (selectedProduct) {
-      initialRow.itemCode=selectedProduct.itemCode
-      initialRow.mrp=selectedProduct.priceDetails.mrp
+      initialRow.itemCode = selectedProduct.itemCode
+      initialRow.mrp = selectedProduct.priceDetails.mrp
     }
   };
 
@@ -172,27 +174,27 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sno} 
-                 onChange={(e) =>
-                  handleInputChange(index, "sno", e.target.value)
-                }
-                fullWidth size="small" />
+                <TextField value={row.sno}
+                  onChange={(e) =>
+                    handleInputChange(index, "sno", e.target.value)
+                  }
+                  fullWidth size="small" />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.itemCode} fullWidth size="small" 
+                <TextField value={row.itemCode} fullWidth size="small"
                 // onChange={(e) =>
                 //   handleInputChange(index, "itemCode", e.target.value)
                 // }
-                 />
+                />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <Select
-                 value={selectedMedicine}
-                 onChange={handleProductChange}
+                  value={selectedMedicine}
+                  onChange={handleProductChange}
                   fullWidth
                   size="small"
                 >
@@ -207,22 +209,22 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
                 <TextField value={row.qty} fullWidth size="small"
-                 onChange={(e) =>
-                  handleInputChange(index, "qty", e.target.value)
-                } />
+                  onChange={(e) =>
+                    handleInputChange(index, "qty", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.freeQty} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "freeQty", e.target.value)
-                }/>
+                <TextField value={row.freeQty} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "freeQty", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.mrp} fullWidth size="small" 
+                <TextField value={row.mrp} fullWidth size="small"
                 //  onChange={(e) =>
                 //   handleInputChange(index, "mrp", e.target.value)
                 // }
@@ -231,66 +233,66 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.unitCost} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "unitCost", e.target.value)
-                }/>
+                <TextField value={row.unitCost} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "unitCost", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.discount1} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "discount1", e.target.value)
-                } />
+                <TextField value={row.discount1} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "discount1", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.discount2} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "discount2", e.target.value)
-                }/>
+                <TextField value={row.discount2} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "discount2", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.taxableValue} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "taxableValue", e.target.value)
-                }/>
+                <TextField value={row.taxableValue} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "taxableValue", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.cgst} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "cgst", e.target.value)
-                }/>
+                <TextField value={row.cgst} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "cgst", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.sgst} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "sgst", e.target.value)
-                }/>
+                <TextField value={row.sgst} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "sgst", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.igst} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "igst", e.target.value)
-                }/>
+                <TextField value={row.igst} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "igst", e.target.value)
+                  } />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 100, height: 25 }}
               >
-                <TextField value={row.totalValue} fullWidth size="small" 
-                 onChange={(e) =>
-                  handleInputChange(index, "totalValue", e.target.value)
-                } />
+                <TextField value={row.totalValue} fullWidth size="small"
+                  onChange={(e) =>
+                    handleInputChange(index, "totalValue", e.target.value)
+                  } />
               </TableCell>
               <TableCell sx={{ border: "1px solid white" }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -359,7 +361,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   );
 }
 
-function PurchaseOrder() {
+function PurchaseInvoice() {
   const breadcrumbs = ["Purchase", "Purchase Invoice"];
   const [tables, setTables] = useState([
     {
@@ -375,18 +377,19 @@ function PurchaseOrder() {
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
-  const[invoiceNo, setInvoiceNo]=useState('')
-   const[supplier,setSupplier]=useState([])
-   const [ selectedSupplier, setSelectedSupplier ] = useState ("");
-   const[placeOfSupply,setPlaceOfSupply]=useState("")
-   const[billingAddress,setBillingAddress]=useState('')
-   const[grossAmount,setGrossAmount]=useState('')
-   const[gstAmount,setGstAmount]=useState('')
-   const[netAmount,setNetAmount]=useState('')
-   const[narration,setNarration]=useState('');
-   const[taxType,setTaxType]=useState('');
-   
-   const [transPortDetails, setTransPortDetails] = useState({
+  const [chargeLabel, setChargeLabel] = useState('');
+  const [invoiceNo, setInvoiceNo] = useState('')
+  const [supplier, setSupplier] = useState([])
+  const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [placeOfSupply, setPlaceOfSupply] = useState("")
+  const [billingAddress, setBillingAddress] = useState('')
+  const [grossAmount, setGrossAmount] = useState('')
+  const [gstAmount, setGstAmount] = useState('')
+  const [netAmount, setNetAmount] = useState('')
+  const [narration, setNarration] = useState('');
+  const [taxType, setTaxType] = useState('');
+
+  const [transPortDetails, setTransPortDetails] = useState({
     receiptNumber: '',
     dispatchedThrough: '',
     destination: '',
@@ -424,7 +427,7 @@ function PurchaseOrder() {
       )
     );
   };
-  
+
   const handleRowChange = (tableId, updatedRows) => {
     setTables(
       tables.map((table) =>
@@ -442,39 +445,52 @@ function PurchaseOrder() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // const handleAddCharge = () => {
+  //   const charge = parseFloat(currentCharge);
+  //   if (!isNaN(charge)) {
+  //     setCharges([...charges, charge]);
+  //     setTotalCharges(totalCharges + charge);
+  //     setCurrentCharge('');
+  //   }
+  //   setOpen(false);
+  // };
+
   const handleAddCharge = () => {
-    const charge = parseFloat(currentCharge);
-    if (!isNaN(charge)) {
-      setCharges([...charges, charge]);
-      setTotalCharges(totalCharges + charge);
+    const chargeAmount = parseFloat(currentCharge);
+    if (chargeLabel && !isNaN(chargeAmount)) {
+      const newCharge = { label: chargeLabel, amount: chargeAmount };
+      setCharges([...charges, newCharge]);
+      setTotalCharges(totalCharges + chargeAmount);
+      setChargeLabel('');
       setCurrentCharge('');
+      setOpen(false);
     }
-    setOpen(false);
   };
+
   const addPurchase = async (purchaseData) => {
     console.log(purchaseData);
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
       const response = await axios.post('http://localhost:4000/api/v1/purchase/add',
-         purchaseData,
-        { 
-          
+        purchaseData,
+        {
+
           headers: {
             "content-type": "application/json",
-             "Authorization": `Bearer ${auth.token}`
+            "Authorization": `Bearer ${auth.token}`
           }
         }
       );
       console.log(response);
       if (response.data.status === 201) {
-      console.log("purchase created successfully ");
-      } 
-      
+        console.log("purchase created successfully ");
+      }
+
 
     } catch (error) {
-     
+
       console.log("something went wrong")
-      
+
     }
   };
 
@@ -491,70 +507,65 @@ function PurchaseOrder() {
     placeOfSupply: placeOfSupply,
     paymentTerm: paymentTerms,
     dueDate: dueDate,
-    transPortDetails:transPortDetails,
+    transPortDetails: transPortDetails,
     billingAddress: billingAddress,
     reverseCharge: reverseCharge,
     purchaseTable: tables[0].rows,
     amounts: {
-        grossAmount: grossAmount,
-        gstAmount: gstAmount,
-        otherCharge: otherCharges,
-        netAmount: netAmount
+      grossAmount: grossAmount,
+      gstAmount: gstAmount,
+      otherCharge: otherCharges,
+      netAmount: netAmount
     },
-    Narration:narration
-};
+    Narration: narration
+  };
   const handleSubmit = async (event) => {
-    
-    event.preventDefault(); 
-   
-    
-  console.log(tables);
-  
+    event.preventDefault();
+    console.log(tables);
     try {
       await addPurchase(purchaseData);
       // handleAddMedicine();
-      
+
     } catch (error) {
       console.error('Error adding purchase:', error);
-      
+
     }
   };
   const config = () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     return {
-        headers: {
-            Authorization: `Bearer ${auth.token}`,
-            "Content-Type": "application/json",
-        },
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+        "Content-Type": "application/json",
+      },
     };
-};
+  };
   const fetchSupplier = async () => {
     try {
-        const response = await axios.get("http://localhost:4000/api/v1/admin/getAllSupplier", config());
-        
-        if (Array.isArray(response.data.result)) {
-            setSupplier(response.data.result);
-        }
-        else {
-            console.error("Error: Fetched data is not an array");
-        }
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getAllSupplier", config());
+
+      if (Array.isArray(response.data.result)) {
+        setSupplier(response.data.result);
+      }
+      else {
+        console.error("Error: Fetched data is not an array");
+      }
     } catch (error) {
-        console.error("Error fetching supplier:", error);
-        setSupplier([]);
+      console.error("Error fetching supplier:", error);
+      setSupplier([]);
     }
-};
-useEffect(() => {
-  fetchSupplier();
-}, []);
+  };
+  useEffect(() => {
+    fetchSupplier();
+  }, []);
 
 
-const handleSupplierChange = (event) => {
-  const supp = supplier.find(s => s._id === event.target.value);
-  setSelectedSupplier(event.target.value);
-  setPlaceOfSupply(supp ? supp.address : '');
-};
+  const handleSupplierChange = (event) => {
+    const supp = supplier.find(s => s._id === event.target.value);
+    setSelectedSupplier(event.target.value);
+    setPlaceOfSupply(supp ? supp.address : '');
+  };
 
-  
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -581,26 +592,26 @@ const handleSupplierChange = (event) => {
             </Grid>
             <Grid item xs={3}>
               <TextField label="Supplier Invoice No." fullWidth
-              
-              value={invoiceNo}
-              onChange={(e) => setInvoiceNo(e.target.value)}
+
+                value={invoiceNo}
+                onChange={(e) => setInvoiceNo(e.target.value)}
               />
             </Grid>
             <Grid item xs={3}>
               <TextField select label="Supplier Name" fullWidth
-              value={selectedSupplier}
-              onChange={handleSupplierChange}
+                value={selectedSupplier}
+                onChange={handleSupplierChange}
               >
                 {supplier.map((supp) => (
-                                <MenuItem key={supp._id} value={supp._id}>
-                                    {supp.name}
-                                </MenuItem>
-                            ))}
+                  <MenuItem key={supp._id} value={supp._id}>
+                    {supp.name}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Place of Supply" fullWidth 
-              value={placeOfSupply}
+              <TextField label="Place of Supply" fullWidth
+                value={placeOfSupply}
               />
             </Grid>
             <Grid item xs={3}>
@@ -632,16 +643,16 @@ const handleSupplierChange = (event) => {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item md={4} xs={4}>
-            <TransportDetails
-              transPortDetails={transPortDetails}
-              setTransPortDetails={setTransPortDetails}
-            />
+            <Grid item md={3} xs={3}>
+              <TransportDetails
+                transPortDetails={transPortDetails}
+                setTransPortDetails={setTransPortDetails}
+              />
             </Grid>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
               <TextField label="Billing Address" fullWidth />
             </Grid>
-            <Grid item md={4} xs={4}>
+            <Grid item md={3} xs={3}>
               <TextField
                 id="outlined-select-currency"
                 select
@@ -655,9 +666,9 @@ const handleSupplierChange = (event) => {
               </TextField>
             </Grid>
             <Grid item md={3} xs={3}>
-            <TextField select label="Tax Type" fullWidth
-              value={taxType}
-              onChange={(e) => setTaxType(e.target.value)}
+              <TextField select label="Tax Type" fullWidth
+                value={taxType}
+                onChange={(e) => setTaxType(e.target.value)}
               >
                 <MenuItem value="TaxType1">TaxType1</MenuItem>
                 <MenuItem value="TaxType2">TaxType2</MenuItem>
@@ -670,7 +681,7 @@ const handleSupplierChange = (event) => {
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
           <Typography variant="h5" gutterBottom>
-            Product Tables
+            Product Details
           </Typography>
           {tables.map((table) => (
             <ProductTable
@@ -700,32 +711,59 @@ const handleSupplierChange = (event) => {
             <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
               <Grid container spacing={1} sx={style} maxWidth="xl">
                 <Grid item md={12} xs={12} >
-                  <Typography variant="h6" sx={{fontWeight:700}}> Other Charges</Typography>
-                  <TextField                    
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}> Other Charges</Typography>
+                  <TextField
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    label="Other Charges Name"
+                    value={chargeLabel}
+                    onChange={(e) => setChargeLabel(e.target.value)}
+                  />
+                  <TextField
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    label="Other Charges Amount"
+                    value={currentCharge}
+                    onChange={(e) => setCurrentCharge(e.target.value)}
+                  />
+                  <Button className="btn-design" sx={{ color: 'white', mt: 2 }} onClick={handleAddCharge}>Add</Button>
+
+                  {/* Display List of Charges */}
+                  <List>
+                    {charges.map((charge, index) => (
+                      <ListItem key={index}>
+                        {charge.label}: {charge.amount.toFixed(2)}
+                      </ListItem>
+                    ))}
+                  </List>
+                  {/* <TextField
                     fullWidth
                     sx={{ mt: 2 }}
                     label="Other Charges"
                     value={currentCharge}
                     onChange={(e) => setCurrentCharge(e.target.value)}
                   />
-                  <Button className="btn-design" sx={{color:'white', mt:2}}  onClick={handleAddCharge}>Add</Button>
+                  <Button className="btn-design" sx={{ color: 'white', mt: 2 }} onClick={handleAddCharge}>Add</Button> */}
                 </Grid>
               </Grid>
-            </Modal>           
+            </Modal>
             <TextField label="Narration" fullWidth multiline rows={3} />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
-              style={{ display: "grid", justifyContent: "center", gap: "15px" }} >            
+              style={{ display: "grid", justifyContent: "center", gap: "15px" }} >
               <TextField label="Gross Amount" fullWidth />
               <TextField label="GST Amount" fullWidth />
-              <TextField label="Other Charge" 
-               value={totalCharges}
-               InputProps={{
-                 readOnly: true,
-               }}
-              fullWidth />
+              <TextField
+                label="Total Charges"
+                fullWidth
+                value={`${totalCharges.toFixed(2)}`}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ mt: 2 }}
+              />
               <TextField label="Net Amount" fullWidth />
             </Box>
           </Grid>
@@ -748,12 +786,17 @@ const handleSupplierChange = (event) => {
             <Button
               variant="contained"
               className="btn-design"
-              onClick={(e)=>{handleSubmit(e); handlePrint();}}
+              onClick={(e) => { handleSubmit(e); handlePrint(); }}
             >
               Save & Print
             </Button>
+            <PurchasePayment onClick={handleSubmit}
+              handleOpen={handleOpen}
+              netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}
+              label="Save & Payment"
+            />
 
-            <PurchasePayment  onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo} />
+            {/* <PurchasePayment  onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo} /> */}
           </Grid>
         </Grid>
       </Paper>
@@ -761,4 +804,4 @@ const handleSupplierChange = (event) => {
   );
 }
 
-export default PurchaseOrder;
+export default PurchaseInvoice;

@@ -26,6 +26,14 @@
     background-color: #004d40 !important;
     transition: "all 0.3s",
 }
+.btn-design-print{
+    background-color: purple !important;
+    transition: "all 0.3s";
+}
+.btn-design-invoice{
+    background-color: orange !important;
+    transition: "all 0.3s";
+}
 /* -----------------------Popup Form Title ----------------------------- */
 .dialogTitle-popupForm{
     font-size: 1.08rem !important;

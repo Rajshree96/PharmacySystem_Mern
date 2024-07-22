@@ -434,7 +434,7 @@ function GuiSale() {
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
           <Typography variant="h5" gutterBottom>
-            Product Tables
+            Product Details
           </Typography>
           {tables.map((table) => (
             <ProductTable

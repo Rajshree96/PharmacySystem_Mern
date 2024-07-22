@@ -18,13 +18,15 @@ import {
   TableHead,
   TableRow,
   Modal,
+  ListItem,
+  List,
 } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
-import PurchaseOrderPayment from "./PurchaseOrderPayment";
+
 import axios from "axios"
 const style = {
   position: "absolute",
@@ -56,9 +58,8 @@ const initialRow = {
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
 
-  
-  const[medicine,setMedicine]=useState([]);
-  const [ selectedMedicine, setSelectedMedicine ] = useState ("");
+  const [medicine, setMedicine] = useState([]);
+  const [selectedMedicine, setSelectedMedicine] = useState("");
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -71,55 +72,54 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
     onRowChange(updatedRows);
   };
 
-  
   const config = () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     return {
-        headers: {
-            Authorization: `Bearer ${auth.token}`,
-            "Content-Type": "application/json",
-        },
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+        "Content-Type": "application/json",
+      },
     };
-};
+  };
   const fetchMedicine = async () => {
     try {
-        const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", config());
-        
-        if (Array.isArray(response.data.result)) {
-            setMedicine(response.data.result);
-        }
-        else {
-            console.error("Error: Fetched data is not an array");
-        }
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", config());
+
+      if (Array.isArray(response.data.result)) {
+        setMedicine(response.data.result);
+      }
+      else {
+        console.error("Error: Fetched data is not an array");
+      }
     } catch (error) {
-        console.error("Error fetching medicine:", error);
-        setMedicine([]);
+      console.error("Error fetching medicine:", error);
+      setMedicine([]);
     }
   };
- 
+
   useEffect(() => {
-   fetchMedicine();
+    fetchMedicine();
   }, []);
-  
+
   const handleProductChange = (event) => {
     const productId = event.target.value;
     setSelectedMedicine(productId);
-    initialRow.productName= productId;
+    initialRow.productName = productId;
     const selectedProduct = medicine.find(product => product._id === productId);
-    initialRow.productName= selectedProduct.medicineName;
+    initialRow.productName = selectedProduct.medicineName;
     if (selectedProduct) {
-      initialRow.itemCode=selectedProduct.itemCode
-      initialRow.mrp=selectedProduct.priceDetails.mrp
+      initialRow.itemCode = selectedProduct.itemCode
+      initialRow.mrp = selectedProduct.priceDetails.mrp
       // setItemCode(selectedProduct.itemCode);
       // setMrp(selectedProduct.priceDetails.mrp);
     }
   };
- 
+
   return (
     <TableContainer sx={{ mb: 2 }} maxWidth="xl">
       <Table>
         <TableHead>
-        <TableRow>
+          <TableRow>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               S.no
             </TableCell>
@@ -131,10 +131,10 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Qty
-            </TableCell> 
+            </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               Free Qty
-            </TableCell>                 
+            </TableCell>
             <TableCell sx={{ border: "1px solid grey", width: 100, fontWeight: 700, fontSize: '15px' }}>
               MRP
             </TableCell>
@@ -439,11 +439,6 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   }}
                 />
               </TableCell>
-              
-
-
-
-
 
               <TableCell sx={{ border: "1px solid white" }}>
                 <Box sx={{ display: "flex", justifyContent: "start" }}>
@@ -460,7 +455,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               </TableCell>
             </TableRow>
           ))}
-         <TableRow>
+          <TableRow>
             <TableCell
               sx={{ border: "1px solid grey", fontWeight: 700, fontSize: '15px' }}
               colSpan={1}
@@ -491,7 +486,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
             </TableCell>
             <TableCell sx={{ border: "1px solid grey", textAlign: 'center' }}>
               -
-            </TableCell>            
+            </TableCell>
             <TableCell sx={{ border: "1px solid grey" }}>
               {calculateTotal("taxableValue")}
             </TableCell>
@@ -530,20 +525,21 @@ function PurchaseOrder() {
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
-   const[orderNo, setOrderNo]=useState('')
-   const[supplier,setSupplier]=useState([])
-   const [ selectedSupplier, setSelectedSupplier ] = useState ("");
-   
+  const [chargeLabel, setChargeLabel] = useState('');
+  const [orderNo, setOrderNo] = useState('');
+  const [supplier, setSupplier] = useState([])
+  const [selectedSupplier, setSelectedSupplier] = useState("");
 
-   const[placeOfSupply,setPlaceOfSupply]=useState("")
-   const[billingAddress,setBillingAddress]=useState('')
-   const[grossAmount,setGrossAmount]=useState('')
-   const[gstAmount,setGstAmount]=useState('')
-   const[netAmount,setNetAmount]=useState('')
-   const[narration,setNarration]=useState('');
-   const[taxType,setTaxType]=useState('');
-   
-   const [transPortDetails, setTransPortDetails] = useState({
+
+  const [placeOfSupply, setPlaceOfSupply] = useState("")
+  const [billingAddress, setBillingAddress] = useState('')
+  const [grossAmount, setGrossAmount] = useState('')
+  const [gstAmount, setGstAmount] = useState('')
+  const [netAmount, setNetAmount] = useState('')
+  const [narration, setNarration] = useState('');
+  const [taxType, setTaxType] = useState('');
+
+  const [transPortDetails, setTransPortDetails] = useState({
     receiptNumber: '',
     dispatchedThrough: '',
     destination: '',
@@ -551,8 +547,8 @@ function PurchaseOrder() {
     billOfLading: '',
     vehicleNumber: ''
   });
-  
-  
+
+
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -576,9 +572,9 @@ function PurchaseOrder() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
@@ -604,7 +600,7 @@ function PurchaseOrder() {
 
   const resumeRef = useRef();
   const handlePrint = useReactToPrint({
-    
+
     content: () => resumeRef.current,
   });
 
@@ -613,38 +609,41 @@ function PurchaseOrder() {
   const handleClose = () => setOpen(false);
 
   const handleAddCharge = () => {
-    const charge = parseFloat(currentCharge);
-    if (!isNaN(charge)) {
-      setCharges([...charges, charge]);
-      setTotalCharges(totalCharges + charge);
+    const chargeAmount = parseFloat(currentCharge);
+    if (chargeLabel && !isNaN(chargeAmount)) {
+      const newCharge = { label: chargeLabel, amount: chargeAmount };
+      setCharges([...charges, newCharge]);
+      setTotalCharges(totalCharges + chargeAmount);
+      setChargeLabel('');
       setCurrentCharge('');
+      setOpen(false);
     }
-    setOpen(false);
   };
+
   const addPurchase = async (purchaseData) => {
     console.log(purchaseData);
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
       const response = await axios.post('http://localhost:4000/api/v1/purchase/add',
-         purchaseData,
-        { 
-          
+        purchaseData,
+        {
+
           headers: {
             "content-type": "application/json",
-             "Authorization": `Bearer ${auth.token}`
+            "Authorization": `Bearer ${auth.token}`
           }
         }
       );
       console.log(response);
       if (response.data.status === 201) {
-      console.log("purchase created successfully ");
-      } 
-      
+        console.log("purchase created successfully ");
+      }
+
 
     } catch (error) {
-     
+
       console.log("something went wrong")
-      
+
     }
   };
 
@@ -661,68 +660,68 @@ function PurchaseOrder() {
     placeOfSupply: placeOfSupply,
     paymentTerm: paymentTerms,
     dueDate: dueDate,
-    transPortDetails:transPortDetails,
+    transPortDetails: transPortDetails,
     billingAddress: billingAddress,
     reverseCharge: reverseCharge,
     purchaseTable: tables[0].rows,
     amounts: {
-        grossAmount: grossAmount,
-        gstAmount: gstAmount,
-        otherCharge: otherCharges,
-        netAmount: netAmount
+      grossAmount: grossAmount,
+      gstAmount: gstAmount,
+      otherCharge: otherCharges,
+      netAmount: netAmount
     },
-    Narration:narration
-};
+    Narration: narration
+  };
   const handleSubmit = async (event) => {
-    
-    event.preventDefault(); 
-   
-    
-  console.log(tables);
-  
+
+    event.preventDefault();
+
+
+    console.log(tables);
+
     try {
       await addPurchase(purchaseData);
       // handleAddMedicine();
-      
+
     } catch (error) {
       console.error('Error adding purchase:', error);
-      
+
     }
   };
   const config = () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     return {
-        headers: {
-            Authorization: `Bearer ${auth.token}`,
-            "Content-Type": "application/json",
-        },
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+        "Content-Type": "application/json",
+      },
     };
-};
+  };
   const fetchSupplier = async () => {
     try {
-        const response = await axios.get("http://localhost:4000/api/v1/admin/getAllSupplier", config());
-        
-        if (Array.isArray(response.data.result)) {
-            setSupplier(response.data.result);
-        }
-        else {
-            console.error("Error: Fetched data is not an array");
-        }
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getAllSupplier", config());
+
+      if (Array.isArray(response.data.result)) {
+        setSupplier(response.data.result);
+      }
+      else {
+        console.error("Error: Fetched data is not an array");
+      }
     } catch (error) {
-        console.error("Error fetching supplier:", error);
-        setSupplier([]);
+      console.error("Error fetching supplier:", error);
+      setSupplier([]);
     }
-};
-useEffect(() => {
-  fetchSupplier();
-}, []);
+  };
+  useEffect(() => {
+    fetchSupplier();
+  }, []);
 
 
-const handleSupplierChange = (event) => {
-  const supp = supplier.find(s => s._id === event.target.value);
-  setSelectedSupplier(event.target.value);
-  setPlaceOfSupply(supp ? supp.address : '');
-};
+  const handleSupplierChange = (event) => {
+    const supp = supplier.find(s => s._id === event.target.value);
+    setSelectedSupplier(event.target.value);
+    setPlaceOfSupply(supp ? supp.address : '');
+  };
 
 
 
@@ -732,7 +731,7 @@ const handleSupplierChange = (event) => {
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
           <Typography variant="h4" gutterBottom>
-          Purchase
+            Purchase
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Grid container spacing={2}>
@@ -747,28 +746,28 @@ const handleSupplierChange = (event) => {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Order No." fullWidth 
-              value={orderNo}
-              onChange={(e) => setOrderNo(e.target.value)}
+              <TextField label="Order No." fullWidth
+                value={orderNo}
+                onChange={(e) => setOrderNo(e.target.value)}
               />
-            </Grid>           
+            </Grid>
             <Grid item xs={3}>
               <TextField select label="Supplier Name" fullWidth
-              value={selectedSupplier}
-              onChange={handleSupplierChange}
+                value={selectedSupplier}
+                onChange={handleSupplierChange}
               >
                 {supplier.map((supp) => (
-                                <MenuItem key={supp._id} value={supp._id}>
-                                    {supp.name}
-                                </MenuItem>
-                            ))}
+                  <MenuItem key={supp._id} value={supp._id}>
+                    {supp.name}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
             <Grid item xs={3}>
               <TextField label="Place of Supply" fullWidth
-              value={placeOfSupply}
+                value={placeOfSupply}
               // onChange={(e) => setPlaceOfSupply(e.target.value)}
-               />
+              />
             </Grid>
             <Grid item xs={3}>
               <TextField
@@ -800,16 +799,16 @@ const handleSupplierChange = (event) => {
 
           <Grid container spacing={2}>
             <Grid item md={3} xs={3}>
-            <TransportDetails
-              transPortDetails={transPortDetails}
-              setTransPortDetails={setTransPortDetails}
-            />
+              <TransportDetails
+                transPortDetails={transPortDetails}
+                setTransPortDetails={setTransPortDetails}
+              />
 
             </Grid>
             <Grid item md={3} xs={3}>
-              <TextField label="Billing Address" fullWidth 
-              value={billingAddress}
-              onChange={(e) => setBillingAddress(e.target.value)}
+              <TextField label="Billing Address" fullWidth
+                value={billingAddress}
+                onChange={(e) => setBillingAddress(e.target.value)}
               />
             </Grid>
             <Grid item md={3} xs={3}>
@@ -826,9 +825,9 @@ const handleSupplierChange = (event) => {
               </TextField>
             </Grid>
             <Grid item md={3} xs={3}>
-            <TextField select label="Tax Type" fullWidth
-              value={taxType}
-              onChange={(e) => setTaxType(e.target.value)}
+              <TextField select label="Tax Type" fullWidth
+                value={taxType}
+                onChange={(e) => setTaxType(e.target.value)}
               >
                 <MenuItem value="TaxType1">TaxType1</MenuItem>
                 <MenuItem value="TaxType2">TaxType2</MenuItem>
@@ -841,7 +840,7 @@ const handleSupplierChange = (event) => {
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
           <Typography variant="h5" gutterBottom>
-            Product Tables
+            Product Details
           </Typography>
           {tables.map((table) => (
             <ProductTable
@@ -871,45 +870,65 @@ const handleSupplierChange = (event) => {
             <Modal open={open} onClose={handleClose} sx={{ maxWidth: "xl" }}>
               <Grid container spacing={1} sx={style} maxWidth="xl">
                 <Grid item md={12} xs={12} >
-                  <Typography variant="h6" sx={{fontWeight:700}}> Other Charges</Typography>
-                  <TextField                    
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}> Other Charges</Typography>
+                  <TextField
                     fullWidth
                     sx={{ mt: 2 }}
-                    label="Other Charges"
+                    label="Other Charges Name"
+                    value={chargeLabel}
+                    onChange={(e) => setChargeLabel(e.target.value)}
+                  />
+                  <TextField
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    label="Other Charges Amount"
                     value={currentCharge}
                     onChange={(e) => setCurrentCharge(e.target.value)}
                   />
-                  <Button className="btn-design" sx={{color:'white', mt:2}}  onClick={handleAddCharge}>Add</Button>
+                  <Button className="btn-design" sx={{ color: 'white', mt: 2 }} onClick={handleAddCharge}>Add</Button>
+
+                  {/* Display List of Charges */}
+                  <List>
+                    {charges.map((charge, index) => (
+                      <ListItem key={index}>
+                        {charge.label}: {charge.amount.toFixed(2)}
+                      </ListItem>
+                    ))}
+                  </List>
                 </Grid>
               </Grid>
-            </Modal>   
+            </Modal>
             <TextField label="Narration" fullWidth multiline rows={3}
-            value={narration}
-            onChange={(e) => setNarration(e.target.value)}
-             />
+              value={narration}
+              onChange={(e) => setNarration(e.target.value)}
+            />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
-              <TextField label="Gross Amount" fullWidth 
-              value={grossAmount}
-              onChange={(e) => setGrossAmount(e.target.value)}
+              <TextField label="Gross Amount" fullWidth
+                value={grossAmount}
+                onChange={(e) => setGrossAmount(e.target.value)}
               />
-              <TextField label="GST Amount" fullWidth 
+              <TextField label="GST Amount" fullWidth
                 value={gstAmount}
                 onChange={(e) => setGstAmount(e.target.value)}
               />
-              <TextField label="Other Charge" fullWidth
-               value={totalCharges}
-               InputProps={{
-                 readOnly: true,
-               }} />
+              <TextField
+                label="Total Charges"
+                fullWidth
+                value={`${totalCharges.toFixed(2)}`}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ mt: 2 }}
+              />
               <TextField label="Net Amount" fullWidth
-              value={netAmount}
-              onChange={(e) => setNetAmount(e.target.value)}
-               />
+                value={netAmount}
+                onChange={(e) => setNetAmount(e.target.value)}
+              />
             </Box>
           </Grid>
         </Grid>
@@ -931,13 +950,12 @@ const handleSupplierChange = (event) => {
             <Button
               variant="contained"
               className="btn-design"
-              onClick={(e)=>{handleSubmit(e); handlePrint();}}
-              
+              onClick={(e) => { handleSubmit(e); handlePrint(); }}
             >
               Save & Print
             </Button>
 
-            <PurchaseOrderPayment onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}/>
+            {/* <PurchaseOrderPayment onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}/> */}
 
           </Grid>
         </Grid>
