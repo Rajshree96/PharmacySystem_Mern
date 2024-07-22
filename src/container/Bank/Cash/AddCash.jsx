@@ -107,7 +107,7 @@ const AddCash = () => {
       const response = await axios.delete(`http://localhost:4000/api/v1/cash/delete/${_id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
-      toast.success("manufacturer added successfully");
+      toast.success("manufacturer deleted successfully");
       handleClose();
 
       if (response.data.statusText === "ok" || response.status === 200) {
@@ -156,7 +156,7 @@ const AddCash = () => {
             headers: { Authorization: `Bearer ${auth.token}` }
           }
         );
-        toast.success("manufacturer added successfully");
+        toast.success("manufacturer updated successfully");
         handleClose();
       } else {
         response = await axios.post(
