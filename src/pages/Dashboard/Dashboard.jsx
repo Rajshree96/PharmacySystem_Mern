@@ -78,6 +78,18 @@ import AddCash from "../../container/Bank/Cash/AddCash";
 import ManageCash from "../../container/Bank/Cash/ManageCash";
 import axios from "axios";
 
+//Settings
+import GstSetting from "../../container/Settings/GstSetting/GstSetting";
+import AccountSetting from "../../container/Settings/AccountsSetting/AccountSetting";
+import InventorySetting from "../../container/Settings/InventorySetting/InventorySetting";
+import UserSetting from "../../container/Settings/UserSetting/UserSetting";
+
+//Report
+import StockReport from "../../container/Report/StockReport/StockReport";
+import SaleReport from "../../container/Report/SaleReport/SaleReport";
+import PurchaseReport from "../../container/Report/PurchaseReport/PurchaseReport";
+import { Navigate } from "react-router-dom";
+
 const FireNav = styled(List)({
   "& .MuiListItemButton-root": {
     paddingLeft: 24,
@@ -133,7 +145,7 @@ const AppBar = styled(MuiAppBar, {
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  backgroundColor:'red',
+  backgroundColor: 'red',
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
@@ -147,7 +159,7 @@ const Dashboard = () => {
   const [businessDetails, setBusinessDetails] = useState({
     name: "Loading...",
     logo: "",
-});
+  });
 
   useEffect(() => {
     const fetchBusinessDetails = async () => {
@@ -173,7 +185,7 @@ const Dashboard = () => {
     fetchBusinessDetails();
   }, []);
 
-  console.log(businessDetails,"@@@@")
+  console.log(businessDetails, "@@@@")
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -267,16 +279,32 @@ const Dashboard = () => {
         return <ManageBankTransaction />;
       case "Add Cash":
         return <AddCash />;
+      case "Business Setup":
+        return <Navigate to="/admin/setupbusiness" />;
+      case "GST Settings":
+        return <GstSetting />;
+      case "Accounts Settings":
+        return <AccountSetting />;
+      case "Inventory Settings":
+        return <InventorySetting />;
+      case "User Settings":
+        return <UserSetting />;
+      case "Stock Report":
+        return <StockReport />;
+      case "Sales Report":
+        return <SaleReport />;
+      case "Purchase Report":
+        return <PurchaseReport />;
       default:
         return null;
     }
   };
 
-   const main = {
-      bgcolor: "#e0f7fa", 
-      minHeight: "100vh",
-      maxHeight:'auto'
-   };
+  const main = {
+    bgcolor: "#e0f7fa",
+    minHeight: "100vh",
+    maxHeight: 'auto'
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -315,10 +343,10 @@ const Dashboard = () => {
         variant="persistent"
         anchor="left"
         open={open}
-        
+
       >
-         
-          <DrawerHeader sx={{ bgcolor: "#086070" }}>
+
+        <DrawerHeader sx={{ bgcolor: "#086070" }}>
           <Box
             sx={{
               display: "flex",
@@ -326,11 +354,11 @@ const Dashboard = () => {
               alignItems: "center",
             }}
           >
-            <img src={businessDetails.businessLogo}  height="50px" width="50px" />
+            <img src={businessDetails.businessLogo} height="50px" width="50px" />
             <Typography
               sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}
             >
-             {businessDetails.name}
+              {businessDetails.name}
             </Typography>
           </Box>
           <IconButton onClick={handleDrawerClose} sx={{ color: "white" }}>
