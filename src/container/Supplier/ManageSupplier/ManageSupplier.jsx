@@ -116,7 +116,7 @@ const handleCloseModal = () => {
   useEffect(() => {
     fetchSupplier();
     
-  }, []);
+  }, [suppliers]);
 
   const handleDeleteClick = async (_id) => {
     const auth = JSON.parse(localStorage.getItem('auth'));

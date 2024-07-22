@@ -8,58 +8,61 @@ const incomeSchema = new mongoose.Schema({
         default: Date.now(),
         required:true,
     },
-    IncomeNo:{
+    incomeNo:{
         type:Number,
         required:true,
         unique:true,
     },
-    recivedMode:{
+    paymentMode:{
         type:String,
-        enum:["Cash", "bank"],
+        enum:["Cash", "Bank"],
         required:true,
     },
     taxType:{
       type:String,
-      enum:["CGST","SGST", "IGST", "Non GST"],
+      enum:["CGST/SGST", "IGST", "Non GST"],
       required:true,
     },
      bank:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Bank",
-        required:true,
+        type:String,
+        required: function() { return this.receiptMode === "Bank"; }
+
      },
-     method:{
+     paymentMethod:{
        type:String,
        enum:["Online", "Cheque"],
-       required:true,
+       required: function() { return this.receiptMode === "Bank"; }
+
      },
      transaction:{
         type:Number,
-        required:true,
+        required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Online"; }
+
      },
-  chequeNO:{
+  chequeNo:{
     type:Number,
-    required:true
+    required: function() { return this.receiptMode === "Bank" && this.paymentMethod === "Cheque"; }
+
   },
 
-   purchaseTable:{
+   purchaseTable:[{
     account:{
         type:String,
         required:true,
     },
-    productService:{
+    product:{
         type:String,
         required:true,
     },
-    Description:{
+    description:{
         type:String,
         required:true,
     },
-    Amount:{
+    amount:{
         type:Number,
         required:true
     },
-    Tax:{
+    tax:{
         type:String,
         required:true,
     },
@@ -71,11 +74,11 @@ const incomeSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-   },
-   TotalValue:{
-    type:Number,
-    required:true,
-   },
+   }],
+//    TotalValue:{
+//     type:Number,
+//     required:true,
+//    },
    narration:{
     type:String,
    }

@@ -4,7 +4,16 @@ import Bank from "../models/bankModal.js";
 // Controller function for adding a bank
 export const addBank = async (req, res) => {
   try {
+    console.log(req.body);
     const bank = new Bank(req.body);
+     // Validate the newPurchase object against the PurchaseModal schema
+  const validationError = bank.validateSync(); // This will synchronously validate the schema
+ 
+  if (validationError) {
+      // If validation fails, respond with a 400 Bad Request status and error details
+      console.log(validationError.message)
+      return res.status(400).json({ message: validationError.message });
+  }
     await bank.save();
     res.status(201).json({message:"Bank added successfully",bank});
   } catch (error) {

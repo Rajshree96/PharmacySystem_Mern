@@ -11,18 +11,15 @@ const fixedAssetsSchema = new mongoose.Schema({
         unique:true,
     },
     supplierInvoiceNo:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Supplier",
+        type:String,
         required:true,
     },
     supplierName:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Supplier",
+        type:String,
         required:true,
     },
     placeOfSupply:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Supplier",
+        type:String,
         required:true,
     },
     taxType:{
@@ -38,7 +35,7 @@ const fixedAssetsSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    udm:{
+    uom:{
         type:Number,
         required:true
     },
@@ -70,15 +67,14 @@ const fixedAssetsSchema = new mongoose.Schema({
    }],
     grossTotal:{
         type:Number,
-        reuired:true,
+        required:true,
     },
     gstAmount:{
         type:Number,
-        reuired:true,
+        required:true,
     },
     otherCharge:{
         type:Number,
-        required:true,
     },
     netAmount:{
         type:Number,

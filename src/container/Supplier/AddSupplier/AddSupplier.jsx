@@ -233,6 +233,125 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
             // Handle any additional logic if the overall form is not valid
             return;
         }
+        // const supplierData = {
+        //     name: name,
+        //     address: address,
+        //     state: selectedState,
+        //     pincode: pinCode,
+        //     country: selectedCountry,
+        //     contact: contact,
+        //     email: email,
+        //     website: website,
+        //     bankingDetails: {
+        //         bankName: bankName,
+        //         bankAddress: bankAddress,
+        //         ifscCode: ifscCode,
+        //         accountHolderName: accountHolderName,
+        //         accountNumber: accountNumber,
+        //     },
+        //     statutoryDetails: {
+        //         registrationType: registrationType,
+        //         gstin: gstin,
+        //     },
+        //     openingBalance: {
+        //         asOnFirstDayOfFinancialYear: openingBalance,
+        //     },
+        // };
+
+        // try {
+        //     const auth = JSON.parse(localStorage.getItem("auth"));
+        //     const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             Authorization: `Bearer ${auth.token}`,
+        //         },
+        //     });
+        //     if (response.status === 201) {
+        //         console.log("Supplier added successfully:", response.data);
+        //         setSelectedCountry("");
+        //         setSelectedState("");
+        //         setName("");
+        //         setAddress("");
+        //         setPinCode("");
+        //         setContact("");
+        //         setEmail("");
+        //         setWebsite("");
+        //         setBankName("");
+        //         setBankAddress("");
+        //         setIfscCode("");
+        //         setAccountHolderName("");
+        //         setAccountNumber("");
+        //         setGstin("");
+        //         setOpeningBalance("");
+        //         setRegistrationType("");
+        //         toast.success("supplier added successfully");
+        //     }
+        // } catch (error) {
+        //     console.log("Error adding supplier:", error);
+        // }
+    };
+
+const addSupplier = async (supplierData) => {
+    try {
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.token}`,
+            },
+        });
+        if (response.status === 201) {
+            console.log("Supplier added successfully:", response.data);
+            setSelectedCountry("");
+            setSelectedState("");
+            setName("");
+            setAddress("");
+            setPinCode("");
+            setContact("");
+            setEmail("");
+            setWebsite("");
+            setBankName("");
+            setBankAddress("");
+            setIfscCode("");
+            setAccountHolderName("");
+            setAccountNumber("");
+            setGstin("");
+            setOpeningBalance("");
+            setRegistrationType("");
+            toast.success("supplier added successfully");
+        }
+    } catch (error) {
+        console.log("Error adding supplier:", error);
+    }
+}
+
+
+const editSupplier = async (id, supplier) => {
+    console.log("Manufacturer@@@@", supplier._id);
+
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+    }
+
+    try {
+        const response = await axios.put(`http://localhost:4000/api/v1/admin/update/supplier/${id}`, supplier, {
+            headers: { Authorization: `Bearer ${auth.token}` },
+        });
+        console.log("Supplier updated:", response.data);
+        console.log("supplier-----",supplier);
+
+    } catch (error) {
+        console.error("Error updating supplier:", error);
+    }
+};
+
+
+    const handleSaveSupplier = async (e) => {
+
+        e.preventDefault();
+
         const supplierData = {
             name: name,
             address: address,
@@ -259,45 +378,13 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
         };
 
         try {
-            const auth = JSON.parse(localStorage.getItem("auth"));
-            const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${auth.token}`,
-                },
-            });
-            if (response.status === 201) {
-                console.log("Supplier added successfully:", response.data);
-                setSelectedCountry("");
-                setSelectedState("");
-                setName("");
-                setAddress("");
-                setPinCode("");
-                setContact("");
-                setEmail("");
-                setWebsite("");
-                setBankName("");
-                setBankAddress("");
-                setIfscCode("");
-                setAccountHolderName("");
-                setAccountNumber("");
-                setGstin("");
-                setOpeningBalance("");
-                setRegistrationType("");
-                toast.success("supplier added successfully");
-            }
-        } catch (error) {
-            console.log("Error adding supplier:", error);
-        }
-    };
-
-    const handleSaveSupplier = async () => {
-        try {
             if (formType === "edit supplier") {
-                console.log("Supplier updated successfully");
+                await editSupplier(selectedData._id,  supplierData );
+                // console.log("Supplier updated successfully");
             }
             else {
-                console.log("Supplier added successfully");
+                await addSupplier(supplierData);
+                // console.log("Supplier added successfully");
             }
             setSuccess(true);
             

@@ -20,11 +20,12 @@ const bankSchema = new mongoose.Schema({
     pinCode:{
         type:Number,
         required:true,
-        maxlength:6,
-        validate: function(v){
-            return /^\d{6}$/.test(v); 
-        },
-        message: props => `${props.value} is not a valid pincode! It should be exactly 6 digits.`
+        validate: {
+            validator: function(v) {
+              return /^\d{6}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid pincode! It should be exactly 6 digits.`
+          }
 
     },
     accountHolderName:{
@@ -40,12 +41,17 @@ const bankSchema = new mongoose.Schema({
     ifscCode:{
         type:String,
         required:true,
-        unique:true,
+        
     },
     mobileNo:{
       type:Number,
       required:true,
-      unique:true,
+      validate: {
+        validator: function(v) {
+          return /^\d{10}$/.test(v);
+        },
+        message: props => `${props.value} is not a valid mobile number! It should be exactly 10 digits.`
+      }
     },
     openingBalance:{
        type:Number,

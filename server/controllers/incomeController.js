@@ -1,37 +1,44 @@
 import Income from "../models/incomeModal.js";
-import Bank from "../models/bankModal.js";
 
 
 export const addIncome = async (req, res)=>{
-    try {
-        const { method, transaction, chequeNO, bank } = req.body;
+  try {
+    const newIncome = new Income ({
+      date: req.body.date,
+      incomeNo: req.body.incomeNo,
+      paymentMode:req.body.paymentMode,
+      taxType: req.body.taxType,
+      narration:req.body.narration,
+      purchaseTable: req.body.purchaseTable,
+    });
 
-    // Validate that transaction is provided if method is Online
-    if (method === 'Online' && !transaction) {
-      return res.status(400).json({ message: 'Transaction number is required for Online method' });
+     // Only include bank-related fields if receiptMode is "Bank"
+  if (req.body.receiptMode === "Bank") {
+    newIncome.bank = req.body.bank;
+    newIncome.paymentMethod = req.body.paymentMethod;
+    if (req.body.paymentMethod === "Online") {
+      newIncome.transaction = req.body.transaction;
+    } else if (req.body.paymentMethod === "Cheque") {
+      newIncome.chequeNo = req.body.chequeNo;
     }
+  }
+  
 
-    // Validate that chequeNO is provided if method is Cheque
-    if (method === 'Cheque' && !chequeNO) {
-      return res.status(400).json({ message: 'Cheque number is required for Cheque method' });
-    }
 
-    // Validate the bank reference
-    const bankRecord = await Bank.findById(bank);
-    if (!bankRecord) {
-      return res.status(404).json({ message: 'Bank not found' });
-    }
-
-    // Create the income entry
-    const income = new Income(req.body);
-    await income.save();
-
-    // Populate the bank field with the bank name
-    await income.populate('bank', 'bankName').execPopulate();
-
-    res.status(201).json(income);
-
-    } catch (error) {
+   // Validate the newPurchase object against the PurchaseModal schema
+   const validationError = newIncome.validateSync(); // This will synchronously validate the schema
+ 
+   if (validationError) {
+       // If validation fails, respond with a 400 Bad Request status and error details
+       console.log(validationError.message)
+       return res.status(400).json({ message: validationError.message });
+   }
+    
+    await newIncome.save();
+    console.log(newIncome);
+    res.status(201).json({ message: "income added successfully", newIncome });
+  }
+  catch (error) {
         res.status(400).json({ message: error.message });
 
     }

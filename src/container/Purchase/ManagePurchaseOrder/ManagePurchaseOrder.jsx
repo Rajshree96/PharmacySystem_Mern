@@ -105,7 +105,7 @@ const handleCloseModal = () => {
   useEffect(() => {
     fetchPurchaseList();
 
-  }, []);
+  }, [purchaseData]);
   // console.log("customer data",customers);
 
   const handleDeleteClick = async (_id) => {
