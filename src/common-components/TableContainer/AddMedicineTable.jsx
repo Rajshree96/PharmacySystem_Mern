@@ -836,48 +836,8 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
 
   useEffect(() => {
     fetchMedicines();
-    const socket = io("http://localhost:4000");
-  
-    socket.on('connect', () => {
-      console.log("Socket connected");
-    });
-  
-    socket.on('newMedicine', (newMedicine) => {
-      console.log('New medicine received:', newMedicine);
-      if (newMedicine) {
-        setMedicines((prevMedicines) => [...prevMedicines, newMedicine]);
-      }
-    });
-  
-    socket.on('updateMedicine', (updatedMedicine) => {
-      console.log('Updated medicine received:', updatedMedicine);
-      if (updatedMedicine && updatedMedicine._id) {
-        setMedicines((prevMedicines) =>
-          prevMedicines.map((med) =>
-            med._id === updatedMedicine._id ? updatedMedicine : med
-          )
-        );
-      }
-    });
-  
-    socket.on('deleteMedicine', (deletedMedicineId) => {
-      console.log('Deleted medicine ID received:', deletedMedicineId);
-      if (deletedMedicineId) {
-        setMedicines((prevMedicines) => 
-          prevMedicines.filter(medicine => medicine._id !== deletedMedicineId)
-        );
-      }
-    });
-  
-    socket.on('disconnect', () => {
-      console.log("Socket disconnected");
-    });
-  
-    return () => {
-      socket.disconnect();
-      console.log("Socket disconnected on cleanup");
-    };
-  }, []);
+    
+ }, []);
   
 
   const handleDeleteClick = async (itemCode) => {
