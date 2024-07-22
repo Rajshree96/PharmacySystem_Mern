@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   styled,
   useTheme,
@@ -33,6 +33,8 @@ import { Bar, Line } from "react-chartjs-2";
 import "chart.js/auto";
 import hexToRgba from "hex-to-rgba";
 import SalesEstimate from "../../container/Sales/SalesEstimate/SalesEstimate"
+import { getAllCategories } from "../../categoriesApi";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -222,10 +224,39 @@ const MiniLineGraph = ({ color }) => {
 
 const DashboardCard = () => {
   const classes = useStyles();
+  const [customers, setCustomers] = useState([]);
+
+
+  useEffect(() => {
+    fetchCustomer();
+  }, [customers]);
+
+  const fetchCustomer = async () => {
+    try {
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+        }
+        const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall", {
+            headers: {Authorization: `Bearer ${auth.token}`},
+        });
+        console.log("API Response:", response);
+
+        if (Array.isArray(response.data)) {
+            //  setCustomers(response.data);
+        }
+        else {
+            console.error("API response does not contain cutomer array:", response.data.result);
+        }
+    } catch (error) {
+        console.error("Error fetching manufacturer:", error);
+    }
+};
   const cardData = [
     {
       img: customer,
-      end: 180,
+      end: customer.length,
       color: "#78A75A",
       title: "Total Customer",
     },
