@@ -12,6 +12,7 @@ const AddBrand = () => {
     const breadcrumbs = [ "Add Brand", "Add Brand" ];
     const [ modalType, setModalType ] = useState("");
     const [ selectedBrand, setSelectedBrand ] = useState(null); // State to store selected brand for editing
+    const [refreshData, setRefreshData] = useState(false); // State to trigger data refresh
 
     const handleOpenModal = (type, brand = null) => {
         setModalType(type);
@@ -21,6 +22,7 @@ const AddBrand = () => {
     const handleCloseModal = () => {
         setModalType("");
         setSelectedBrand(null);
+        setRefreshData((prev) => !prev); // Toggle the state to trigger data refresh
     };
 
     return (
@@ -51,7 +53,7 @@ const AddBrand = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <AddBrandTable onEditBrand={(brand) => handleOpenModal("edit brand", brand)} />
+                        <AddBrandTable onEditBrand={(brand) => handleOpenModal("edit brand", brand)}  refreshData={refreshData} />
                     </Paper>
                 </Container>
             </Box>
