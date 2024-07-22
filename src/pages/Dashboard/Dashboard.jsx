@@ -173,6 +173,8 @@ const Dashboard = () => {
     fetchBusinessDetails();
   }, []);
 
+  console.log(businessDetails,"@@@@")
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };

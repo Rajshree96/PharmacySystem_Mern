@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Container,
   Box,
@@ -26,6 +26,9 @@ import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
+import PurchasePayment from "../PurchaseInvoice/PurchasePayment";
+import { useReactToPrint } from "react-to-print";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -64,14 +67,14 @@ const ManagePurchaseOrder = () => {
   const fetchPurchaseList = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
-    }
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+      }
       const response = await axios.get("http://localhost:4000/api/v1/purchase/getall",
         {
-          headers: { Authorization: `Bearer ${auth.token}`}
-         }
+          headers: { Authorization: `Bearer ${auth.token}` }
+        }
       );
       console.log("API Response:", response.data);
 
@@ -87,7 +90,7 @@ const ManagePurchaseOrder = () => {
 
   useEffect(() => {
     fetchPurchaseList();
-    
+
   }, []);
   // console.log("customer data",customers);
 
@@ -115,12 +118,34 @@ const ManagePurchaseOrder = () => {
     }
   };
 
+  const [selectedPurchase, setSelectedPurchase] = useState(null);
+  const resumeRef = useRef();
+
+  const handlePrintClick = (id) => {
+    const purchase = purchaseData.find(item => item._id === id);
+    setSelectedPurchase(purchase);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => resumeRef.current,
+    documentTitle: `Purchase_${selectedPurchase ? selectedPurchase._id : ''}`,
+  });
+
+  const handleOpen = () => setOpen(true);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  };
+
+  const handleInvoice = () =>{
+    
+  }
+
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} ref={resumeRef}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
-             Purchase
+            Purchase
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Divider sx={{ my: 2 }} />
@@ -128,19 +153,21 @@ const ManagePurchaseOrder = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                <StyledTableCell>Sno.</StyledTableCell>
+                  <StyledTableCell>Sno.</StyledTableCell>
                   <StyledTableCell>Date</StyledTableCell>
                   <StyledTableCell>Order No.</StyledTableCell>
                   <StyledTableCell>Supplier Name</StyledTableCell>
                   <StyledTableCell>Place of Supply</StyledTableCell>
                   <StyledTableCell>Due Date</StyledTableCell>
                   <StyledTableCell>Payment Status</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell>
+                    <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>
+                  </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {/* console.log(customers) */}
-              {purchaseData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((purchaseData,index) => (
+                {purchaseData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((purchaseData, index) => (
                   <StyledTableRow key={purchaseData._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
@@ -153,14 +180,14 @@ const ManagePurchaseOrder = () => {
                     <StyledTableCell>{purchaseData.paymentStatus}</StyledTableCell>
                     <StyledTableCell>
                       <Box
-                        style={{ display: "flex", justifyContent: "center" }}
+                        style={{ display: "flex", justifyContent: "space-between" }}
                       >
                         <ViewButton
                           sx={{ mr: 1, color: "green  " }}
                           label="View"
                           icon={Visibility}
                         />
-                         <EditButton
+                        <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
@@ -170,9 +197,34 @@ const ManagePurchaseOrder = () => {
                           label="delete"
                           icon={Delete}
                           onClick={() => handleDeleteClick(purchaseData._id)}
-
                         />
-                        
+                        <Button
+                          className="btn-design-invoice"
+                          sx={{ color: 'white', height: '2.3rem' }}
+                          label="Print"
+                        onClick={()=>{
+                          handleInvoice();
+                        }}                                                  
+                        >
+                          Invoice
+                        </Button>
+                        <PurchasePayment onClick={handleSubmit}
+                          handleOpen={handleOpen}
+                          netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}
+                          label="Payout"
+                        />
+                        <Button
+                          className="btn-design-print"
+                          sx={{ color: 'white', height: '2.3rem' }}
+                          label="Print"
+                          onClick={() => {
+                            handlePrintClick(purchaseData._id);
+                            handlePrint();
+                          }}
+                        >
+                          Print
+                        </Button>
+
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -180,14 +232,14 @@ const ManagePurchaseOrder = () => {
               </TableBody>
             </Table>
           </TableContainer>
-         
-         <TablePaginations
-        count={purchaseData.length}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+
+          <TablePaginations
+            count={purchaseData.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
 
         </Paper>
       </Box>

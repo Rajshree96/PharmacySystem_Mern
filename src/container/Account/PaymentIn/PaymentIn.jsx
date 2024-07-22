@@ -37,13 +37,15 @@ const style = {
   p: 4,
 };
 
+
 const initialRow = {
   sno: "",
   // itemCode: "",
   billNumber: "",
   billAmount: "",
   receivedAmount: "",
-  balance: "",
+  balanceAmount: "",
+  total:400
 };
 
 const billOptions = [
@@ -53,6 +55,8 @@ const billOptions = [
 ];
 
 function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
+  const [total, setBalanceTotal] = useState(0);
+
   const calculateTotal = (key) => {
     return rows
       .reduce((sum, row) => sum + parseFloat(row[key] || 0), 0)
@@ -64,6 +68,10 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
     updatedRows[index][field] = value;
     onRowChange(updatedRows);
   };
+  
+  useEffect(() => {
+    setBalanceTotal(calculateTotal("balanceAmount"));
+  }, [rows]);
 
   return (
     <TableContainer sx={{ mb: 2 }} maxWidth="xl">
@@ -149,9 +157,9 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <Select
-                  value={row.billNumber}
+                  value={row.billNo}
                   onChange={(e) =>
-                    handleInputChange(index, "billNumber", e.target.value)
+                    handleInputChange(index, "billNo", e.target.value)
                   }
                   fullWidth
                   size="small"
@@ -207,11 +215,11 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.balance}
+                  value={row.balanceAmount}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "balance", e.target.value)
+                    handleInputChange(index, "balanceAmount", e.target.value)
                   }
                   InputProps={{
                     sx: {
@@ -260,7 +268,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
               {calculateTotal("receivedAmount")}
             </TableCell>
             <TableCell sx={{ border: "1px solid grey" }}>
-              {calculateTotal("balance")}
+               {total}
             </TableCell>
           </TableRow>
         </TableBody>
@@ -311,9 +319,9 @@ function PaymentIn() {
       tables.map((table) =>
         table.id === tableId
           ? {
-              ...table,
-              rows: table.rows.filter((_, index) => index !== rowIndex),
-            }
+            ...table,
+            rows: table.rows.filter((_, index) => index !== rowIndex),
+          }
           : table
       )
     );
@@ -468,7 +476,7 @@ function PaymentIn() {
                     label="Cheque Number"
                     fullWidth
                     value={chequeNumber}
-                    onChange={(e) => setChequeNumber(e.target.value)} 
+                    onChange={(e) => setChequeNumber(e.target.value)}
                   />
                 </Grid>
               )}
@@ -478,7 +486,7 @@ function PaymentIn() {
 
         {/* Product Details */}
         <Box sx={{ p: 2 }}>
-         
+
           {tables.map((table) => (
             <ProductTable
               key={table.id}
