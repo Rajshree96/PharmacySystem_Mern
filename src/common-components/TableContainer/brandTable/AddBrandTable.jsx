@@ -27,7 +27,9 @@ const AddBrandTable = ({onEditBrand}) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+
                 const response = await getAllBrand();
+                console.log("response-", response.data);
                 setRows(response.data);
             } catch (error) {
                 console.error("Error fetching brands:", error);
@@ -60,7 +62,7 @@ const AddBrandTable = ({onEditBrand}) => {
                     {rows.map((row) => (
                         <TableRow key={row._id}>
                             <TableCell>{row.brand}</TableCell>
-                            <TableCell>{row.manufactureId}</TableCell>
+                            <TableCell>{row.manufactureId.name}</TableCell>
                             <TableCell>
                                 <EditButton
                                     label={"edit"}

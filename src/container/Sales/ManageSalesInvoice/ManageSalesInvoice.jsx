@@ -121,6 +121,7 @@ const ManageSalesInvoice = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                <StyledTableCell>S No</StyledTableCell>
                   <StyledTableCell>Date</StyledTableCell>
                   <StyledTableCell>Invoice No.</StyledTableCell>
                   <StyledTableCell>Customer Name</StyledTableCell>
@@ -133,6 +134,8 @@ const ManageSalesInvoice = () => {
               <TableBody>
                 {invoice.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((invoice, index) => (
                   <StyledTableRow key={invoice._id}>
+                                        <StyledTableCell>                        {page * rowsPerPage + index + 1}
+                                        </StyledTableCell>
                     <StyledTableCell>{invoice.date}</StyledTableCell>
                     <StyledTableCell>{invoice.invoiceNo}</StyledTableCell>
                     <StyledTableCell>{invoice.customerName}</StyledTableCell>

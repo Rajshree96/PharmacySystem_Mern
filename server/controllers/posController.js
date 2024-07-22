@@ -1,6 +1,4 @@
 import POS from '../models/posModal.js';
-import Customer from '../models/customerModal.js';
-import medicineModel from '../models/medicineModel.js';
 
 
 
@@ -10,41 +8,28 @@ import medicineModel from '../models/medicineModel.js';
 // Create a new POS entry
 export const createPOs = async (req, res) => {
     try {
-        const {date, invoiceNo, customerDetail, paymentType, purchaseTable } = req.body;
-
-        // Validate and save POS entry
-        const pos = new POS({
-            date,
-            invoiceNo,
-            customerDetail,
-            paymentType,
-            purchaseTable
+        const newPos = new POS({
+            date: req.body.date,
+            invoiceNo: req.body.invoiceNo,
+            customerName: req.body.customerName,
+            paymentType: req.body.paymentType,
+ 
+            purchaseTable: req.body.purchaseTable,
+            amounts: req.body.amounts,
+            
         });
-        await pos.save();
-
-        // Populate customer details and medicine details in POS
-        const populatedPOS = await POS.findById(pos._id)
-            .populate('customerDetail', 'customerDetails.name customerDetails.contact customerDetails.email')
-            .populate('purchaseTable.itemCode', 'itemCode')
-            .populate('purchaseTable.productName', 'medicineName');
-
-        // // Extract populated data for response
-        const customerName = populatedPOS.customerDetail.customerDetail;
-        const customerContact = populatedPOS.customerDetail.customerDetail;
-        const customerEmail = populatedPOS.customerDetail.customerDetail;
-
-        res.status(201).json({
+        const validationError = newPos.validateSync(); // This will synchronously validate the schema
+ 
+        if (validationError) {
+            // If validation fails, respond with a 400 Bad Request status and error details
+            console.log(validationError.message)
+            return res.status(400).json({ message: validationError.message });
+        }
+        await newPos.save();
+   res.status(201).json({
             message: "POS entry created successfully",
-            pos,
-            customerName,
-            customerContact,
-            customerEmail,
-            populatedPOS
-
-            
-            
-          
-        });
+            newPos
+     });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

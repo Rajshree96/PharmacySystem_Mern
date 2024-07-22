@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -39,7 +40,8 @@ const style = {
 
 const initialRow = {
   sno: "",
-  billNo: "",
+  // itemCode: "",
+  billNumber: "",
   billAmount: "",
   receivedAmount: "",
   balanceAmount: "",
@@ -284,24 +286,23 @@ function PaymentIn() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [receiptMode, setReceiptMode] = useState("");
+  const [receiptNo, setReciptNo] = useState('');
+  const[customerDetail, setCustomerDetail] = useState("");
   const [bank, setBank] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [receiptMode, setReceiptMode] = useState("");
+  const[paymentMethod, setPaymentMethod] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [chequeNumber, setChequeNumber] = useState("");
-  const [receiptNo, setReceiptNo] = useState("");
-  const [customer, setCustomer] = useState("");
-  const [narration, setNarration] = useState("");
+  // const [total , setTotal] = useState("");
+  const [narration , setNarration] = useState("");
 
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -339,50 +340,50 @@ function PaymentIn() {
     content: () => resumeRef.current,
   });
 
-  const paymentData = {
-    date: date,
-    receiptNo: receiptNo,
-    customerDetail: customer,
-    receiptMode: receiptMode,
-    bank: bank,
-    paymentMethod: paymentMethod,
-    transaction: transactionNumber,
-    chequeNo: chequeNumber,
-    narration: narration,
-    purchaseTable: tables[0].rows,
-  };
 
-    // purchaseTable: 
-    //   {
-    //     billNo: billNumber,
-    //     billAmount: billAmount,
-    //     recivedAmount: receivedAmount,
-    //     balanceAmount: balance,
-    //     total: total,
-    //     narration: narration
-    //   },
-
-  const handleSubmit = async (event) => {
+  const handelSubmit = async () => {
     try {
-    event.preventDefault();
       const auth = JSON.parse(localStorage.getItem('auth'));
-      const response = await axios.post('http://localhost:4000/api/v1/payin/pay',
+      let paymentData = {
+        date,
+        receiptNo,
+        customerDetail,
+        receiptMode,
+        narration,
+        purchaseTable: tables[0].rows.map(row => ({
+          billNo: row.billNumber,
+          billAmount: parseFloat(row.billAmount) || 0,
+          receivedAmount: parseFloat(row.receivedAmount) || 0,
+          balanceAmount: parseFloat(row.balance) || 0,
+        })),
+      };
+       if(receiptMode === 'Bank')
+       {
+        paymentData.bank =bank;
+        paymentData.paymentMethod = paymentMethod;
+        if(paymentMethod === "Online")
+        {
+          paymentData.transaction =  transactionNumber;
+        } else if(paymentMethod === 'Cheque')
+        {
+          paymentData.chequeNo = chequeNumber;
+        }
+       }
+       const response = await axios.post("http://localhost:4000/api/v1/payin/pay",
         paymentData,
         {
-          headers: {
+          headers:{
             "content-type": "application/json",
-            "Authorization": `Bearer ${auth.token}`
+             "Authorization": `Bearer ${auth.token}`
           }
         }
-      );
-      console.log(response.data,"@@@@@@@@");
-      if (response.data.status === 201) {
-        console.log("paymentIn created successfully ");
-      }
+       );
+       console.log("PaymentIn added Successfully:", response.data);
+
     } catch (error) {
-      console.log("something went wrong");
+      console.error('Error adding paymentIn:', error)
     }
-  };
+  }
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
@@ -405,16 +406,17 @@ function PaymentIn() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Receipt No."
-                value={receiptNo}
-                onChange={(e) => setReceiptNo(e.target.value)}
-                fullWidth />
+              <TextField label="Receipt No." fullWidth 
+              value={receiptNo}
+              onChange={(e)=>setReciptNo(e.target.value)}
+
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Select Customer"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
-                fullWidth>
+              <TextField select label="Select Customer" fullWidth
+              value={customerDetail}
+              onChange={(e)=>setCustomerDetail(e.target.value)}
+              >
                 <MenuItem value="Customer1">Customer1</MenuItem>
                 <MenuItem value="Customer2">Customer2</MenuItem>
               </TextField>
@@ -501,10 +503,10 @@ function PaymentIn() {
         {/* Narration */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={3} xs={3}>
-            <TextField label="Narration"
-              value={narration}
-              onChange={(e) => setNarration(e.target.value)}
-              fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3} 
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
         </Grid>
 
@@ -518,8 +520,7 @@ function PaymentIn() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design"
-              onClick={handleSubmit}>
+            <Button variant="contained" className="btn-design" onClick={handelSubmit}>
               Save
             </Button>
           </Grid>
