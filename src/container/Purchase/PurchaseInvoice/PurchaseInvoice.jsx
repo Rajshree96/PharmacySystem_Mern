@@ -522,16 +522,15 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                 await editPurchaseInvoice(selectedData._id, purchaseData);
                 console.log("Purchase Invoice updated successfully");
             }
+            else if (formType === "create purchaseinvoice") {
+                await addPurchaseInvoice(purchaseData);
+                console.log("Invoice generated successfully");
+            } 
             else {
                 await addPurchaseInvoice(purchaseData);
                 console.log("Purchase Invoice added successfully");
             }
-            if (formType === "create purchaseinvoice"  )  {
-             
-                console.log(" Invoice updated successfully");
-            }
-            
-            
+                       
             
             setSuccess(true);
         } catch (error) {
@@ -665,6 +664,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                   borderRadius: 2,
                   boxShadow: "none",
                   // backgroundColor:  "#f0f4f8",
+                  
               }
             : {};
 
@@ -911,8 +911,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                                 backgroundColor: editModeStyles.buttonColor,
                             }}
                         >
-                            {formType === "edit purchaseinvoice" ? "Update " : "Save "}
-                            {formType === "create purchaseinvoice" ? "Create Invoice " : "Save invoice "}
+                            {formType === "edit purchaseinvoice" ? "Update Invoice" : (formType === "create purchaseinvoice" ? "Create Invoice" : "Save Invoice")}
                         </Button>
 
                         <Button
