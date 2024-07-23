@@ -1,5 +1,5 @@
 // Import necessary packages and components
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     TextField,
@@ -14,20 +14,20 @@ import {
     createTheme,
     FormControl,
 } from "@mui/material";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import BusinessIcon from "@mui/icons-material/Business";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import {makeStyles} from "@mui/styles";
-import {Formik, Form, Field} from "formik";
+import { makeStyles } from "@mui/styles";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import axios from "axios";
 
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 
 // Responsive design helper functions
@@ -48,8 +48,15 @@ const responsiveWidth = (minWidth, maxWidth) => {
 };
 
 const registrationTypes = [
-    {value: "Composition", label: "Composition"},
-    {value: "Regular", label: "Regular"},
+    { value: "Composition", label: "Composition" },
+    { value: "Regular", label: "Regular" },
+];
+
+const accountHeadTypes = [
+    { value: "Bank Accounts", label: "Bank Accounts" },
+    { value: "Bank OCC", label: "Bank OCC" },
+    { value: "Capital Account", label: "Capital Account" },
+    
 ];
 
 const theme = createTheme({
@@ -102,40 +109,41 @@ const useStyles = makeStyles({
 // Validation schema using Yup
 const validationSchema = Yup.object().shape({
     name: Yup.string()
-    .matches(/^[a-zA-Z\s]+$/, "Only letters are allowed")
-    .min(1, "Name must be at least 1 character")
-    .required("Name is required"),
+        .matches(/^[a-zA-Z\s]+$/, "Only letters are allowed")
+        .min(1, "Name must be at least 1 character")
+        .required("Name is required"),
     state: Yup.string().required("State is required"),
     registrationType: Yup.string().required("Registration Type is required"),
     gstin: Yup.string()
-    .matches(/^[A-Z0-9]{15}$/, "GSTIN must be 15 characters long and contain only capital letters and numbers")
-    .required("GSTIN is required"),
+        .matches(/^[A-Z0-9]{15}$/, "GSTIN must be 15 characters long and contain only capital letters and numbers")
+        .required("GSTIN is required"),
 });
 
 // Main component
-const AddManufacturer = ({formType, selectedData, setSuccess}) => {
+const AddManufacturer = ({ formType, selectedData, setSuccess }) => {
     const classes = useStyles();
-    const [ manufacturersName, setManufacturersName ] = useState("");
-    const [ selectedCountry, setSelectedCountry ] = useState("");
-    const [ selectedState, setSelectedState ] = useState("");
-    const [ name, setName ] = useState("");
-    const [ address, setAddress ] = useState("");
-    const [ pinCode, setPinCode ] = useState("");
-    const [ contact, setContact ] = useState("");
-    const [ email, setEmail ] = useState("");
-    const [ website, setWebsite ] = useState("");
-    const [ bankName, setBankName ] = useState("");
-    const [ bankAddress, setBankAddress ] = useState("");
-    const [ ifscCode, setIfscCode ] = useState("");
-    const [ accountHolderName, setAccountHolderName ] = useState("");
-    const [ accountNumber, setAccountNumber ] = useState("");
-    const [ gstin, setGstin ] = useState("");
-    const [ openingBalance, setOpeningBalance ] = useState("");
-    const [ registrationType, setRegistrationType ] = useState("");
-    const [ nameError, setNameError ] = useState("");
-    const [ gstError, setGstError ] = useState("");
-    const [ stateError, setStateError ] = useState("");
-    const [ registrationTypeError, setRegistrationTypeError ] = useState("");
+    const [manufacturersName, setManufacturersName] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedState, setSelectedState] = useState("");
+    const [name, setName] = useState("");
+    const [address, setAddress] = useState("");
+    const [pinCode, setPinCode] = useState("");
+    const [contact, setContact] = useState("");
+    const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
+    const [bankName, setBankName] = useState("");
+    const [bankAddress, setBankAddress] = useState("");
+    const [ifscCode, setIfscCode] = useState("");
+    const [accountHolderName, setAccountHolderName] = useState("");
+    const [accountNumber, setAccountNumber] = useState("");
+    const [gstin, setGstin] = useState("");
+    const [openingBalance, setOpeningBalance] = useState("");
+    const [registrationType, setRegistrationType] = useState("");
+    const [accountHead, setAccountHead] = useState("");
+    const [nameError, setNameError] = useState("");
+    const [gstError, setGstError] = useState("");
+    const [stateError, setStateError] = useState("");
+    const [registrationTypeError, setRegistrationTypeError] = useState("");
 
     useEffect(() => {
         if (formType === "edit manufacturer" && selectedData) {
@@ -148,6 +156,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
             setContact(selectedData.contact);
             setEmail(selectedData.email);
             setWebsite(selectedData.website);
+            setAccountHead(selectedData.accountHead);
             setBankName(selectedData.bankingDetails.bankName);
             setBankAddress(selectedData.bankingDetails.bankAddress);
             setIfscCode(selectedData.bankingDetails.ifscCode);
@@ -160,7 +169,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         else {
             resetForm();
         }
-    }, [ formType, selectedData ]);
+    }, [formType, selectedData]);
 
     const resetForm = () => {
         // setManufacturersName("");
@@ -180,6 +189,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         setGstin("");
         setOpeningBalance("");
         setRegistrationType("");
+        setAccountHead("");
     };
 
     const handleCountryChange = (val) => {
@@ -257,37 +267,37 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
     //         },
     //     };
 
-        // try {
-        //     const auth = JSON.parse(localStorage.getItem("auth"));
-        //     const response = await axios.post("http://localhost:4000/api/v1/admin/add-manufacturer", manufacturerData, {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             Authorization: `Bearer ${auth.token}`,
-        //         },
-        //     });
-        //     if (response.status === 201) {
-        //         console.log("Manufacturer added successfully:", response.data);
-        //         setSelectedCountry("");
-        //         setSelectedState("");
-        //         setName("");
-        //         setAddress("");
-        //         setPinCode("");
-        //         setContact("");
-        //         setEmail("");
-        //         setWebsite("");
-        //         setBankName("");
-        //         setBankAddress("");
-        //         setIfscCode("");
-        //         setAccountHolderName("");
-        //         setAccountNumber("");
-        //         setGstin("");
-        //         setOpeningBalance("");
-        //         setRegistrationType("");
-        //         toast.success("manufacturer added successfully");
-        //     }
-        // } catch (error) {
-        //     console.log("Error adding manufacturer:", error);
-        // }
+    // try {
+    //     const auth = JSON.parse(localStorage.getItem("auth"));
+    //     const response = await axios.post("http://localhost:4000/api/v1/admin/add-manufacturer", manufacturerData, {
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${auth.token}`,
+    //         },
+    //     });
+    //     if (response.status === 201) {
+    //         console.log("Manufacturer added successfully:", response.data);
+    //         setSelectedCountry("");
+    //         setSelectedState("");
+    //         setName("");
+    //         setAddress("");
+    //         setPinCode("");
+    //         setContact("");
+    //         setEmail("");
+    //         setWebsite("");
+    //         setBankName("");
+    //         setBankAddress("");
+    //         setIfscCode("");
+    //         setAccountHolderName("");
+    //         setAccountNumber("");
+    //         setGstin("");
+    //         setOpeningBalance("");
+    //         setRegistrationType("");
+    //         toast.success("manufacturer added successfully");
+    //     }
+    // } catch (error) {
+    //     console.log("Error adding manufacturer:", error);
+    // }
     // };
 
 
@@ -311,6 +321,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                 setContact("");
                 setEmail("");
                 setWebsite("");
+                setAccountHead("");
                 setBankName("");
                 setBankAddress("");
                 setIfscCode("");
@@ -329,19 +340,19 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
 
     const editManufacturer = async (id, manufacturer) => {
         console.log("Manufacturer@@@@", manufacturer._id);
-    
+
         const auth = JSON.parse(localStorage.getItem("auth"));
         if (!auth || !auth.token) {
             console.error("No token found in local storage");
             return;
         }
-    
+
         // // Check if the _id field is defined
         // if (!manufacturer.id) {
         //     console.error("Manufacturer _id is undefined");
         //     return;
         // }
-    
+
         try {
             const response = await axios.put(`http://localhost:4000/api/v1/admin/update/manufacturer/${id}`, manufacturer, {
                 headers: { Authorization: `Bearer ${auth.token}` },
@@ -360,7 +371,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         try {
             e.preventDefault();
             // Validate name
-            await validationSchema.validateAt("name", {name});
+            await validationSchema.validateAt("name", { name });
             setNameError(""); // Clear any previous error
         } catch (err) {
             setNameError(err.message); // Set error message for name
@@ -368,7 +379,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
 
         try {
             // Validate gstin
-            await validationSchema.validateAt("gstin", {gstin});
+            await validationSchema.validateAt("gstin", { gstin });
             setGstError("");
         } catch (err) {
             setGstError(err.message);
@@ -376,7 +387,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
 
         try {
             // Validate state
-            await validationSchema.validateAt("state", {state: selectedState});
+            await validationSchema.validateAt("state", { state: selectedState });
             setStateError("");
         } catch (err) {
             setStateError(err.message);
@@ -384,14 +395,14 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
 
         try {
             // Validate registration type
-            await validationSchema.validateAt("registrationType", {registrationType});
+            await validationSchema.validateAt("registrationType", { registrationType });
             setRegistrationTypeError("");
         } catch (err) {
             setRegistrationTypeError(err.message);
         }
 
         // Check overall validity after individual validations
-        const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
+        const isValid = await validationSchema.isValid({ name, gstin, state: selectedState, registrationType });
 
         if (!isValid) {
             // Handle any additional logic if the overall form is not valid
@@ -424,7 +435,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         try {
             if (formType === "edit manufacturer") {
 
-              await editManufacturer(selectedData._id, manufacturerData);
+                await editManufacturer(selectedData._id, manufacturerData);
                 console.log("Manufacturer updated successfully");
                 setSuccess(true);
                 // toast.success("Manufacturer edited successfully");
@@ -433,56 +444,56 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
             }
             else {
 
-               await addManufacturer(manufacturerData);
+                await addManufacturer(manufacturerData);
                 console.log("Manufacturer added successfully");
                 setSuccess(true);
                 // toast.success("Manufacturer added successfully");
             }
 
-           
+
             // setManufacturersName("");
         } catch (error) {
             console.error(`Error ${formType === "edit manufacturer" ? "editing" : "adding"}  manufacturer:`, error);
         }
     };
     const containerVariants = {
-        hidden: {opacity: 0},
-        visible: {opacity: 1, transition: {duration: 0.5, staggerChildren: 0.1}},
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.1 } },
     };
 
     const itemVariants = {
-        hidden: {opacity: 0, y: 20},
-        visible: {opacity: 1, y: 0, transition: {duration: 0.5}},
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
     };
 
-    const breadcrumbs = [ "Manufacturer", "Add Manufacturer" ];
+    const breadcrumbs = ["Manufacturer", "Add Manufacturer"];
 
     // Edit mode -> Form styles changes conditionally
 
     const editModeStyles =
         formType === "edit manufacturer"
             ? {
-                  padding: responsivePadding(16, 32), // Decrease padding in edit mode
-                  headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
-                  buttonColor: "red !important", // Change button color in edit mode
-              }
+                padding: responsivePadding(16, 32), // Decrease padding in edit mode
+                headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+                buttonColor: "red !important", // Change button color in edit mode
+            }
             : {};
 
     const paperStyles =
         formType === "edit manufacturer"
             ? {
-                  padding: responsivePadding(0, 0),
-                  borderRadius: 2,
-                  boxShadow: "none",
-                  // backgroundColor:  "#f0f4f8",
-              }
+                padding: responsivePadding(0, 0),
+                borderRadius: 2,
+                boxShadow: "none",
+                // backgroundColor:  "#f0f4f8",
+            }
             : {};
 
     return (
         <Container maxWidth="lg">
             <Toaster />
             <Box className={classes.formContainer}>
-                <Paper elevation={3} sx={{p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles}}>
+                <Paper elevation={3} sx={{ p: responsivePadding(24, 48), borderRadius: 2, ...paperStyles }}>
                     <motion.div initial="hidden" animate="visible" variants={containerVariants}>
                         <Typography
                             variant="h4"
@@ -592,9 +603,27 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                             onChange={(e) => setWebsite(e.target.value)}
                                         />
                                     </Grid>
+                                    {/* Account Head */}
+                                    <Grid item xs={12} sm={6} md={3}>
+                                        <TextField
+                                            select
+                                            name="accountHead"
+                                            fullWidth
+                                            label="Account Head"
+                                            variant="outlined"
+                                            value={accountHead}
+                                            onChange={(e) => setAccountHead(e.target.value)}
+                                        >
+                                            {accountHeadTypes.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
                                 </Grid>
                             </motion.div>
-                            <Divider sx={{marginTop: "40px", marginBottom: "30px"}} />
+                            <Divider sx={{ marginTop: "40px", marginBottom: "30px" }} />
 
                             <motion.div variants={itemVariants}>
                                 {/* Bank Details */}
@@ -659,7 +688,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                     </Grid>
                                 </Grid>
                             </motion.div>
-                            <Divider sx={{marginTop: "40px", marginBottom: "30px"}} />
+                            <Divider sx={{ marginTop: "40px", marginBottom: "30px" }} />
 
                             <motion.div variants={itemVariants}>
                                 {/* GST Details */}
@@ -696,7 +725,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                             fullWidth
                                             label="GSTIN*"
                                             variant="outlined"
-                                            inputProps={{style: {textTransform: "uppercase"}}}
+                                            inputProps={{ style: { textTransform: "uppercase" } }}
                                             error={!!gstError}
                                             helperText={gstError}
                                             value={gstin}
@@ -705,7 +734,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                     </Grid>
                                 </Grid>
                             </motion.div>
-                            <Divider sx={{marginTop: "40px", marginBottom: "30px"}} />
+                            <Divider sx={{ marginTop: "40px", marginBottom: "30px" }} />
 
                             <motion.div variants={itemVariants}>
                                 {/* Opening Balance */}
@@ -750,7 +779,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
                                                 mx: 1,
                                                 backgroundColor: editModeStyles.buttonColor,
                                             }}
-                                            style={{backgroundColor: "#086070", color: "white"}}
+                                            style={{ backgroundColor: "#086070", color: "white" }}
                                         >
                                             Cancel
                                         </Button>
