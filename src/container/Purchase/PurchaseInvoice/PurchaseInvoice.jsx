@@ -349,6 +349,8 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
     const [ invoiceNo, setInvoiceNo ] = useState("");
     const [ supplier, setSupplier ] = useState([]);
     const [ selectedSupplier, setSelectedSupplier ] = useState("");
+    const [ orderNo, setOrderNo ] = useState("");
+
     const [ placeOfSupply, setPlaceOfSupply ] = useState("");
     const [ billingAddress, setBillingAddress ] = useState("");
     const [ grossAmount, setGrossAmount ] = useState("");
@@ -449,6 +451,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
     const purchaseData = {
         date: date,
         invoiceNo: invoiceNo,
+        orderNo:orderNo,
         supplierName: selectedSupplier,
         placeOfSupply: placeOfSupply,
         paymentTerm: paymentTerms,
@@ -566,6 +569,13 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         setPlaceOfSupply(supp ? supp.address : "");
     };
 
+    const handleOrderNo = (event) => {
+        const order = orderNo.find((s) => s._id === event.target.value);
+        setOrderNo(event.target.value);
+        setPlaceOfSupply(order ? order.address : "");
+    };
+    
+
     const paperStyles =
         formType === "edit purchaseinvoice"
             ? {
@@ -597,11 +607,24 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                             />
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField label="Invoice No." fullWidth />
+                            {/* <TextField label="Order No." fullWidth /> */}
+                            <TextField
+                                select
+                                label="Order No."
+                                fullWidth
+                                value={orderNo}
+                                onChange={handleOrderNo}
+                            >
+                                {/* {orderNo.map((order) => (
+                                    <MenuItem key={order._id} value={order._id}>
+                                        {order.name}
+                                    </MenuItem>
+                                ))} */}
+                            </TextField>
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
-                                label="Supplier Invoice No."
+                                label="Invoice No."
                                 fullWidth
                                 value={invoiceNo}
                                 onChange={(e) => setInvoiceNo(e.target.value)}
