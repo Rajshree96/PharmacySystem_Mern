@@ -618,6 +618,16 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
     
       }, []);  
 
+
+      const editModeStyles =
+        formType === "create purchaseinvoice"
+            ? {
+                  padding: 0, // Decrease padding in edit mode
+                //   headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+                  buttonColor: "yellow !important", // Change button color in edit mode
+              }
+            : {};
+
     const paperStyles =
         formType === "edit purchaseinvoice"
             ? {
