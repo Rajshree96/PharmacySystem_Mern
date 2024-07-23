@@ -30,6 +30,7 @@ import PurchasePayment from "../PurchaseInvoice/PurchasePayment"
 import PurchaseOrderPayment from "../PurchaseOrder/PurchaseOrderPayment";
 
 import axios from "axios";
+import toast from "react-hot-toast";
 const style = {
     position: "absolute",
     top: "50%",
@@ -363,6 +364,9 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
     const [narration, setNarration] = useState("");
     const [taxType, setTaxType] = useState("");
 
+    console.log("initial row ---", initialRow);
+    console.log("initial row tavle ---", tables);
+
     const [transPortDetails, setTransPortDetails] = useState({
         receiptNumber: "",
         dispatchedThrough: "",
@@ -387,6 +391,10 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
             setNarration(selectedData.Narration);
             setTaxType(selectedData.taxType);
             setTransPortDetails(selectedData.transPortDetails);
+
+            setTables(selectedData.tables);
+            
+            
         }
         else {
             resetForm();
@@ -552,21 +560,20 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
     };
 
 
-
-
-
     const handleSavePurchaseOrder = async (e) => {
         e.preventDefault();
         try {
             if (formType === "edit purchaseorder") {
                 await editPurchase(selectedData._id, purchaseData);
-                console.log("Purchase Order updated successfully");
+                toast.success("Purchase Order updated successfully");
+                // console.log("Purchase Order updated successfully");
             }
             else {
                 await addPurchase(purchaseData);
-                console.log("Purchase Order added successfully");
+                toast.success("Purchase Order added successfully");
+                // console.log("Purchase Order added successfully");
             }
-            setSuccess(true);
+         //   setSuccess(true);
         } catch (error) {
             console.error(`Error ${formType === "edit purchaseorder" ? "editing" : "adding"}  purchaseorder:`, error);
         }
