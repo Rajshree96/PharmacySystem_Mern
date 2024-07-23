@@ -191,71 +191,71 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         setSelectedState(val);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            // Validate name
-            await validationSchema.validateAt("name", {name});
-            setNameError(""); // Clear any previous error
-        } catch (err) {
-            setNameError(err.message); // Set error message for name
-        }
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         // Validate name
+    //         await validationSchema.validateAt("name", {name});
+    //         setNameError(""); // Clear any previous error
+    //     } catch (err) {
+    //         setNameError(err.message); // Set error message for name
+    //     }
 
-        try {
-            // Validate gstin
-            await validationSchema.validateAt("gstin", {gstin});
-            setGstError("");
-        } catch (err) {
-            setGstError(err.message);
-        }
+    //     try {
+    //         // Validate gstin
+    //         await validationSchema.validateAt("gstin", {gstin});
+    //         setGstError("");
+    //     } catch (err) {
+    //         setGstError(err.message);
+    //     }
 
-        try {
-            // Validate state
-            await validationSchema.validateAt("state", {state: selectedState});
-            setStateError("");
-        } catch (err) {
-            setStateError(err.message);
-        }
+    //     try {
+    //         // Validate state
+    //         await validationSchema.validateAt("state", {state: selectedState});
+    //         setStateError("");
+    //     } catch (err) {
+    //         setStateError(err.message);
+    //     }
 
-        try {
-            // Validate registration type
-            await validationSchema.validateAt("registrationType", {registrationType});
-            setRegistrationTypeError("");
-        } catch (err) {
-            setRegistrationTypeError(err.message);
-        }
+    //     try {
+    //         // Validate registration type
+    //         await validationSchema.validateAt("registrationType", {registrationType});
+    //         setRegistrationTypeError("");
+    //     } catch (err) {
+    //         setRegistrationTypeError(err.message);
+    //     }
 
-        // Check overall validity after individual validations
-        const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
+    //     // Check overall validity after individual validations
+    //     const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
 
-        if (!isValid) {
-            // Handle any additional logic if the overall form is not valid
-            return;
-        }
-        const manufacturerData = {
-            name: name,
-            address: address,
-            state: selectedState,
-            pincode: pinCode,
-            country: selectedCountry,
-            contact: contact,
-            email: email,
-            website: website,
-            bankingDetails: {
-                bankName: bankName,
-                bankAddress: bankAddress,
-                ifscCode: ifscCode,
-                accountHolderName: accountHolderName,
-                accountNumber: accountNumber,
-            },
-            statutoryDetails: {
-                registrationType: registrationType,
-                gstin: gstin,
-            },
-            openingBalance: {
-                asOnFirstDayOfFinancialYear: openingBalance,
-            },
-        };
+    //     if (!isValid) {
+    //         // Handle any additional logic if the overall form is not valid
+    //         return;
+    //     }
+    //     const manufacturerData = {
+    //         name: name,
+    //         address: address,
+    //         state: selectedState,
+    //         pincode: pinCode,
+    //         country: selectedCountry,
+    //         contact: contact,
+    //         email: email,
+    //         website: website,
+    //         bankingDetails: {
+    //             bankName: bankName,
+    //             bankAddress: bankAddress,
+    //             ifscCode: ifscCode,
+    //             accountHolderName: accountHolderName,
+    //             accountNumber: accountNumber,
+    //         },
+    //         statutoryDetails: {
+    //             registrationType: registrationType,
+    //             gstin: gstin,
+    //         },
+    //         openingBalance: {
+    //             asOnFirstDayOfFinancialYear: openingBalance,
+    //         },
+    //     };
 
         // try {
         //     const auth = JSON.parse(localStorage.getItem("auth"));
@@ -288,7 +288,7 @@ const AddManufacturer = ({formType, selectedData, setSuccess}) => {
         // } catch (error) {
         //     console.log("Error adding manufacturer:", error);
         // }
-    };
+    // };
 
 
     const addManufacturer = async (manufacturerData) => {
