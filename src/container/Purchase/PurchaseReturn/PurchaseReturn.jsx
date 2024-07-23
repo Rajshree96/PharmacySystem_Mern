@@ -138,6 +138,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   fullWidth
                   size="small"
                 >
+                  <MenuItem value="" disabled>Select Product</MenuItem>
                   {productOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
@@ -310,7 +311,7 @@ function PurchaseReturn() {
   const [date, setDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const[taxType,setTaxType]=useState('');
+  const [taxType, setTaxType] = useState('');
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -434,9 +435,9 @@ function PurchaseReturn() {
               <TextField label="Reason for Return" fullWidth />
             </Grid>
             <Grid item md={3} xs={3}>
-            <TextField select label="Tax Type" fullWidth
-              value={taxType}
-              onChange={(e) => setTaxType(e.target.value)}
+              <TextField select label="Tax Type" fullWidth
+                value={taxType}
+                onChange={(e) => setTaxType(e.target.value)}
               >
                 <MenuItem value="TaxType1">TaxType1</MenuItem>
                 <MenuItem value="TaxType2">TaxType2</MenuItem>

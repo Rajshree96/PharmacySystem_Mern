@@ -188,6 +188,7 @@ function ProductTable({rows, onAddRow, onRemoveRow, onRowChange}) {
                             </TableCell>
                             <TableCell sx={{border: "1px solid grey", width: 100, height: 25}}>
                                 <Select value={selectedMedicine} onChange={handleProductChange} fullWidth size="small">
+                                <MenuItem value="" disabled>Select Product</MenuItem>                                
                                     {medicine.map((med) => (
                                         <MenuItem key={med._id} value={med._id}>
                                             {med.medicineName}
