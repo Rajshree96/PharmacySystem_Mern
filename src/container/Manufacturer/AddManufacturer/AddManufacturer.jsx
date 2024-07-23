@@ -367,7 +367,7 @@ const AddManufacturer = ({ formType, selectedData, setSuccess }) => {
         }
     };
 
-    const handleSaveCategory = async (e) => {
+    const handleSaveManufacturer = async (e) => {
         try {
             e.preventDefault();
             // Validate name
@@ -765,7 +765,7 @@ const AddManufacturer = ({ formType, selectedData, setSuccess }) => {
                                             startIcon={<SaveIcon />}
                                             className="btn-design-green"
                                             // onClick={handleSubmit}
-                                            onClick={handleSaveCategory}
+                                            onClick={handleSaveManufacturer}
                                         >
                                             {formType === "edit manufacturer" ? "Update " : "Create "}
                                         </Button>
