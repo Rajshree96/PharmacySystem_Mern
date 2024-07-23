@@ -25,6 +25,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 const style = {
   position: "absolute",
@@ -273,7 +274,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   );
 }
 
-function DeliveryChallan() {
+function DeliveryChallan({formType, selectedData, setSuccess}) {
   const breadcrumbs = ["Sales", "Delivery Challan"];
   const [tables, setTables] = useState([
     {
@@ -307,6 +308,20 @@ function DeliveryChallan() {
    billOfLading: '',
    vehicleNumber: ''
  });
+
+ useEffect(() => {
+  if (formType === "edit salesdeliverychalan" && selectedData) {
+    
+  }
+  else {
+      resetForm();
+  }
+}, [ formType, selectedData ]);
+
+const resetForm = () => {
+ 
+
+};
 
   useEffect(() => {
     if (date && paymentTerms) {
@@ -375,12 +390,12 @@ function DeliveryChallan() {
   };
 
 
-  const addDeliveryChallan = async(delivery)=>{
-    console.log(delivery);
+  const addDeliveryChallan = async(deliveryData)=>{
+    console.log("addDeliveryChallan--------------",deliveryData);
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
        const  response = await axios.post('http://localhost:4000/api/v1/deliveryChallan/addChallan',
-        delivery,
+        deliveryData,
         {
           headers:{
             "content-type": "application/json",
@@ -399,11 +414,46 @@ function DeliveryChallan() {
   }
 
 
-  const handleSubmit = async (event) => {
+  // const handleSubmit = async (event) => {
     
-    event.preventDefault(); 
+  //   event.preventDefault(); 
    
-    const delivery = {
+  //   const delivery = {
+  //     date: date,
+  //     deliveryChallanNo: deliveryChallanNo,
+  //     customerName: customerName,
+  //     placeOfSupply: placeOfSupply,
+  //     paymentTerm: paymentTerms,
+  //     dueDate: dueDate,
+  //     transPortDetails:transPortDetails,
+  //     billingAddress: billingAddress,
+  //     reverseCharge: reverseCharge,
+  //     purchaseTable: tables[0].rows,
+  //     amounts: {
+  //         grossAmount: grossAmount,
+  //         gstAmount: gstAmount,
+  //         netAmount: netAmount
+  //     },
+  //     Narration:narration
+  // };
+  
+  //   try {
+  //     await addDeliveryChallan(delivery);
+  //     // handleAddMedicine();
+      
+  //   } catch (error) {
+  //     console.error('Error adding deliveryChallan:', error);
+      
+  //   }
+  // };
+  console.log(tables)
+  console.log(transPortDetails)
+
+
+  const handleSaveSalesEstimate = async (e) => {
+    e.preventDefault();
+
+    const deliveryData = {
       date: date,
       deliveryChallanNo: deliveryChallanNo,
       customerName: customerName,
@@ -421,21 +471,27 @@ function DeliveryChallan() {
       },
       Narration:narration
   };
-  
+
     try {
-      await addDeliveryChallan(delivery);
-      // handleAddMedicine();
-      
+        if (formType === "edit salesdeliverychalan") {
+            // await editDeliveryChallan(selectedData._id, deliveryData);
+            console.log("Sales Deleiver chalan updated successfully");
+            setSuccess(true);
+            
+        }
+        else {
+            await addDeliveryChallan(deliveryData);
+            toast.success("Sales Deleiver chalan added successfully");
+        }
     } catch (error) {
-      console.error('Error adding deliveryChallan:', error);
-      
+        console.error(`Error ${formType === "edit salesdeliverychalan" ? "editing" : "adding"}    salesdeliverychalan:`, error);
     }
-  };
-  console.log(tables)
-  console.log(transPortDetails)
+};
+
 
   return (
     <Container maxWidth="xl" ref={resumeRef}>
+      <Toaster/>
       <Paper sx={{ p: 2, mb: 2 }}>
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
@@ -614,8 +670,12 @@ function DeliveryChallan() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design" onClick={handleSubmit}>
-              Save
+            <Button variant="contained"
+             className="btn-design"
+             onClick={handleSaveSalesEstimate}
+            //  onClick={handleSubmit}
+             >
+             {formType === "edit salesdeliverychalan" ? "Update Delivery Chalan" : "Save"}
             </Button>
 
             <Button

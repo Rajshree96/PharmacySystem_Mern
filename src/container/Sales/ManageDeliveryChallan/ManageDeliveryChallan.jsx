@@ -21,6 +21,7 @@ import DeleteButton from "../../../common-components/ButtonContainer/DeleteButto
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
+import AllSalesModal from "../../../common-components/Modals/saleModals/AllSalesModal";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,11 +43,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManageDeliveryChallan = () => {
+  const [ modalType, setModalType ] = useState("");
+  const [ selectedSaleDeliveryChallan, setSelectedSaleDeliveryChallan ] = useState(null);
+
   const [deliveryChallan, setDeliveryChallan] = useState([]);
   const breadcrumbs = ["Sales", "Manage Delivery Challan"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    // modal handler function to open and close
+    const handleOpenModal = (type, salesdeliverychalan = null) => {
+      setModalType(type);
+      setSelectedSaleDeliveryChallan(salesdeliverychalan);
+  };
+  
+  const handleCloseModal = () => {
+      setModalType("");
+      setSelectedSaleDeliveryChallan(null);
+  };
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -175,6 +191,7 @@ const ManageDeliveryChallan = () => {
                             sx={{ mr: 1, color: "#1976d2" }}
                             label="edit"
                             icon={Edit}
+                            onClick={() => handleOpenModal("edit salesdeliverychalan", deliveryChallan)} // Pass the deliveryChallan object as a prop
                           />
                           <DeleteButton
                             sx={{ mr: 1, color: "red" }}
@@ -199,6 +216,14 @@ const ManageDeliveryChallan = () => {
           />
         </Paper>
       </Box>
+      {/* Modal */}
+      <AllSalesModal
+       open={!!modalType}
+       handleClose={handleCloseModal}
+       formType={modalType}
+       selectedData={selectedSaleDeliveryChallan}
+       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />      
     </Container>
   );
 };
