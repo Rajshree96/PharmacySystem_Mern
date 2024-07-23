@@ -28,6 +28,7 @@ const AllPurchaseModal = ({open, handleClose, formType, selectedData, style}) =>
                 );
             case "add purchaseinvoice":
             case "edit purchaseinvoice":
+            case "create purchaseinvoice":
                 return (
                     <>
                         <PurchaseInvoice setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
