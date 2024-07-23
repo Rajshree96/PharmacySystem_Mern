@@ -106,6 +106,17 @@ export async function getAllOrderNumber(req, res) {
         res.status(500).json({ message: "Failed to retrieve order numbers", error: error.message });
     }
 }
+
+export async function getPurchaseByOrderNumber(req,res){
+    const {orderNo}= req.body;
+    console.log(orderNo);
+    try {
+        const purchase = await Purchase.findOne({orderNo:orderNo});
+        res.status(200).json(purchase);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to retrieve purchases", error: error.message });
+    }
+}
 // Update a purchase record
 export const updatePurchase = async (req, res) => {
     const { id } = req.params;
