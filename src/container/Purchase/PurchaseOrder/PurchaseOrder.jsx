@@ -350,7 +350,7 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
     const [totalCharges, setTotalCharges] = useState(0);
     const [currentCharge, setCurrentCharge] = useState("");
     const [chargeLabel, setChargeLabel] = useState("");
-    const [orderNo, setOrderNo] = useState("");
+    const [orderNo, setOrderNo] = useState([]);
     const [supplier, setSupplier] = useState([]);
     const [selectedSupplier, setSelectedSupplier] = useState("");
 
@@ -605,6 +605,8 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
         setPlaceOfSupply(supp ? supp.address : "");
     };
 
+
+    
     // Edit mode -> Form styles changes conditionally
 
     // const editModeStyles =

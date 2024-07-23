@@ -350,7 +350,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
     const [ supplier, setSupplier ] = useState([]);
     const [ selectedSupplier, setSelectedSupplier ] = useState("");
     const [ orderNo, setOrderNo ] = useState("");
-
+    const[orders,setOrders]=useState([]);
     const [ placeOfSupply, setPlaceOfSupply ] = useState("");
     const [ billingAddress, setBillingAddress ] = useState("");
     const [ grossAmount, setGrossAmount ] = useState("");
@@ -570,11 +570,39 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
     };
 
     const handleOrderNo = (event) => {
-        const order = orderNo.find((s) => s._id === event.target.value);
+        
         setOrderNo(event.target.value);
-        setPlaceOfSupply(order ? order.address : "");
+        
     };
+    const fetchPurchaseOrderNumber = async () => {
+        try {
+          const auth = JSON.parse(localStorage.getItem('auth'));
+          if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+          }
+          const response = await axios.get("http://localhost:4000/api/v1/purchase/getallOrderNumber",
+            {
+              headers: { Authorization: `Bearer ${auth.token}` }
+            }
+          );
+          console.log("API Response:", response.data);
     
+          if (Array.isArray(response.data)) {
+            setOrders(response.data);
+            console.log(orderNo,"--------------------------------------------------")
+          } else {
+            console.error("API response does not contain purchase array:", response.data.result);
+          }
+        } catch (error) {
+          console.error("Error fetching purchase list:", error);
+        }
+      };
+    
+      useEffect(() => {
+        fetchPurchaseOrderNumber();
+    
+      }, []);  
 
     const paperStyles =
         formType === "edit purchaseinvoice"
@@ -615,11 +643,13 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                                 value={orderNo}
                                 onChange={handleOrderNo}
                             >
-                                {/* {orderNo.map((order) => (
-                                    <MenuItem key={order._id} value={order._id}>
-                                        {order.name}
+                           
+                                {orders.map((order) => (
+                                    <MenuItem key={order._id} value={order.orderNo}>
+
+                                        {order.orderNo}
                                     </MenuItem>
-                                ))} */}
+                                ))}
                             </TextField>
                         </Grid>
                         <Grid item xs={3}>
