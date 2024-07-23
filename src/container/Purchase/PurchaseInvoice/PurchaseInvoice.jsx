@@ -583,9 +583,39 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         setPlaceOfSupply(supp ? supp.address : "");
     };
 
+    const fetchPurchase = async (orderNo) => {
+        try {
+        //   const auth = JSON.parse(localStorage.getItem('auth'));
+        //   if (!auth || !auth.token) {
+        //     console.error("No token found in local storage");
+        //     return;
+        //   }
+          const response = await axios.get("http://localhost:4000/api/v1/purchase/get",{orderNo:orderNo},
+            // {
+            //   headers: { Authorization: `Bearer ${auth.token}` }
+            // }
+          );
+          console.log("API Response:", response.data);
+    
+          purchaseData=response.data;
+          } else {
+            console.error("API response does not contain purchase array:", response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching purchase list:", error);
+        }
+      };
+    
+      useEffect(() => {
+        fetchPurchase();
+    
+      }, []);  
+
+
     const handleOrderNo = (event) => {
+        setOrderNo(event.target.value); 
+        fetchPurchase(orderNo);
         
-        setOrderNo(event.target.value);
         
     };
     const fetchPurchaseOrderNumber = async () => {
@@ -626,7 +656,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                 //   headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
                   buttonColor: "yellow !important", // Change button color in edit mode
               }
-            : {};
+          :{};
 
     const paperStyles =
         formType === "edit purchaseinvoice"
