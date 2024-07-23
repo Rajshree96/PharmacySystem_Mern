@@ -518,7 +518,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
     const handleSavePurchaseInvoice = async (e) => {
         e.preventDefault();
         try {
-            if (formType === "edit purchaseinvoice") {
+            if (formType === "edit purchaseinvoice"  )  {
                 await editPurchaseInvoice(selectedData._id, purchaseData);
                 console.log("Purchase Invoice updated successfully");
             }
@@ -526,14 +526,28 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                 await addPurchaseInvoice(purchaseData);
                 console.log("Purchase Invoice added successfully");
             }
+            if (formType === "create purchaseinvoice"  )  {
+             
+                console.log(" Invoice updated successfully");
+            }
+            
+            
+            
             setSuccess(true);
         } catch (error) {
             console.error(
                 `Error ${formType === "edit purchaseinvoice" ? "editing" : "adding"}  purchaseinvoice:`,
                 error
             );
+            console.error(
+                `Error ${formType === "create purchaseinvoice" ? "creating" : "adding"}  purchaseinvoice:`,
+                error
+            );
         }
     };
+
+    
+    
 
     const config = () => {
         const auth = JSON.parse(localStorage.getItem("auth"));
@@ -575,6 +589,16 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         setPlaceOfSupply(order ? order.address : "");
     };
     
+    // Edit mode -> Form styles changes conditionally
+
+    const editModeStyles =
+        formType === "create purchaseinvoice"
+            ? {
+                  padding: 0, // Decrease padding in edit mode
+                //   headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
+                  buttonColor: "yellow !important", // Change button color in edit mode
+              }
+            : {};
 
     const paperStyles =
         formType === "edit purchaseinvoice"
@@ -822,8 +846,13 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                             className="btn-design"
                             // onClick={handleSubmit}
                             onClick={handleSavePurchaseInvoice}
+                            sx={{
+                                mx: 1,
+                                backgroundColor: editModeStyles.buttonColor,
+                            }}
                         >
                             {formType === "edit purchaseinvoice" ? "Update " : "Save "}
+                            {formType === "create purchaseinvoice" ? "Create Invoice " : "Save invoice "}
                         </Button>
 
                         <Button
