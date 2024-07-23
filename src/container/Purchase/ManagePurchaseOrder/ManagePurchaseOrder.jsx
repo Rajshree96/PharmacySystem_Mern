@@ -105,7 +105,7 @@ const handleCloseModal = () => {
   useEffect(() => {
     fetchPurchaseList();
 
-  }, [purchaseData]);
+  }, []);
   // console.log("customer data",customers);
 
   const handleDeleteClick = async (_id) => {
@@ -150,9 +150,7 @@ const handleCloseModal = () => {
     event.preventDefault();
   };
 
-  const handleInvoice = () =>{
-    
-  }
+ 
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} ref={resumeRef}>
@@ -217,9 +215,7 @@ const handleCloseModal = () => {
                           className="btn-design-invoice"
                           sx={{ color: 'white', height: '2.3rem' }}
                           label="Print"
-                        onClick={()=>{
-                          handleInvoice();
-                        }}                                                  
+                          onClick={() => handleOpenModal("create purchaseinvoice", purchaseData)} // Pass the supplier object as a prop                                               
                         >
                           Invoice
                         </Button>
