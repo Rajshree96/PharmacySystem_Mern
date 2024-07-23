@@ -25,6 +25,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 const style = {
   position: "absolute",
@@ -272,7 +273,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
   );
 }
 
-function SalesInvoice() {
+function SalesInvoice({formType, selectedData, setSuccess}) {
   const breadcrumbs = ["Sales", "Sales Invoice"];
   const [tables, setTables] = useState([
     {
@@ -305,6 +306,24 @@ function SalesInvoice() {
    billOfLading: '',
    vehicleNumber: ''
  });
+
+
+ useEffect(() => {
+  if (formType === "edit salesinvoice" && selectedData) {
+  
+  }
+  else {
+      resetForm();
+  }
+}, [ formType, selectedData ]);
+
+const resetForm = () => {
+  
+};
+
+
+
+
   useEffect(() => {
     if (date && paymentTerms) {
       const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
@@ -396,11 +415,46 @@ function SalesInvoice() {
   }
 
 
-  const handleSubmit = async (event) => {
+  // const handleSubmit = async (event) => {
     
-    event.preventDefault(); 
+  //   event.preventDefault(); 
    
-    const salesInvoice = {
+  //   const salesInvoice = {
+  //     date: date,
+  //     invoiceNo: invoiceNo,
+  //     customerName: customerName,
+  //     placeOfSupply: placeOfSupply,
+  //     paymentTerm: paymentTerms,
+  //     dueDate: dueDate,
+  //     transPortDetails:transPortDetails,
+  //     billingAddress: billingAddress,
+  //     reverseCharge: reverseCharge,
+  //     purchaseTable: tables[0].rows,
+  //     amounts: {
+  //         grossAmount: grossAmount,
+  //         gstAmount: gstAmount,
+  //         otherCharge: otherCharges,
+  //         netAmount: netAmount
+  //     },
+  //     Narration:narration
+  // };
+  
+  //   try {
+  //     await addSalesInvoice(salesInvoice);
+  //     // handleAddMedicine();
+      
+  //   } catch (error) {
+  //     console.error('Error adding salesInvoice:', error);
+      
+  //   }
+  // };
+  console.log(tables)
+  console.log(transPortDetails)
+
+  const handleSaveSalesEstimate = async (e) => {
+    e.preventDefault();
+
+    const salesInvoiceData = {
       date: date,
       invoiceNo: invoiceNo,
       customerName: customerName,
@@ -419,20 +473,33 @@ function SalesInvoice() {
       },
       Narration:narration
   };
-  
+
     try {
-      await addSalesInvoice(salesInvoice);
-      // handleAddMedicine();
-      
+        if (formType === "edit salesestimate") {
+            // await editSalesEstimate(selectedData._id, salesInvoiceData);
+            console.log("Sales Invoice updated successfully");
+            setSuccess(true);
+            // toast.success("sales Estimate edited successfully");
+        }
+        else {
+          
+           await addSalesInvoice(salesInvoiceData);
+            toast.success("Sales Invoice added successfully");
+        }
+
     } catch (error) {
-      console.error('Error adding salesInvoice:', error);
-      
+        console.error(`Error ${formType === "edit salesestimate" ? "editing" : "adding"}   salesestimate:`, error);
     }
-  };
-  console.log(tables)
-  console.log(transPortDetails)
+};
+
+
+
+
+
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
+        <Toaster />
       <Paper sx={{ p: 2, mb: 2 }}>
         {/* Purchase Order */}
         <Box sx={{ p: 2, mb: 2 }}>
@@ -618,8 +685,13 @@ function SalesInvoice() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design" onClick={handleSubmit}>
-              Save
+            <Button variant="contained"
+             className="btn-design" 
+            // onClick={handleSubmit}
+            onClick={handleSaveSalesEstimate}
+            >
+             
+              {formType === "edit salesinvoice" ? "Update Invoice " : "Save Invoice "}
             </Button>
 
             <Button

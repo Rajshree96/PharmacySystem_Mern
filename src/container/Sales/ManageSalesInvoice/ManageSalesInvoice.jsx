@@ -21,6 +21,7 @@ import DeleteButton from "../../../common-components/ButtonContainer/DeleteButto
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
+import AllSalesModal from "../../../common-components/Modals/saleModals/AllSalesModal";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,11 +43,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManageSalesInvoice = () => {
+  const [ modalType, setModalType ] = useState("");
+  const [ selectedSaleInvoice, setSelectedSaleInvoice ] = useState(null);
+
   const [invoice, setInvoice] = useState([]);
   const breadcrumbs = ["Sales", "Manage Sales Invoice"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // modal handler function to open and close
+  const handleOpenModal = (type, salesinvoice = null) => {
+    setModalType(type);
+    setSelectedSaleInvoice(salesinvoice);
+};
+
+const handleCloseModal = () => {
+    setModalType("");
+    setSelectedSaleInvoice(null);
+};
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -153,6 +169,7 @@ const ManageSalesInvoice = () => {
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="Edit"
                           icon={Edit}
+                          onClick={() => handleOpenModal("edit salesinvoice", invoice)} // Pass the managebanktransaction object as a prop
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red" }}
@@ -176,6 +193,14 @@ const ManageSalesInvoice = () => {
           />
         </Paper>
       </Box>
+      {/* Modal */}
+      <AllSalesModal
+       open={!!modalType}
+       handleClose={handleCloseModal}
+       formType={modalType}
+       selectedData={selectedSaleInvoice}
+       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />      
     </Container>
   );
 };

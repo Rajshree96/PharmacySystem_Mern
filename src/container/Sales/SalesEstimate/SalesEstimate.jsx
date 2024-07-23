@@ -25,6 +25,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import {useReactToPrint} from "react-to-print";
 import {format, addDays} from "date-fns";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 // import salesEstimate from "../../../../server/controllers/salesEstimateController";
 
 const style = {
@@ -508,6 +509,7 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
 
     return (
         <Container maxWidth="xl" ref={resumeRef}>
+            <Toaster />
             <Paper sx={{p: 2, mb: 2, ...paperStyles}}>
                 {/* Purchase Order */}
                 <Box sx={{p: 2, mb: 2}}>
