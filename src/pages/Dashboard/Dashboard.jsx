@@ -151,15 +151,31 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
+const convertArrayBufferToBase64 = (arrayBuffer) => {
+  return new Promise((resolve, reject) => {
+    const blob = new Blob([arrayBuffer], { type: 'image/png' });
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64 = reader.result.split(',')[1]; // Remove the data URL prefix
+      resolve(base64);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(blob);
+  });
+};
+
 const Dashboard = () => {
   const [activeComponent, setActiveComponent] = useState("");
 
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [businessDetails, setBusinessDetails] = useState({
-    name: "Loading...",
-    logo: "",
+    name: "Loading..."
   });
+  const [logoUrl, setLogoUrl] = useState('');
 
   useEffect(() => {
     const fetchBusinessDetails = async () => {
@@ -171,21 +187,27 @@ const Dashboard = () => {
           }
         };
         const response = await axios.get('http://localhost:4000/api/v1/business-setup/get', config);
-        console.log("response", response);
-
         setBusinessDetails({
           name: response.data.businessInfo.businessName,
-          logo: response.data.businessInfo.businessLogo,
         });
       } catch (error) {
         console.error('Error fetching business details:', error);
       }
     };
-
+    const fetchLogo = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/v1/business-setup/get-businesslogo', {
+          responseType: 'blob',  // Important: set responseType to 'blob'
+        });
+        const imageUrl = URL.createObjectURL(response.data);
+        setLogoUrl(imageUrl);
+      } catch (error) {
+        console.error('Error fetching the business logo:', error);
+      }
+    };
+    fetchLogo();
     fetchBusinessDetails();
   }, []);
-
-  console.log(businessDetails, "@@@@")
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -345,7 +367,6 @@ const Dashboard = () => {
         open={open}
 
       >
-
         <DrawerHeader sx={{ bgcolor: "#086070" }}>
           <Box
             sx={{
@@ -354,7 +375,11 @@ const Dashboard = () => {
               alignItems: "center",
             }}
           >
-            <img src={businessDetails.businessLogo} height="50px" width="50px" />
+            {logoUrl ? (
+              <img src={logoUrl} alt="Business Logo" height="50px" width="50px" />
+            ) : (
+              <p>Loading logo...</p>
+            )}
             <Typography
               sx={{ fontWeight: "400", color: "white", fontSize: "19px" }}
             >
