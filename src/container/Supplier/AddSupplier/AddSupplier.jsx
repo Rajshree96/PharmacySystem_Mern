@@ -27,6 +27,7 @@ import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import axios from "axios";
 import toast, {Toaster} from "react-hot-toast";
+
 // Responsive design helper functions
 const responsiveFontSize = (minSize, maxSize) => {
     return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - 320px) / (1280 - 320)))`;

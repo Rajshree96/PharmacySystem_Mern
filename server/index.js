@@ -27,7 +27,7 @@ import payOutRouter from "./routes/payOutRoutes.js";
 import expenseRouter from "./routes/expenseRoutes.js";
 import fixedAssetsRouter from "./routes/fixedAssetsRoutes.js";
 import journalRouter from "./routes/journalRouter.js";
-
+import transactionRouter from "./routes/bankTransactionRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -65,6 +65,7 @@ app.use('/api/v1/payout',payOutRouter);
 app.use('/api/v1/expense', expenseRouter);
 app.use('/api/v1/fixedassets', fixedAssetsRouter);
 app.use('/api/v1/journal', journalRouter);
+app.use('/api/v1/transaction', transactionRouter);
 
 
 

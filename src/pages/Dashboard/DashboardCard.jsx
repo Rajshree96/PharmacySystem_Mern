@@ -98,7 +98,7 @@ const useStyles = makeStyles({
   cardTypography: {
     color: "black",
     fontWeight: 700,
-    fontSize: "17px",
+    fontSize: "15px",
     // width: '150px',
     "@media(max-width(600))": {
       width: "auto",

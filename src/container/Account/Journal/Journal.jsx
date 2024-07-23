@@ -23,10 +23,10 @@ import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const initialRow = {
   sno: "",
-  itemCode: "",
   account: "",
   amount: "",  
 };
@@ -99,15 +99,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "sno", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -121,6 +113,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   fullWidth
                   size="small"
                 >
+                                <MenuItem value="" disabled>Select Account No.</MenuItem>
                   {accounts.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
@@ -137,15 +130,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "amount", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>            
               <TableCell sx={{ border: "1px solid white" }}>
@@ -197,15 +182,17 @@ function Journal() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const[journalNo, setJournalNo] = useState("");
+  const[selectedAccount , setSelectedAccount] = useState("");
+  const[narration, setNarration] = useState("");
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -243,6 +230,39 @@ function Journal() {
     content: () => resumeRef.current,
   });
 
+  const handelSubmit = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      let journal = {
+        date,
+        journalNo,
+        selectedAccount,
+       
+        narration,
+        purchaseTable: tables[0].rows.map(row => ({
+          account: row.account,
+          amount: row.amount || 0,
+        })),
+      };
+      
+       const response = await axios.post("http://localhost:4000/api/v1/journal/add",
+        journal,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("income added Successfully:", response.data);
+
+    } catch (error) {
+      console.error('Error adding income:', error)
+    }
+  }
+
+
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -264,10 +284,16 @@ function Journal() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Journal No." fullWidth />
+              <TextField label="Journal No." fullWidth
+              value={journalNo}
+              onChange={(e)=>setJournalNo(e.target.value)}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Select Account" fullWidth>
+              <TextField select label="Select Account" fullWidth
+              value={selectedAccount}
+              onChange={(e)=>setSelectedAccount(e.target.value)}
+              >
               {accounts.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
@@ -297,7 +323,10 @@ function Journal() {
         {/* Narration */}
         <Grid container spacing={2} sx={{ p: 2, mb: 2 }}>
           <Grid item md={3} xs={3}>
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3} 
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
         </Grid>
 
@@ -311,7 +340,7 @@ function Journal() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handelSubmit}>
               Save
             </Button>
             <Button

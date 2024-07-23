@@ -4,12 +4,7 @@ import {
   Box,
   Paper,
   Typography,
-  Grid,
-  TextField,
-  Button,
-  Tooltip,
   Divider,
-  MenuItem,
   TableContainer,
   Table,
   TableHead,
@@ -20,16 +15,19 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
+  Button,
+  styled,
   tableCellClasses
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { AddCircle, Edit, Delete, Visibility } from "@mui/icons-material";
+import axios from "axios";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
 import ViewButton from "../../../common-components/ButtonContainer/ViewButton";
-import { Edit, Delete, Visibility, AddCircle } from "@mui/icons-material";
 import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
-import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
+import toast, { Toaster } from 'react-hot-toast';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -54,10 +52,13 @@ const AddCash = () => {
   const [cash, setCash] = useState([]);
   const [open, setOpen] = useState(false); 
   const [newCash, setNewCash] = useState({ name: "", openingBalance: "" });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState("");
   const breadcrumbs = ["Cash", "Add Cash"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -67,34 +68,33 @@ const AddCash = () => {
     setPage(0);
   };
 
-
-  const fetchCustomer = async () => {
+  const fetchCash = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
       if (!auth || !auth.token) {
         console.error("No token found in local storage");
         return;
       }
-      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
+      const response = await axios.get("http://localhost:4000/api/v1/cash/getAll",        
         {
-          headers: { Authorization: `Bearer ${auth.token}`}
+          headers: { Authorization: `Bearer ${auth.token}`},
         }
       );
-      console.log("API Response:", response.data);
 
-      if (Array.isArray(response.data)) {
-        setCash(response.data);
+      if (response.data && Array.isArray(response.data.cash)) {
+        setCash(response.data.cash);
+        // console.log("####",response);
       } else {
-        console.error("API response does not contain cutomer array:", response.data.result);
+        console.error("API response does not contain cash array:", response.data);
       }
     } catch (error) {
-      console.error("Error fetching manufacturer:", error);
+      console.error("Error fetching cash data:", error);
     }
   };
 
   useEffect(() => {
-    fetchCustomer();
-  }, []);
+    fetchCash();
+  }, [cash]);
 
   const handleDeleteClick = async (_id) => {
     const auth = JSON.parse(localStorage.getItem('auth'));
@@ -104,23 +104,34 @@ const AddCash = () => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+      const response = await axios.delete(`http://localhost:4000/api/v1/cash/delete/${_id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       });
-      console.log("API Response:", response);
+      toast.success("manufacturer deleted successfully");
+      handleClose();
 
-      if (response.data.status === "ok" || response.status === 200) {
-        console.log("Deleted customer with _id code:", _id);
-        fetchCustomer();
+      if (response.data.statusText === "ok" || response.status === 200) {
+        console.log("Deleted cash entry with _id:", _id);
+        fetchCash();
+        // toast.success("Cash entry deleted successfully!");
       } else {
-        console.error("Failed to delete customer:", response.data);
+        toast.error("Failed to delete cash entry.");
       }
     } catch (error) {
-      console.error("Error deleting customer:", error);
+      toast.error("Error deleting cash entry.");
     }
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (item = null) => {
+    if (item) {
+      setNewCash({ name: item.name, openingBalance: item.openingBalance });
+      setEditId(item._id);
+      setIsEditing(true);
+    } else {
+      setNewCash({ name: "", openingBalance: "" });
+      setEditId("");
+      setIsEditing(false);
+    }
     setOpen(true);
   };
 
@@ -136,24 +147,31 @@ const AddCash = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/cutomer/add",
-        newCash,
-        {
-          headers: { Authorization: `Bearer ${auth.token}` }
-        }
-      );
-      console.log("API Response:", response.data);
-
-      if (response.data.status === "ok") {
-        console.log("Added new cash entry:", response.data);
-        fetchCustomer();
+      let response;
+      if (isEditing) {
+        response = await axios.put(
+          `http://localhost:4000/api/v1/cash/edit/${editId}`,
+          newCash,
+          {
+            headers: { Authorization: `Bearer ${auth.token}` }
+          }
+        );
+        toast.success("manufacturer updated successfully");
         handleClose();
       } else {
-        console.error("Failed to add cash entry:", response.data);
+        response = await axios.post(
+          "http://localhost:4000/api/v1/cash/addcash",
+          newCash,
+          {
+            headers: { Authorization: `Bearer ${auth.token}` }
+          }
+        );
+        toast.success("manufacturer added successfully");
+        handleClose();
       }
+     
     } catch (error) {
-      console.error("Error adding cash entry:", error);
+      toast.error(isEditing ? "Error updating cash entry." : "Error adding cash entry.");
     }
   };
 
@@ -161,16 +179,17 @@ const AddCash = () => {
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom >
             Cash
           </Typography>
           <BreadcrumbContainer breadcrumbs={breadcrumbs} />
           <Divider sx={{ my: 2 }} />
           <Button variant="contained" className="btn-design" 
               startIcon={<AddCircle />}
-              onClick={handleClickOpen} >
+              onClick={() => handleClickOpen()} >
             Add Cash
           </Button>
+
           <TableContainer component={Paper} sx={{ mt: 2 }}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
@@ -182,13 +201,13 @@ const AddCash = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cash.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((cash, index) => (
-                  <StyledTableRow key={cash._id}>
+                {cash.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                  <StyledTableRow key={item._id}>
                     <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {cash.name}
+                      {item.name}
                     </StyledTableCell>
-                    <StyledTableCell>{cash.openingBalance}</StyledTableCell>
+                    <StyledTableCell>{item.openingBalance}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "center" }}
@@ -202,12 +221,13 @@ const AddCash = () => {
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
+                          onClick={() => handleClickOpen(item)}
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red" }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(cash._id)}
+                          onClick={() => handleDeleteClick(item._id)}
                         />
                       </Box>
                     </StyledTableCell>
@@ -217,18 +237,17 @@ const AddCash = () => {
             </Table>
           </TableContainer>
           <TablePaginations
-        count={cash.length}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-          
+            count={cash.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />          
         </Paper>
       </Box>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Cash</DialogTitle>
+        <DialogTitle>{isEditing ? "Edit Cash" : "Add Cash"}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -251,12 +270,14 @@ const AddCash = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}  >Cancel</Button>
+          <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleSave} variant="contained" className="btn-design">
             Save
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Toaster />
     </Container>
   );
 };

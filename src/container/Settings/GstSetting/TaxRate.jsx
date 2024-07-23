@@ -1,8 +1,36 @@
 import React, { useState } from 'react';
 import {
-  Container, Typography, TextField, Button, Box, Grid, Paper, IconButton, Modal
+  Container, Typography, TextField, Button, Box, Grid, Paper, IconButton, Modal,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  styled,
+  TableBody,
+  tableCellClasses
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Edit, Delete } from "@mui/icons-material";
+import EditButton from '../../../common-components/ButtonContainer/EditButton';
+import DeleteButton from '../../../common-components/ButtonContainer/DeleteButton';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#086070",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    // backgroundColor: theme.palette.action.hover,
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 const TaxRate = () => {
   const [taxName, setTaxName] = useState('');
@@ -44,17 +72,16 @@ const TaxRate = () => {
   };
 
   return (
-    <> 
+    <>
 
-      <Grid container spacing={4} mt={5}>
+      <Grid container spacing={4} mt={2} mb={7}>
         <Grid item xs={12} md={12}>
           <Paper elevation={3} style={{ padding: 16 }}>
-            <Typography variant="h5" align="center" gutterBottom>
+            <Typography variant="h6" align="start" gutterBottom>
               Create Tax Rate
             </Typography>
             <Box component="form" noValidate autoComplete="off">
               <Grid container spacing={2}>
-               
                 <Grid item md={4}>
                   <TextField
                     fullWidth
@@ -64,43 +91,54 @@ const TaxRate = () => {
                     value={taxRate}
                     onChange={(e) => setTaxRate(e.target.value)}
                   />
-               
                   <Box display="flex" justifyContent="start" mt={2}>
-                    <Button variant="contained" color="primary" onClick={handleSave}>
+                    <Button variant="contained" className='btn-design' onClick={handleSave}>
                       {editIndex !== null ? 'Update' : 'Save'}
                     </Button>
                   </Box>
                 </Grid>
               </Grid>
-            </Box>      
+            </Box>
 
-        <Grid item xs={12}>
-            <Grid container alignItems="center" style={{ padding: 5, marginTop: 16 }}>              
-              <Grid item xs={4}>
-                <Typography variant="h6">Tax Rate (%)</Typography>
-              </Grid>
-              <Grid item xs={4} style={{ textAlign: 'right' }}>
-                <Typography variant="h6">Actions</Typography>
+            <Grid item xs={12}>
+              <Grid container alignItems="center" style={{ padding: 5, marginTop: 16 }}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>Tax Rate (%)</StyledTableCell>
+                      <StyledTableCell sx={{ textAlign: 'center' }}>Action</StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {savedTaxRates.map((tax, index) => (
+                      <StyledTableRow>
+                        <StyledTableCell>{tax.rate}</StyledTableCell>
+
+                        <StyledTableCell>
+                          <Box
+                            style={{ display: "flex", justifyContent: "center" }}
+                          >
+                            <EditButton
+                              sx={{ mr: 1, color: "#1976d2" }}
+                              label="edit"
+                              icon={Edit}
+                              onClick={() => handleEdit(index)}
+                            />
+                            <DeleteButton
+                              sx={{ mr: 1, color: "red" }}
+                              label="delete"
+                              icon={Delete}
+                              onClick={() => handleDelete(index)}
+                            />
+                          </Box>
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </Grid>
             </Grid>
-
-          {savedTaxRates.map((tax, index) => (
-              <Grid container alignItems="center" style={{ padding: 5 }}>               
-                <Grid item xs={4}>
-                  <Typography variant="h6">{tax.rate}</Typography>
-                </Grid>
-                <Grid item xs={4} style={{ textAlign: 'right' }}>
-                  <IconButton onClick={() => handleEdit(index)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(index)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-          ))}
-        </Grid>
-        </Paper>
+          </Paper>
         </Grid>
       </Grid>
 
@@ -109,7 +147,7 @@ const TaxRate = () => {
           <Typography variant="h6" align="center" gutterBottom>
             Edit Tax Rate
           </Typography>
-          <Grid container spacing={2}>           
+          <Grid container spacing={2}>
             <Grid item md={6}>
               <TextField
                 fullWidth
@@ -122,7 +160,7 @@ const TaxRate = () => {
             </Grid>
           </Grid>
           <Box display="flex" justifyContent="center" mt={2}>
-            <Button variant="contained" color="primary" onClick={handleSave}>
+            <Button variant="contained" className='btn-design' onClick={handleSave}>
               Update
             </Button>
           </Box>

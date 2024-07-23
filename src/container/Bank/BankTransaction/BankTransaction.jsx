@@ -124,13 +124,24 @@ const TransactionForm = ({ type, handleSave }) => {
         />
         <CardContent>
 
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-        <DatePicker label="Basic date picker" />
-      </DemoContainer>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Grid item md={12} xs={12} sx={{ mb:'12px'}} >        
+        <DatePicker
+          label="Select date"
+          InputLabelProps={{ shrink: true }}
+            variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <DateRange />
+                </InputAdornment>
+              ),
+            }}
+        />
+      </Grid>
     </LocalizationProvider>
 
-
+{/* 
           <StyledTextField
             fullWidth
             label="Date"
@@ -144,7 +155,7 @@ const TransactionForm = ({ type, handleSave }) => {
                 </InputAdornment>
               ),
             }}
-          />
+          /> */}
           <StyledTextField
             fullWidth
             label="Contra No"

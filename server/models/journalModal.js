@@ -8,24 +8,28 @@ const journalSchema = new mongoose.Schema({
     journalNo:{
         type:Number,
         required:true,
+        unique:true
     },
     selectedAccount:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"FixedAssets",
-        required:true,
-    },
-    account:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"FixedAssets",
-        required:true,
-    },
-    amount:{
-        type:Number,
-        required:true,
-    },
-    narration:{
         type:String,
+        required:true,
     },
+   
+        purchaseTable:[{
+            account:{
+               type:String,
+               required:true,
+            },
+            amount:{
+               type:String,
+               required:true,
+            },
+          
+          }],
+          narration:{
+            type:String,
+        }
+        
 },{timestamps:true})
 
 

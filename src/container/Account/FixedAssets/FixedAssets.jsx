@@ -24,6 +24,7 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -38,17 +39,16 @@ const style = {
 
 const initialRow = {
   sno: "",
-  itemCode: "",
   assetsName: "",
   qty: "",
-  amount: "",
   uom:"",
   rate: "",
   taxValue: "",
-  cgst: "",
-  igst: "",
-  sgst: "",
-  totalValue: "",
+  cGst: "",
+  iGst: "",
+  sGst: "",
+  taxableValue: "",
+  totalValue:"",
 };
 
 
@@ -184,15 +184,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "sno", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -204,15 +196,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "assetsName", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -224,15 +208,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "qty", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -244,15 +220,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "uom", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -264,95 +232,55 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "rate", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>              
               <TableCell
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.taxValue}
+                  value={row.taxableValue}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "taxValue", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                    handleInputChange(index, "taxableValue", e.target.value)
+                  }                 
                 />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.cgst}
+                  value={row.cGst}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "cgst", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                    handleInputChange(index, "cGst", e.target.value)
+                  }                 
                 />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.sgst}
+                  value={row.sGst}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "sgst", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                    handleInputChange(index, "sGst", e.target.value)
+                  }                 
                 />
               </TableCell>
               <TableCell
                 sx={{ border: "1px solid grey", width: 150, height: 25 }}
               >
                 <TextField
-                  value={row.igst}
+                  value={row.iGst}
                   fullWidth
                   size="small"
                   onChange={(e) =>
-                    handleInputChange(index, "igst", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                    handleInputChange(index, "iGst", e.target.value)
+                  }                 
                 />
               </TableCell>
               <TableCell
@@ -364,15 +292,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                   size="small"
                   onChange={(e) =>
                     handleInputChange(index, "totalValue", e.target.value)
-                  }
-                  InputProps={{
-                    sx: {
-                      border: "none",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
+                  }                 
                 />
               </TableCell>              
               <TableCell sx={{ border: "1px solid white" }}>
@@ -445,19 +365,26 @@ function FixedAssets() {
     },
   ]);
   const [date, setDate] = useState("");
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [invoiceNo, setIncomeNo] = useState("");
+  const [supplierInvoiceNo, setSupplierIncomeNo] = useState("");
+  const [supplierName, setSupplierName] = useState("");
+  const [placeOfSupply, setPlaceOfSupply] = useState("");
+  const[taxType, setTaxType]= useState("");
+  const[grossTotal,setGrossAmount]=useState('')
+  const[gstAmount,setGstAmount]=useState('')
+  const[netAmount,setNetAmount]=useState('')
   const [charges, setCharges] = useState([]);
   const [totalCharges, setTotalCharges] = useState(0);
   const [currentCharge, setCurrentCharge] = useState('');
+  const [narration, setNarration] = useState("");
 
 
-  useEffect(() => {
-    if (date && paymentTerms) {
-      const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
-      setDueDate(format(newDueDate, "yyyy-MM-dd"));
-    }
-  }, [date, paymentTerms]);
+  // useEffect(() => {
+  //   if (date && paymentTerms) {
+  //     const newDueDate = addDays(new Date(date), parseInt(paymentTerms));
+  //     setDueDate(format(newDueDate, "yyyy-MM-dd"));
+  //   }
+  // }, [date, paymentTerms]);
 
   const handleAddRow = (tableId) => {
     setTables(
@@ -509,6 +436,61 @@ function FixedAssets() {
     setOpen(false);
   };
 
+
+
+  const addFixedAssests = async(fixedAssets)=>{
+    console.log(fixedAssets);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/fixedassets/add',
+        fixedAssets,
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("FixedAssets  response", response);
+       if (response.data.status === 201) {
+        console.log("FixedAsstes created successfully ");
+        } 
+    } catch (error) {
+      console.log("Somthing went wrong");
+
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault(); 
+   
+    const fixedAssets = {
+      date: date,
+      invoiceNo: invoiceNo,
+      supplierInvoiceNo: supplierInvoiceNo,
+      supplierName: supplierName,
+      placeOfSupply: placeOfSupply,
+      taxType: taxType,
+      purchaseTable: tables[0].rows,
+      grossTotal: parseFloat(grossTotal) || 0,
+      gstAmount: parseFloat(gstAmount) || 0, 
+      otherCharge: totalCharges,
+      netAmount: parseFloat(netAmount) || 0,
+      Narration:narration
+  };
+  
+    try {
+      await addFixedAssests(fixedAssets);
+      // handleAddMedicine();
+      
+    } catch (error) {
+      console.error('Error adding fixedAssets:', error);
+      
+    }
+  };
+  console.log(tables)
+
   return (
     <Container maxWidth="xl" ref={resumeRef}>
       <Paper sx={{ p: 2, mb: 2 }}>
@@ -530,25 +512,40 @@ function FixedAssets() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Income No." fullWidth />
+              <TextField label="Income No." fullWidth
+              value={invoiceNo}
+              onChange={(e)=>setIncomeNo(e.target.value)}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Supplier Income No." fullWidth />
+              <TextField label="Supplier Income No." fullWidth 
+              value={supplierInvoiceNo}
+              onChange={(e)=> setSupplierIncomeNo(e.target.value)}
+              />
             </Grid>           
             <Grid item xs={3}>
-              <TextField select label="Supplier Name" fullWidth>
+              <TextField select label="Supplier Name" fullWidth
+               value={supplierName}
+               onChange={(e)=>setSupplierName(e.target.value)}
+              >
                 <MenuItem value="Supplier1">Supplier1</MenuItem>
                 <MenuItem value="Supplier2">Supplier2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Place of Supply" fullWidth>
+              <TextField select label="Place of Supply" fullWidth
+              value={placeOfSupply}
+              onChange={(e)=>setPlaceOfSupply(e.target.value)}
+              >
                 <MenuItem value="Supply1">Supply1</MenuItem>
                 <MenuItem value="Supply2">Supply2</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={3}>
-              <TextField select label="Tax Type" fullWidth>
+              <TextField select label="Tax Type" fullWidth
+              value={taxType}
+              onChange={(e)=>setTaxType(e.target.value)}
+              >
                 <MenuItem value="GST @ 5% (CGST 2.5% +SGST 2.5%)">GST @ 5% (CGST 2.5% +SGST 2.5%)</MenuItem>
                 <MenuItem value="GST @12% (CGST 6% +SGST 6%)">GST @12% (CGST 6% +SGST 6%)</MenuItem>
                 <MenuItem value="GST @18% (CGST 9% +SGST 9%)">GST @18% (CGST 9% +SGST 9%)</MenuItem>
@@ -601,21 +598,42 @@ function FixedAssets() {
                 </Grid>
               </Grid>
             </Modal>   
-            <TextField label="Narration" fullWidth multiline rows={3} />
+            <TextField label="Narration" fullWidth multiline rows={3}
+            value={narration}
+            onChange={(e)=>setNarration(e.target.value)}
+            />
           </Grid>
           {/* Gross Amount */}
           <Grid item md={8} xs={8}>
             <Box
               style={{ display: "grid", justifyContent: "center", gap: "15px" }}
             >
-              <TextField label="Gross Amount" fullWidth />
-              <TextField label="GST Amount" fullWidth />
+              <TextField label="Gross Amount" fullWidth 
+              value={grossTotal}
+              onChange={(e)=>setGrossAmount(e.target.value)}
+              InputProps={{
+                readOnly: true,
+              }}
+              />
+              <TextField label="GST Amount" fullWidth
+              value={gstAmount}
+              onChange={(e)=>setGstAmount(e.target.value)}
+              InputProps={{
+                readOnly: true,
+              }}
+              />
               <TextField label="Other Charge" fullWidth
                value={totalCharges}
                InputProps={{
                  readOnly: true,
                }} />
-              <TextField label="Net Amount" fullWidth />
+              <TextField label="Net Amount" fullWidth 
+              value={netAmount}
+              onChange={(e)=>setNetAmount(e.target.value)}
+              InputProps={{
+                readOnly: true,
+              }}
+              />
             </Box>
           </Grid>
         </Grid>
@@ -630,7 +648,7 @@ function FixedAssets() {
             xs={12}
             sx={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button variant="contained" className="btn-design">
+            <Button variant="contained" className="btn-design" onClick={handleSubmit}>
               Save
             </Button>
 

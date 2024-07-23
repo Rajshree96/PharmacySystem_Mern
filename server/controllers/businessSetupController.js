@@ -1,6 +1,7 @@
 import multer from 'multer';
 import SetUpBusiness from '../models/setUpBusinessModel.js';
 import path from 'path'
+import fs from 'fs';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -62,3 +63,26 @@ export const getBusinessSetup = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
+
+export async function getBusinessLogoController(req, res) {
+  try {
+    const businessSetup = await SetUpBusiness.findOne();
+    if (!businessSetup || !businessSetup.businessInfo.businessLogo) {
+      return res.status(404).json({ message: "Business logo not found" });
+    }
+
+    const logoPath = businessSetup.businessInfo.businessLogo;
+
+    // Check if the file exists
+    if (fs.existsSync(logoPath)) {
+      res.sendFile(path.resolve(logoPath));
+    } else {
+      res.status(404).json({ message: "File not found" });
+    }
+  } catch (error) {
+    console.error('Error in getBusinessLogoController:', error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
