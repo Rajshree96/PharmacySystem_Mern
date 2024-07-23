@@ -26,6 +26,7 @@ import EditButton from "../../../common-components/ButtonContainer/EditButton";
 import DeleteButton from "../../../common-components/ButtonContainer/DeleteButton";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
+import AllSalesModal from "../../../common-components/Modals/saleModals/AllSalesModal";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,11 +48,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManageSalesEstimate = () => {
+
+  const [ modalType, setModalType ] = useState("");
+  const [ selectedSaleEstimate, setSelectedSaleEstimate ] = useState(null);
+  
+
   const [saleEstimate, setSaleEstimate] = useState([]);
   const breadcrumbs = ["Sales", "Manage Sales Estimate"];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // modal handler function to open and close
+  const handleOpenModal = (type, salesestimate = null) => {
+    setModalType(type);
+    setSelectedSaleEstimate(salesestimate);
+};
+
+const handleCloseModal = () => {
+    setModalType("");
+    setSelectedSaleEstimate(null);
+};
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -165,6 +183,7 @@ const ManageSalesEstimate = () => {
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
+                          onClick={() => handleOpenModal("edit salesestimate", saleEstimate)} // Pass the managebanktransaction object as a prop
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
@@ -192,6 +211,15 @@ const ManageSalesEstimate = () => {
 
         </Paper>
       </Box>
+                
+      {/* Modal */}
+      <AllSalesModal
+       open={!!modalType}
+       handleClose={handleCloseModal}
+       formType={modalType}
+       selectedData={selectedSaleEstimate}
+       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />           
     </Container>
   );
 };
