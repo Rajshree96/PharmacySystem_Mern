@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -33,6 +33,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import axios from "axios";
+import dayjs from "dayjs";
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: 300,
@@ -76,15 +78,15 @@ const MotionPaper = styled(motion(Paper))({
 
 const transactionTypes = [
   {
-    value: "bankToBank",
-    title: "Bank to Bank Transaction",
+    value: "Bank to Bank",
+    title: "Bank to Bank",
     fromAccountLabel: "Bank Name",
     toAccountLabel: "Bank Name",
     fromAccountIcon: <AccountBalance />,
     toAccountIcon: <AccountBalance />,
   },
   {
-    value: "cashDeposit",
+    value: "Cash Deposit in Bank",
     title: "Cash Deposit in Bank",
     fromAccountLabel: "Cash",
     toAccountLabel: "Bank Name",
@@ -92,8 +94,8 @@ const transactionTypes = [
     toAccountIcon: <AccountBalance />,
   },
   {
-    value: "cashWithdraw",
-    title: "Cash Withdraw from Bank",
+    value: "Cash Withdrawal from Bank",
+    title: "Cash Withdrawal from Bank",
     fromAccountLabel: "Bank Name",
     toAccountLabel: "Cash",
     fromAccountIcon: <AccountBalance />,
@@ -102,8 +104,31 @@ const transactionTypes = [
 ];
 
 const TransactionForm = ({ type, handleSave }) => {
+
+  const [formData, setFormData] = useState({
+    date: null,
+    contraNo: "",
+    fromAccount: "",
+    toAccount: "",
+    amount: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // const handleDateChange = (date) => {
+  //   setFormData({ ...formData, date: date.format('YYYY-MM-DD') });
+  // };
+
+  const handleDateChange = (newDate) => {
+    setFormData({ ...formData, date: newDate });
+  };
+
   const transaction = transactionTypes.find((t) => t.value === type);
   if (!transaction) return null;
+
+  
 
   return (
     <Grid item xs={12} md={6} lg={4}>
@@ -128,15 +153,18 @@ const TransactionForm = ({ type, handleSave }) => {
       <Grid item md={12} xs={12} sx={{ mb:'12px'}} >        
         <DatePicker
           label="Select date"
-          InputLabelProps={{ shrink: true }}
+          value={formData.date}
+          onChange={handleDateChange}
+          // InputLabelProps={{ shrink: true }}
             variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <DateRange />
-                </InputAdornment>
-              ),
-            }}
+            // InputProps={{
+            //   startAdornment: (
+            //     <InputAdornment position="start">
+            //       <DateRange />
+            //     </InputAdornment>
+            //   ),
+            // }}
+            renderInput={(params) => <TextField {...params} />}
         />
       </Grid>
     </LocalizationProvider>
@@ -159,6 +187,9 @@ const TransactionForm = ({ type, handleSave }) => {
           <StyledTextField
             fullWidth
             label="Contra No"
+             name="contraNo"
+             value={formData.contraNo}
+             onChange={handleChange}
             variant="outlined"
             InputProps={{
               startAdornment: (
@@ -171,6 +202,9 @@ const TransactionForm = ({ type, handleSave }) => {
           <StyledTextField
             fullWidth
             label="From Account"
+            name="fromAccount"
+            value={formData.fromAccount}
+            onChange={handleChange}
             variant="outlined"
             helperText={transaction.fromAccountLabel}
             InputProps={{
@@ -181,9 +215,14 @@ const TransactionForm = ({ type, handleSave }) => {
               ),
             }}
           />
+
+            
           <StyledTextField
             fullWidth
             label="To Account"
+            name="toAccount"
+            value={formData.toAccount}
+            onChange={handleChange}
             variant="outlined"
             helperText={transaction.toAccountLabel}
             InputProps={{
@@ -194,11 +233,30 @@ const TransactionForm = ({ type, handleSave }) => {
               ),
             }}
           />
+            {(type === 'cashDeposit' || type === 'Cash Withdrawal from Bank') && (
+            <StyledTextField
+              fullWidth
+              label="Amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              variant="outlined"
+              type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoney />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+
           <Box sx={{ textAlign: "center" }}>
             <StyledButton
               variant="contained"
               startIcon={<Save />}
-              onClick={handleSave}
+              onClick={() => handleSave(formData)}
               component={motion.div}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -215,15 +273,45 @@ const TransactionForm = ({ type, handleSave }) => {
 const BankTransaction = () => {
   const [transactionType, setTransactionType] = useState("");
   const [isSaved, setIsSaved] = useState(false);
+  const handleSave = async (formData) => {
+    // const transactionTitle = transactionTypes.find(
+    //   (t) => t.value === transactionType
+    // )?.title;
+    // toast.success(`${transactionTitle} saved`);
+    // setIsSaved(true);
+    try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+        toast.error("No authentication token found");
+        return;
+      }
 
-  const handleSave = () => {
-    const transactionTitle = transactionTypes.find(
-      (t) => t.value === transactionType
-    )?.title;
-    toast.success(`${transactionTitle} saved`);
-    setIsSaved(true);
+      const transactionData = {
+        transactionType: transactionTypes.find(t => t.value === transactionType).title,
+        ...formData,
+        date: formData.date ? dayjs(formData.date).format('YYYY-MM-DD') : null, // Format the date
+
+      };
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/transaction/add",
+        transactionData,
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        }
+      );
+      toast.success(`${transactionData.transactionType} saved`);
+      setIsSaved(true);
+      console.log("response", response);
+
+    } catch (error) {
+      toast.error(`Error saving transaction: ${error.response?.data?.message || error.message}`);
+
+    }
   };
 
+
+
+  
   return (
     <Container maxWidth="xl" sx={{ mt: 5, mb: 5 }}>
       <Toaster />

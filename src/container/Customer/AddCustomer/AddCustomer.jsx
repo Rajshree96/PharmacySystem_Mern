@@ -283,7 +283,7 @@ const resetForm = () => {
 
       const auth = JSON.parse(localStorage.getItem("auth"));
       const response = await axios.post(
-        "http://localhost:4000/api/v1/cutomer/add",
+        "http://localhost:4000/api/v1/customer/add",
         customerDetails,
         {
           headers: {
@@ -320,6 +320,7 @@ const resetForm = () => {
   const handleSaveCustomer = async () => {
     try {
         if (formType === "edit customer") {
+          
             console.log("Customer updated successfully");
         }
         else {
