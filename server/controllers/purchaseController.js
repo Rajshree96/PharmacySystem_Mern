@@ -97,6 +97,15 @@ export const getAllPurchases = async (req, res) => {
     }
 };
  
+export async function getAllOrderNumber(req, res) {
+    try {
+        const purchases = await Purchase.find({}, 'orderNo'); // Only select the orderNo field
+        const orderNumbers = purchases.map(purchase => purchase.orderNo);
+        res.status(200).json(orderNumbers);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to retrieve order numbers", error: error.message });
+    }
+}
 // Update a purchase record
 export const updatePurchase = async (req, res) => {
     const { id } = req.params;

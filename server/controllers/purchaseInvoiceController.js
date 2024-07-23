@@ -45,8 +45,8 @@ export const addPurchaseInvoice = async (req, res) => {
         
         const newPurchase =  new PurchaseInvoice({
             date: req.body.date,
-            invoiceNo: req.body.invoiceNo,
-            supplierInvoiceNo:req.body.supplierInvoiceNo,
+            orderNo: req.body.orderNo,
+            invoiceNo:req.body.invoiceNo,
             supplierName: req.body.supplierName,
             placeOfSupply: req.body.placeOfSupply,
             paymentTerm: req.body.paymentTerm,
