@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   styled,
   useTheme,
@@ -33,6 +33,8 @@ import { Bar, Line } from "react-chartjs-2";
 import "chart.js/auto";
 import hexToRgba from "hex-to-rgba";
 import SalesEstimate from "../../container/Sales/SalesEstimate/SalesEstimate"
+import { getAllCategories } from "../../categoriesApi";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -222,28 +224,139 @@ const MiniLineGraph = ({ color }) => {
 
 const DashboardCard = () => {
   const classes = useStyles();
+  const [customers, setCustomers] = useState([]);
+  const [ manufacturer, setmanufacturer ] = useState([]);
+   const[medicines, setMedcine] = useState([]);
+   const [invoices, setInvoice] = useState([]);
+
+
+  useEffect(() => {
+    fetchCustomer();
+  }, []);
+  
+
+  const fetchCustomer = async () => {
+    try {
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+        }
+        const response = await axios.get("http://localhost:4000/api/v1/customer/getall", {
+            headers: {Authorization: `Bearer ${auth.token}`},
+        });
+        console.log("API Response:", response);
+
+        if (Array.isArray(response.data)) {
+              setCustomers(response.data);
+        }
+        else {
+            console.error("API response does not contain cutomer array:", response.data);
+        }
+    } catch (error) {
+        console.error("Error fetching manufacturer:", error);
+    }
+};
+
+const fetchManufacturer = async () => {
+  try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+          console.error("No token found in local storage");
+          return;
+      }
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getAllManufacturer", {
+          headers: {Authorization: `Bearer ${auth.token}`},
+      });
+      console.log("API Response:", response.data.result);
+
+      if (Array.isArray(response.data.result)) {
+          setmanufacturer(response.data.result);
+      }
+      else {
+          console.error("API response does not contain manufacturer array:", response.data);
+      }
+  } catch (error) {
+      console.error("Error fetching manufacturer:", error);
+  }
+};
+
+useEffect(() => {
+  fetchManufacturer();
+  fetchMedicine();
+  fetchSales();
+}, []);
+
+
+
+
+const fetchMedicine = async () => {
+  try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+          console.error("No token found in local storage");
+          return;
+      }
+      const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", {
+          headers: {Authorization: `Bearer ${auth.token}`},
+      });
+      console.log("API Response:", response.data.result);
+
+      if (Array.isArray(response.data.result)) {
+           setMedcine(response.data.result);
+      }
+      else {
+          console.error("API response does not contain medicine array:", response.data);
+      }
+  } catch (error) {
+      console.error("Error fetching medcine:", error);
+  }
+};
+
+
+const fetchSales = async () => {
+  try {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+    const response = await axios.get("http://localhost:4000/api/v1/salesinvoice/getAll", {
+      headers: { Authorization: `Bearer ${auth.token}` }
+    });
+    console.log("API Response:", response.data);
+
+    if (Array.isArray(response.data)) {
+      setInvoice(response.data);
+    } else {
+      console.error("API response does not contain invoice array:", response.data.result);
+    }
+  } catch (error) {
+    console.error("Error fetching invoice:", error);
+  }
+};
   const cardData = [
     {
       img: customer,
-      end: 180,
+      end: customers.length,
       color: "#78A75A",
       title: "Total Customer",
     },
     {
       img: store,
-      end: 120,
+      end: manufacturer.length,
       color: "#EA33F7",
       title: "Total Manufacturer",
     },
     {
       img: medicine,
-      end: 70,
+      end: medicines.length,
       color: "#2854C5",
       title: "Total Medicine",
     },
     { img: inventry, end: 89, color: "#BB271A", title: "Out of Stock" },
     { img: expire, end: 56, color: "#8C1AF6", title: "Expired" },
-    { img: invoice, end: 69, color: "#F19E39", title: "Total Invoice" },
+    { img: invoice, end: invoices.length, color: "#F19E39", title: "Total Invoice" },
   ];
   const pieData = [
     { title: "Total Medicine", value: 10, color: "#E38627" },

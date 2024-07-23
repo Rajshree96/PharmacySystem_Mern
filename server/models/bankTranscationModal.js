@@ -31,7 +31,7 @@ const bankTransactionSchema = new mongoose.Schema({
         amount:{
             type:Number,
             required: function() { 
-                return this.transactionType === 'Cash Deposit in Bank' || this.transactionType === 'Cash Withdrawal from Bank'; 
+                return  this.transactionType === 'Cash Withdrawal from Bank'; 
             },
 
         }

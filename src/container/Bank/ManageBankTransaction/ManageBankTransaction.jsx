@@ -77,58 +77,57 @@ const handleCloseModal = () => {
   };
 
 
-  const fetchCustomer = async () => {
+  const fetchTransactions = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
-    }
-      const response = await axios.get("http://localhost:4000/api/v1/cutomer/getall",
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+      }
+      const response = await axios.get("http://localhost:4000/api/v1/transaction/getAll",
         {
           headers: { Authorization: `Bearer ${auth.token}`}
-         }
+        }
       );
       console.log("API Response:", response.data);
 
-      if (Array.isArray(response.data)) {
-        setTransaction(response.data);
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setTransaction(response.data.data);
       } else {
-        console.error("API response does not contain cutomer array:", response.data.result);
+        console.error("API response does not contain transaction array:", response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching manufacturer:", error);
+      console.error("Error fetching transactions:", error);
     }
   };
-
   useEffect(() => {
-    fetchCustomer();
-    
+    fetchTransactions();
   }, []);
 
-  const handleDeleteClick = async (_id) => {
-    const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
-    }
 
-    try {
-      const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
-        headers: { Authorization: `Bearer ${auth.token}` }
-      });
-      console.log("API Response:", response);
+  // const handleDeleteClick = async (_id) => {
+  //   const auth = JSON.parse(localStorage.getItem('auth'));
+  //   if (!auth || !auth.token) {
+  //     console.error("No token found in local storage");
+  //     return;
+  //   }
 
-      if (response.data.status === "ok" || response.status === 200) {
-        console.log("Deleted customer with _id code:", _id);
-        fetchCustomer();
-      } else {
-        console.error("Failed to delete customer:", response.data);
-      }
-    } catch (error) {
-      console.error("Error deleting customer:", error);
-    }
-  };
+  //   try {
+  //     const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+  //       headers: { Authorization: `Bearer ${auth.token}` }
+  //     });
+  //     console.log("API Response:", response);
+
+  //     if (response.data.status === "ok" || response.status === 200) {
+  //       console.log("Deleted customer with _id code:", _id);
+  //       fetchCustomer();
+  //     } else {
+  //       console.error("Failed to delete customer:", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting customer:", error);
+  //   }
+  // };
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -159,8 +158,8 @@ const handleCloseModal = () => {
                     <StyledTableCell component="th" scope="row">
                       {transaction.date}
                     </StyledTableCell>
-                    <StyledTableCell>{transaction.type}</StyledTableCell>
-                    <StyledTableCell>{transaction.contraNumber}</StyledTableCell>
+                    <StyledTableCell>{transaction.transactionType}</StyledTableCell>
+                    <StyledTableCell>{transaction.contraNo}</StyledTableCell>
                     <StyledTableCell>{transaction.amount}</StyledTableCell>
                     <StyledTableCell>
                       <Box
@@ -181,7 +180,7 @@ const handleCloseModal = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          onClick={() => handleDeleteClick(transaction._id)}
+                          // onClick={() => handleDeleteClick(transaction._id)}
                         />                    
                       </Box>
                     </StyledTableCell>

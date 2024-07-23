@@ -28,6 +28,7 @@ import expenseRouter from "./routes/expenseRoutes.js";
 import fixedAssetsRouter from "./routes/fixedAssetsRoutes.js";
 import journalRouter from "./routes/journalRouter.js";
 import transactionRouter from "./routes/bankTransactionRoutes.js";
+import purchaseInvoiceRoute from "./routes/purchaseInvoiceRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -49,6 +50,7 @@ app.use('/api/v1/medicine-type', medicineRouter);
 app.use("/api/v1/brand", brandRoutes);
 app.use("/api/v1/customer", cutomerRouter);
 app.use("/api/v1/purchase", purchaseRoute);
+app.use('/api/v1/purchase-invoice',purchaseInvoiceRoute)
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/purchase-retrun", purchaseRouter);
 app.use("/api/v1/bank", bankRouter);

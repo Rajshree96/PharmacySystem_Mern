@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const PurchaseInvoiceSchema = new mongoose.Schema({
     date: { type: String, required: true },
     invoiceNo: { type: String, required: true },
+    supplierInvoiceNo:{type:Number,required:true},
     supplierName: { type: String, required: true },
     placeOfSupply: { type: String, required: true },
     paymentTerm: { type: String, required: true },

@@ -22,8 +22,9 @@ export const createTransaction = async (req, res) => {
                         transactionType,
                         date,
                         contraNo,
-                        toAccount,  
                         amount,
+                        toAccount,  
+                        
                        
                        
  
@@ -34,13 +35,22 @@ export const createTransaction = async (req, res) => {
                             transactionType,
                             date,
                             contraNo,
-                            fromAccount,
                             amount,
+                            fromAccount,
+                            
                           
                         });
                         break;
                         default:
                             return res.status(400).json({ message: 'Invalid transaction type' });
+                    }
+
+                    const validationError = transaction.validateSync(); // This will synchronously validate the schema
+ 
+                    if (validationError) {
+                        // If validation fails, respond with a 400 Bad Request status and error details
+                        console.log(validationError.message)
+                        return res.status(400).json({ message: validationError.message });
                     }
                     await transaction.save();
                     res.status(201).json({ message: 'Transaction created successfully', transaction });
@@ -55,5 +65,22 @@ export const createTransaction = async (req, res) => {
                     res.status(200).json(transactions);
                 } catch (error) {
                     res.status(400).json({ message: 'Failed to fetch transactions', error: error.message });
+                }
+            };
+
+            export const getAllTransactions = async (req, res) => {
+                try {
+                    const transactions = await Transaction.find().sort({ createdAt: -1 }); // Sort by creation date, newest first
+                    res.status(200).json({
+                        success: true,
+                        count: transactions.length,
+                        data: transactions
+                    });
+                } catch (error) {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Server Error',
+                        error: error.message
+                    });
                 }
             };
