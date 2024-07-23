@@ -16,7 +16,6 @@ const GstSetting = () => {
             </Typography>
             <TaxType />
             <TaxRate/>
-
         </Container>
     );
 };

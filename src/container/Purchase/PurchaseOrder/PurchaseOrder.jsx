@@ -27,6 +27,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
 import PurchasePayment from "../PurchaseInvoice/PurchasePayment"
+import PurchaseOrderPayment from "../PurchaseOrder/PurchaseOrderPayment";
 
 import axios from "axios";
 const style = {
@@ -171,14 +172,14 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     fullWidth
                                     size="small"
                                     onChange={(e) => handleInputChange(index, "sno", e.target.value)}
-                                    // InputProps={{
-                                    //     sx: {
-                                    //         border: "none",
-                                    //         "& .MuiOutlinedInput-notchedOutline": {
-                                    //             border: "none",
-                                    //         },
-                                    //     },
-                                    // }}
+                                // InputProps={{
+                                //     sx: {
+                                //         border: "none",
+                                //         "& .MuiOutlinedInput-notchedOutline": {
+                                //             border: "none",
+                                //         },
+                                //     },
+                                // }}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -186,14 +187,14 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.itemCode}
                                     fullWidth
                                     size="small"
-                                    // onChange={(e) =>
-                                    //   handleInputChange(index, "itemCode", e.target.value)
-                                    // }                                  
+                                // onChange={(e) =>
+                                //   handleInputChange(index, "itemCode", e.target.value)
+                                // }                                  
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
                                 <Select value={selectedMedicine} onChange={handleProductChange} fullWidth size="small">
-                                <MenuItem value="" disabled>Select Product</MenuItem>
+                                    <MenuItem value="" disabled>Select Product</MenuItem>
                                     {medicine.map((med) => (
                                         <MenuItem key={med._id} value={med._id}>
                                             {med.medicineName}
@@ -206,7 +207,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.qty}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "qty", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "qty", e.target.value)}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -214,7 +215,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.freeQty}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "freeQty", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "freeQty", e.target.value)}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -222,9 +223,9 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.mrp}
                                     fullWidth
                                     size="small"
-                                    // onChange={(e) =>
-                                    //   handleInputChange(index, "mrp", e.target.value)
-                                    // }                                  
+                                // onChange={(e) =>
+                                //   handleInputChange(index, "mrp", e.target.value)
+                                // }                                  
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -232,7 +233,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.unitCost}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "unitCost", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "unitCost", e.target.value)}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -240,7 +241,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.discount1}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "discount1", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "discount1", e.target.value)}
                                 />
                             </TableCell>{" "}
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -248,7 +249,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.discount2}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "discount2", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "discount2", e.target.value)}
                                 />
                             </TableCell>{" "}
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -256,7 +257,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.taxableValue}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "taxableValue", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "taxableValue", e.target.value)}
                                 />
                             </TableCell>{" "}
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -264,7 +265,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.cgst}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "cgst", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "cgst", e.target.value)}
                                 />
                             </TableCell>{" "}
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -272,7 +273,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.sgst}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "sgst", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "sgst", e.target.value)}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -280,7 +281,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.igst}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "igst", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "igst", e.target.value)}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid grey", width: 150, height: 25 }}>
@@ -288,7 +289,7 @@ function ProductTable({ rows, onAddRow, onRemoveRow, onRowChange }) {
                                     value={row.totalValue}
                                     fullWidth
                                     size="small"
-                                    onChange={(e) => handleInputChange(index, "totalValue", e.target.value)}                                  
+                                    onChange={(e) => handleInputChange(index, "totalValue", e.target.value)}
                                 />
                             </TableCell>
                             <TableCell sx={{ border: "1px solid white" }}>
@@ -886,9 +887,8 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
                             Save & Print
                         </Button>
 
-                        <PurchasePayment label="Save & Payment"
+                        <PurchaseOrderPayment label="Save & Payment"
                             onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo} />
-
                     </Grid>
                 </Grid>
             </Paper>
