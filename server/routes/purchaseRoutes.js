@@ -8,7 +8,7 @@ const purchaseRoute = express.Router();
 purchaseRoute.post('/add', checkUserLogin, isAdmin, addPurchase);
 purchaseRoute.get('/getAll', checkUserLogin, isAdmin, getAllPurchases);
 purchaseRoute.get('/getAllOrderNumber', checkUserLogin, isAdmin, getAllOrderNumber);
-purchaseRoute.get('/get',  getPurchaseByOrderNumber);
+purchaseRoute.get('/get/:orderNo', checkUserLogin, isAdmin, getPurchaseByOrderNumber);
 purchaseRoute.put('/edit/:id', checkUserLogin, isAdmin, updatePurchase);
 purchaseRoute.delete('/delete/:id', checkUserLogin, isAdmin, deletePurchase);
 

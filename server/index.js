@@ -52,7 +52,7 @@ app.use("/api/v1/customer", cutomerRouter);
 app.use("/api/v1/purchase", purchaseRoute);
 app.use('/api/v1/purchase-invoice',purchaseInvoiceRoute)
 app.use("/api/v1/payment", paymentRouter);
-app.use("/api/v1/purchase-retrun", purchaseRouter);
+app.use("/api/v1/purchase-return", purchaseRouter);
 app.use("/api/v1/bank", bankRouter);
 app.use("/api/v1/cash", cashRouter);
 app.use("/api/v1/sales", salesRouter);

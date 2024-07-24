@@ -108,7 +108,7 @@ export async function getAllOrderNumber(req, res) {
 }
 
 export async function getPurchaseByOrderNumber(req,res){
-    const {orderNo}= req.body;
+    const {orderNo}= req.params;
     console.log(orderNo);
     try {
         const purchase = await Purchase.findOne({orderNo:orderNo});

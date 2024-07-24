@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const purchaseReturnSchema = new mongoose.Schema({
     purchaseReturn:{
         suppplierName:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Supplier",
+            type:String,
              required:true,
              unique:true,
         },
@@ -17,8 +16,7 @@ const purchaseReturnSchema = new mongoose.Schema({
           required:true,
         },
         placeOfSupply:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Supplier",
+            type:String,
              required:true,
         },
         paymentTerm:{
@@ -34,8 +32,7 @@ const purchaseReturnSchema = new mongoose.Schema({
             required:true,
         },
         selectedPurchase:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"PurchaseModal",
+            type:String,
              required:true,
         },
         reasonForReturn:{
@@ -46,14 +43,12 @@ const purchaseReturnSchema = new mongoose.Schema({
     },
     purchaseTable:{
         itemCode:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Medicine",
+            type:String,
             required:true,
     
         },
         productName:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Medicine",
+            type:String,
              required:true,
            
             // required:true,
