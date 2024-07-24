@@ -26,7 +26,6 @@ import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/
 import TransportDetails from "../../../common-components/Modals/PurchaseModal/TranspotDetails";
 import { useReactToPrint } from "react-to-print";
 import { format, addDays } from "date-fns";
-import PurchasePayment from "../PurchaseInvoice/PurchasePayment"
 import PurchaseOrderPayment from "../PurchaseOrder/PurchaseOrderPayment";
 
 import axios from "axios";
@@ -391,8 +390,9 @@ function PurchaseOrder({ formType, selectedData, setSuccess }) {
             setNarration(selectedData.Narration);
             setTaxType(selectedData.taxType);
             setTransPortDetails(selectedData.transPortDetails);
+            setTables([ {id: Date.now(), rows: selectedData.purchaseTable}])
+        
 
-            setTables(selectedData.tables);
             
             
         }

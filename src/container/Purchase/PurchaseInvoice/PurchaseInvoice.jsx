@@ -370,7 +370,9 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
 
     useEffect(() => {
         if (formType === "edit purchaseinvoice" && selectedData) {
-          setDate(selectedData.date)
+            console.log(selectedData,"---------------------------------------");
+        //   setDate(selectedData.date)
+        
         }
         else {
             resetForm();
@@ -473,7 +475,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         event.preventDefault();
         console.log(tables);
         try {
-            await addPurchase(purchaseData);
+            await addPurchaseInvoice(purchaseData);
             // handleAddMedicine();
         } catch (error) {
             console.error("Error adding purchase:", error);
@@ -484,7 +486,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         console.log(purchaseData);
         try {
             const auth = JSON.parse(localStorage.getItem("auth"));
-            const response = await axios.post("http://localhost:4000/api/v1/purchase/add", purchaseData, {
+            const response = await axios.post("http://localhost:4000/api/v1/purchase-invoice/add", purchaseData, {
                 headers: {
                     "content-type": "application/json",
                     Authorization: `Bearer ${auth.token}`,
@@ -503,7 +505,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         console.log(purchaseData);
         try {
             const auth = JSON.parse(localStorage.getItem("auth"));
-            const response = await axios.put(`http://localhost:4000/api/v1/purchase/edit/${id}`, purchaseData, {
+            const response = await axios.put(`http://localhost:4000/api/v1/purchase-invoice/edit/${id}`, purchaseData, {
                 headers: {
                     "content-type": "application/json",
                     Authorization: `Bearer ${auth.token}`,
@@ -582,41 +584,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         setPlaceOfSupply(supp ? supp.address : "");
     };
 
-    const fetchPurchase = async (orderNo) => {
-        try {
-        //   const auth = JSON.parse(localStorage.getItem('auth'));
-        //   if (!auth || !auth.token) {
-        //     console.error("No token found in local storage");
-        //     return;
-        //   }
-          const response = await axios.get("http://localhost:4000/api/v1/purchase/get",{orderNo:orderNo},
-            // {
-            //   headers: { Authorization: `Bearer ${auth.token}` }
-            // }
-          );
-          console.log("API Response:", response.data);
     
-          purchaseData=response.data;
-          } else {
-            console.error("API response does not contain purchase array:", response.data);
-          }
-        } catch (error) {
-          console.error("Error fetching purchase list:", error);
-        }
-      };
-    
-      useEffect(() => {
-        fetchPurchase();
-    
-      }, []);  
-
-
-    const handleOrderNo = (event) => {
-        setOrderNo(event.target.value); 
-        fetchPurchase(orderNo);
-        
-        
-    };
     const fetchPurchaseOrderNumber = async () => {
         try {
           const auth = JSON.parse(localStorage.getItem('auth'));
@@ -642,20 +610,86 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
         }
       };
     
+      
+
+      const fetchPurchaseByOrderNumber = async (orderNo) => {
+        
+        try {
+          const auth = JSON.parse(localStorage.getItem('auth'));
+          if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+          }
+          const response = await axios.get(`http://localhost:4000/api/v1/purchase/get/${orderNo}`,
+            {
+              
+              headers: { Authorization: `Bearer ${auth.token}` }
+            }
+          );
+          console.log("API Response:", response.data);
+    
+          if (response.data) {
+              return response.data;
+          } else {
+            console.error("API response does not contain purchase data:", response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching purchase data:", error);
+          
+        } 
+      };
       useEffect(() => {
         fetchPurchaseOrderNumber();
+        
     
-      }, []);  
+      }, []); 
+    
+      const handleOrderNo = async (event) => {
+        const selectedOrderNo = event.target.value;
+        setOrderNo(selectedOrderNo);
+        const purchaseData = await fetchPurchaseByOrderNumber(selectedOrderNo);
+    
+        // Once purchase data is fetched, you can use it here
+        if (purchaseData) {
+          console.log("Fetched Purchase Data:", purchaseData);
+          setDate(purchaseData.date);
+          setInvoiceNo(purchaseData.invoiceNo);
+          setSelectedSupplier(purchaseData.supplierName);
+          setPlaceOfSupply(purchaseData.placeOfSupply);
+          setPaymentTerms(purchaseData.paymentTerm);
+          setDueDate(purchaseData.dueDate);
+          setTransPortDetails(purchaseData.transPortDetails);
+          setBillingAddress(purchaseData.billingAddress);
+          console.log(billingAddress,"////////////////////////")
+          setReverseCharge(purchaseData.reverseCharge);
+          setTables([{ id: Date.now(), rows: purchaseData.purchaseTable }]);
+          setGrossAmount(purchaseData.amounts.grossAmount);
+          console.log(purchaseData.amounts.grossAmount,"////////////////////////////////////////")
+          setGstAmount(purchaseData.amounts.gstAmount);
+          setOtherCharges(purchaseData.amounts.otherCharge);
+          setNetAmount(purchaseData.amounts.netAmount);
+          setNarration(purchaseData.Narration);
+        }
+      };
+    
+      
 
 
-      const editModeStyles =
-        formType === "create purchaseinvoice"
-            ? {
-                  padding: 0, // Decrease padding in edit mode
-                //   headingFontSize: responsiveFontSize(15, 28), // Change heading font size in edit mode
-                  buttonColor: "yellow !important", // Change button color in edit mode
-              }
-          :{};
+    //   syles for buttons in edit and create mode
+
+      const editModeStyles = formType === "create purchaseinvoice"
+      ? {
+          padding: 0, // Decrease padding in create mode
+          buttonColor: "yellow !important", // Change button color to green in create mode
+      }
+      : formType === "edit purchaseinvoice"
+      ? {
+          padding: 0, // Decrease padding in edit mode
+          buttonColor: "green !important", // Change button color to yellow in edit mode
+      }
+      : {
+          buttonColor: "defaultButtonColor", // Default button color for other modes
+      };
 
     const paperStyles =
         formType === "edit purchaseinvoice"
@@ -768,7 +802,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                             />
                         </Grid>
                         <Grid item md={3} xs={3}>
-                            <TextField label="Billing Address" fullWidth />
+                            <TextField label="Billing Address" value={billingAddress} fullWidth />
                         </Grid>
                         <Grid item md={3} xs={3}>
                             <TextField
@@ -875,13 +909,13 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                                 </Grid>
                             </Grid>
                         </Modal>
-                        <TextField label="Narration" fullWidth multiline rows={3} />
+                        <TextField label="Narration" fullWidth multiline rows={3}  value ={narration}/>
                     </Grid>
                     {/* Gross Amount */}
                     <Grid item md={8} xs={8}>
                         <Box style={{display: "grid", justifyContent: "center", gap: "15px"}}>
-                            <TextField label="Gross Amount" fullWidth />
-                            <TextField label="GST Amount" fullWidth />
+                            <TextField label="Gross Amount" fullWidth  value = {grossAmount}/>
+                            <TextField label="GST Amount" fullWidth value={gstAmount} />
                             <TextField
                                 label="Total Charges"
                                 fullWidth
@@ -891,7 +925,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                                 }}
                                 sx={{mt: 2}}
                             />
-                            <TextField label="Net Amount" fullWidth />
+                            <TextField label="Net Amount" fullWidth  value ={netAmount}/>
                         </Box>
                     </Grid>
                 </Grid>
@@ -933,7 +967,7 @@ function PurchaseInvoice({formType, selectedData, setSuccess}) {
                             label="Save & Payment"
                         />
 
-                        {/* <PurchasePayment  onClick={handleSubmit} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo} /> */}
+                        <PurchasePayment  onClick={handleSavePurchaseInvoice} netAmount={purchaseData.amounts.netAmount} orderNo={purchaseData.orderNo}   />
                     </Grid>
                 </Grid>
             </Paper>
