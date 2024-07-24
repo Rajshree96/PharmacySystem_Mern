@@ -36,6 +36,12 @@ export const salesEstimate = async(req, res)=>{
         return res.status(400).json({ message: validationError.message });
     }
 
+    // Check if an estimate with this number already exists
+    const existingEstimate = await SalesEstimate.findOne({ estimateNo: req.body.estimateNo });
+    if (existingEstimate) {
+      return res.status(400).json({ message: "An estimate with this number already exists" });
+    }
+    
     // If validation passes, save the new purchase
     await newSalesEstimat.save();
 

@@ -3,6 +3,8 @@ import {Button, Dialog, DialogContent, DialogContentText, DialogTitle, Box} from
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import SalesEstimate from "../../../container/Sales/SalesEstimate/SalesEstimate";
+import SalesInvoice from "../../../container/Sales/SalesInvoice/SalesInvoice";
+import DeliveryChallan from "../../../container/Sales/DeliveryChallan/DeliveryChallan";
 
 
 const AllSalesModal = ({open, handleClose, formType, selectedData, style}) => {
@@ -24,6 +26,20 @@ const AllSalesModal = ({open, handleClose, formType, selectedData, style}) => {
                 return (
                     <>
                       <SalesEstimate setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                    </>
+                );
+            case "add salesinvoice":
+            case "edit salesinvoice":
+                return (
+                    <>
+                      <SalesInvoice setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                    </>
+                );
+            case "add salesdeliverychalan":
+            case "edit salesdeliverychalan":
+                return (
+                    <>
+                      <DeliveryChallan setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
                     </>
                 );
             

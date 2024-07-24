@@ -29,6 +29,8 @@ import fixedAssetsRouter from "./routes/fixedAssetsRoutes.js";
 import journalRouter from "./routes/journalRouter.js";
 import transactionRouter from "./routes/bankTransactionRoutes.js";
 import purchaseInvoiceRoute from "./routes/purchaseInvoiceRoutes.js";
+import expireyRouter from "./routes/expireyDateRoutes.js";
+import gstSettingRouter from "./routes/gstSettingRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -52,7 +54,7 @@ app.use("/api/v1/customer", cutomerRouter);
 app.use("/api/v1/purchase", purchaseRoute);
 app.use('/api/v1/purchase-invoice',purchaseInvoiceRoute)
 app.use("/api/v1/payment", paymentRouter);
-app.use("/api/v1/purchase-retrun", purchaseRouter);
+app.use("/api/v1/purchase-return", purchaseRouter);
 app.use("/api/v1/bank", bankRouter);
 app.use("/api/v1/cash", cashRouter);
 app.use("/api/v1/sales", salesRouter);
@@ -68,6 +70,8 @@ app.use('/api/v1/expense', expenseRouter);
 app.use('/api/v1/fixedassets', fixedAssetsRouter);
 app.use('/api/v1/journal', journalRouter);
 app.use('/api/v1/transaction', transactionRouter);
+app.use('/api/v1/expiry', expireyRouter);
+app.use('/api/v1/gstSettings', gstSettingRouter);
 
 
 

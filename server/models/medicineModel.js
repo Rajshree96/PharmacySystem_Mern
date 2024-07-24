@@ -147,7 +147,10 @@ const MedicineSchema = new mongoose.Schema({
     type: OpeningBalanceSchema,
     required: true,
   },
-  
+  expiryStatus:{
+    type:Boolean,
+    default:false,
+  }
 },{timestamps:true});
 
 function arrayLimit(val) {

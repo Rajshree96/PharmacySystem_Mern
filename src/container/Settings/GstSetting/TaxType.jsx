@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container, Typography, TextField, Button, Box, Grid, Paper, IconButton, Modal,
   Table,
@@ -12,6 +12,7 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import EditButton from '../../../common-components/ButtonContainer/EditButton';
 import DeleteButton from '../../../common-components/ButtonContainer/DeleteButton';
+import axios from 'axios';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -38,34 +39,156 @@ const TaxType = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedTaxType, setEditedTaxType] = useState('');
+  
+  useEffect(() => {
+    fetchTaxTypes();
+  }, []);
 
-  const handleSave = () => {
-    if (editIndex !== null) {
-      const updatedTaxTypes = [...savedTaxTypes];
-      updatedTaxTypes[editIndex] = editedTaxType;
-      setSavedTaxTypes(updatedTaxTypes);
-      setEditIndex(null);
-      setIsModalOpen(false);
-    } else {
-      setSavedTaxTypes([...savedTaxTypes, taxType]);
+
+  const fetchTaxTypes = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.get('http://localhost:4000/api/v1/gstSettings/getAllgst', {
+        headers: {
+          "Authorization": `Bearer ${auth.token}`
+        }
+      });
+      setSavedTaxTypes(response.data);
+    } catch (error) {
+      console.error("Error fetching tax types:", error);
     }
-    setTaxType('');
   };
+
+  const handleSave = async ({gstName}) => {
+    try {
+      if (editIndex !== null) {
+        // const updatedTaxTypes = [...savedTaxTypes];
+        // updatedTaxTypes[editIndex] = editedTaxType;
+        // setSavedTaxTypes(updatedTaxTypes);
+        // setEditIndex(null);
+        // setIsModalOpen(false);
+        // await updateTaxRate(savedTaxTypes[editIndex], editedTaxType);
+        const taxTypeToUpdate = savedTaxTypes[editIndex];
+      await updateTaxType(taxTypeToUpdate._id, editedTaxType);
+      } else {
+        // setSavedTaxTypes([...savedTaxTypes, taxType]);
+        await addTaxType({gstName: taxType});
+  
+      }
+      setTaxType('');
+      setIsModalOpen(false);
+      fetchTaxTypes();
+    
+    } catch (error) {
+      console.error("Error in handleSave:", error);
+    }
+    
+  }
 
   const handleEdit = (index) => {
     setEditIndex(index);
-    setEditedTaxType(savedTaxTypes[index]);
+    setEditedTaxType(savedTaxTypes[index].gstName);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (index) => {
-    setSavedTaxTypes(savedTaxTypes.filter((_, i) => i !== index));
+  const handleDelete = async (index) => {
+    try {
+      const taxTypeToDelete = savedTaxTypes[index];
+      await deleteTaxType(taxTypeToDelete._id);
+      fetchTaxTypes();
+    } catch (error) {
+      console.error("Error in handleDelete:", error);
+
+    }
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
     setEditIndex(null);
   };
+
+  const addTaxType = async({gstName})=>{
+    console.log(gstName);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/gstSettings/addgstType',
+       { gstName},
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("gstSettings response", response);
+       if (response.data.status === 201) {
+        console.log("Gst Settings  created successfully ");
+        } 
+        else {
+          console.log("Unexpected response status:", response.data.status);
+
+        }
+        return response.data;
+      
+
+    } catch (error) {
+      console.log("Somthing went wrong");
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Error data:", error.response.data);
+        console.error("Error status:", error.response.status);
+        console.error("Error headers:", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+      }
+      throw error; // Re-throw the error so it can be handled by the caller
+    
+
+    }
+  }
+
+  const updateTaxType = async (id, newName) => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+     const response =  await axios.put(`http://localhost:4000/api/v1/gstSettings/editgst/${id}`,
+        { gstName: newName },
+        {
+          headers: {
+            "content-type": "application/json",
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating tax type:", error);
+      throw error;
+    }
+  };
+
+  const deleteTaxType = async (id) => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.delete(`http://localhost:4000/api/v1/gstSettings/deletegst/${id}`,
+        {
+          headers: {
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting tax type:", error);
+      throw error;
+    }
+  };
+
+
   return (
     <>
       <Grid container spacing={4}>
@@ -102,8 +225,8 @@ const TaxType = () => {
                   </TableHead>
                   <TableBody>
                     {savedTaxTypes.map((tax, index) => (
-                      <StyledTableRow>
-                        <StyledTableCell>{tax}</StyledTableCell>
+                      <StyledTableRow key={tax._id}>
+                        <StyledTableCell>{tax.gstName}</StyledTableCell>
 
                         <StyledTableCell>
                       <Box

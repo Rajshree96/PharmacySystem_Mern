@@ -88,7 +88,7 @@ const transactionTypes = [
   {
     value: "Cash Deposit in Bank",
     title: "Cash Deposit in Bank",
-    fromAccountLabel: "Cash",
+    fromAccountLabel: "amount",
     toAccountLabel: "Bank Name",
     fromAccountIcon: <AttachMoney />,
     toAccountIcon: <AccountBalance />,
@@ -97,7 +97,7 @@ const transactionTypes = [
     value: "Cash Withdrawal from Bank",
     title: "Cash Withdrawal from Bank",
     fromAccountLabel: "Bank Name",
-    toAccountLabel: "Cash",
+    toAccountLabel: "amount",
     fromAccountIcon: <AccountBalance />,
     toAccountIcon: <AttachMoney />,
   },
@@ -114,7 +114,11 @@ const TransactionForm = ({ type, handleSave }) => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: name === 'amount' ? (value === '' ? '' : Number(value)) : value
+    }));
   };
 
   // const handleDateChange = (date) => {
@@ -199,11 +203,13 @@ const TransactionForm = ({ type, handleSave }) => {
               ),
             }}
           />
+          {(type === "Bank to Bank" || type === "Cash Withdrawal from Bank") && (
           <StyledTextField
             fullWidth
             label="From Account"
             name="fromAccount"
-            value={formData.fromAccount}
+            value={formData.fromAccount }
+          
             onChange={handleChange}
             variant="outlined"
             helperText={transaction.fromAccountLabel}
@@ -215,8 +221,9 @@ const TransactionForm = ({ type, handleSave }) => {
               ),
             }}
           />
-
-            
+          )}
+       
+       {(type === "Bank to Bank" || type === "Cash Deposit in Bank") && (
           <StyledTextField
             fullWidth
             label="To Account"
@@ -233,7 +240,8 @@ const TransactionForm = ({ type, handleSave }) => {
               ),
             }}
           />
-            {(type === 'cashDeposit' || type === 'Cash Withdrawal from Bank') && (
+       )}
+            {/* {(type === "Bank to Bank" || type === "Cash Deposit in Bank" || type === "Cash Withdrawal from Bank") && ( */}
             <StyledTextField
               fullWidth
               label="Amount"
@@ -250,8 +258,8 @@ const TransactionForm = ({ type, handleSave }) => {
                 ),
               }}
             />
-          )}
-
+          
+            {/* )} */}
           <Box sx={{ textAlign: "center" }}>
             <StyledButton
               variant="contained"
@@ -273,6 +281,8 @@ const TransactionForm = ({ type, handleSave }) => {
 const BankTransaction = () => {
   const [transactionType, setTransactionType] = useState("");
   const [isSaved, setIsSaved] = useState(false);
+ 
+
   const handleSave = async (formData) => {
     // const transactionTitle = transactionTypes.find(
     //   (t) => t.value === transactionType
@@ -289,9 +299,13 @@ const BankTransaction = () => {
       const transactionData = {
         transactionType: transactionTypes.find(t => t.value === transactionType).title,
         ...formData,
-        date: formData.date ? dayjs(formData.date).format('YYYY-MM-DD') : null, // Format the date
+        date: formData.date ? dayjs(formData.date).format('YYYY-MM-DD') : null,
+        amount: formData.amount === '' ? null : parseFloat(formData.amount)
 
       };
+      console.log("Original formData:", formData);
+      console.log("Parsed transactionData:", transactionData);
+      
       const response = await axios.post(
         "http://localhost:4000/api/v1/transaction/add",
         transactionData,
@@ -309,8 +323,7 @@ const BankTransaction = () => {
     }
   };
 
-
-
+ 
   
   return (
     <Container maxWidth="xl" sx={{ mt: 5, mb: 5 }}>
