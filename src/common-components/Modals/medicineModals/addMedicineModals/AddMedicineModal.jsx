@@ -53,8 +53,8 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
     const [ unit, setUnit ] = useState([]);
     const [ selectedUnit, setSelectedUnit ] = useState(selectedData?.unit || "");
     //gst state
-    const [ gstRate, setGstRate ] = useState(selectedData?.gstRate || "");
-    const [gstRates, setGstRates] = useState([]);
+    const [ gstRate, setGstRate ] = useState(selectedData?.gstRate || "",[]);
+     const [gstRates, setGstRates] = useState([]);
     const [ expiryDate, setExpiryDate ] = useState(selectedData?.expiryDate || "");
     const [ photos, setPhotos ] = useState(selectedData?.productPhotos || "");
     const [ photoFileName, setPhotoFileName ] = useState(selectedData?.productPhotos || "");
@@ -91,7 +91,9 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         particular: selectedData?.openingBalance?.particular || "",
         quantity: selectedData?.openingBalance?.quantity || "",
         rate: selectedData?.openingBalance?.rate || "",
-        units: selectedData?.openingBalance?.units || "",
+        // units: selectedData?.openingBalance?.units || "",
+        unit: selectedData?.openingBalance?.unit || selectedUnit, 
+
         amount: selectedData?.openingBalance?.amount || "",
     });
     const [ ingredients, setIngredients ] = useState(selectedData?.ingredients?.join(", ") || "");
@@ -115,6 +117,13 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         fetchBrand();
         fetchGstRate();
     }, []);
+
+    useEffect(() => {
+        setOpeningBalance(prevBalance => ({
+            ...prevBalance,
+            unit: selectedUnit
+        }));
+    }, [selectedUnit]);
 
     const fetchCategories = async () => {
         try {
@@ -236,6 +245,8 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
 
     const addMedicine = async (medicineData) => {
         try {
+            console.log("attempting add medicine", medicineData);
+
             const auth = JSON.parse(localStorage.getItem("auth"));
             const response = await axios.post("http://localhost:4000/api/v1/admin/add-medicine", medicineData, {
                 headers: {
@@ -243,12 +254,14 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                     Authorization: `Bearer ${auth.token}`,
                 },
             });
-            console.log(medicineData);
-            console.log(response);
+            // console.log(medicineData);
+            console.log("api  medcine response", response);
             if (response.data.statusCode === 201) {
                 toast.success("Medicine added successfully");
             }
         } catch (error) {
+            console.error("Error adding medicine:", error.response ? error.response.data : error.message);
+
             toast.error("Something went wrong");
         }
     };
@@ -289,7 +302,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
             manufacturer: selectedManufacturer,
             brand: selectedBrand,
             unit: selectedUnit,
-            gstRate,
+            gstRate:gstRate,
             purchaseTaxIncluded,
             salesTaxIncluded,
             productPhotos: photos,
@@ -314,7 +327,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                 particular: openingBalance.particular,
                 quantity: openingBalance.quantity,
                 rate: openingBalance.rate,
-                unit: openingBalance.units || 0,
+                unit: selectedUnit,
                 amount: openingBalance.amount,
             },
         };
@@ -451,6 +464,24 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         }));
     };
 
+
+    const handleUnit = (e) => {
+        const selectedUnitId = e.target.value;
+        console.log("object unit", selectedUnitId);
+
+        setSelectedUnit(selectedUnitId);
+        
+        // // Find the selected unit object
+        const selectedUnitObject = unit.find(u => u.unit === selectedUnit);
+
+        // Update the opening balance unit with the name of the selected unit
+        if (selectedUnitObject) {
+            setOpeningBalance(prevBalance => ({
+                ...prevBalance,
+                unit: selectedUnitObject.units
+            }));
+        }
+    };
     return (
         <>
             <Toaster />
@@ -569,11 +600,12 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             variant="standard"
                             fullWidth
                             value={selectedUnit}
-                            onChange={(e) => setSelectedUnit(e.target.value)}
+                            onChange={handleUnit}
                         >
                             {unit.map((units) => (
-                                <MenuItem key={units._id} value={units._id}>
+                                <MenuItem key={units._id} value={units._id} >
                                     {units.name}
+
                                 </MenuItem>
                             ))}
                         </TextField>
@@ -587,13 +619,13 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             fullWidth
                             variant="standard"
                             value={gstRate}
-                            //  onChange={(e)=>setGstRate(e.target.value)}
+                            onChange={(e)=>setGstRate(e.target.value)}
 
-                            onChange={handleGstRateChange}
+                            //  onChange={handleGstRateChange}
                             select
                         >
 
-{gstRates?.map((gst) => (
+          {gstRates?.map((gst) => (
         <MenuItem key={gst._id} value={gst.taxRate}>
             {gst.taxRate}
         </MenuItem>
@@ -901,8 +933,11 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             type="text"
                             fullWidth
                             variant="standard"
-                            value={openingBalance.units}
-                            onChange={(e) => handleOpeningBalanceChange("units", e.target.value)}
+                            value={selectedUnit}
+                            // onChange={(e) => handleOpeningBalanceChange("unit", e.target.value)}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     {/* Amount */}

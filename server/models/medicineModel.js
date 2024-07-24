@@ -56,7 +56,7 @@ const OpeningBalanceSchema = new mongoose.Schema({
     required: true,
   },
   unit: {
-    type: Number,
+    type: String,
     required: true,
   },
   amount: {

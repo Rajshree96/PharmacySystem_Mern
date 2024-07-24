@@ -13,6 +13,8 @@ import { Try } from "@mui/icons-material";
 
 
 export async function addMedicineController(req, res) {
+    console.log(req.body);
+
     try {
       const {
         itemCode,
@@ -70,7 +72,7 @@ export async function addMedicineController(req, res) {
   
       // Save to database
       const savedMedicine = await newMedicine.save();
-  
+      console.log("saved data ", savedMedicine);
       return res.send(success(201, "Medicine added successfully"));
     } catch (err) {
         return res.send(error(500, err.message));
