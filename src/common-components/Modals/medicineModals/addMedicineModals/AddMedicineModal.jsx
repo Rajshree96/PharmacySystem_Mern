@@ -54,6 +54,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
     const [ selectedUnit, setSelectedUnit ] = useState(selectedData?.unit || "");
     //gst state
     const [ gstRate, setGstRate ] = useState(selectedData?.gstRate || "");
+    const [gstRates, setGstRates] = useState([]);
     const [ expiryDate, setExpiryDate ] = useState(selectedData?.expiryDate || "");
     const [ photos, setPhotos ] = useState(selectedData?.productPhotos || "");
     const [ photoFileName, setPhotoFileName ] = useState(selectedData?.productPhotos || "");
@@ -112,6 +113,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
         fetchManufacturer();
         fetchUnit();
         fetchBrand();
+        fetchGstRate();
     }, []);
 
     const fetchCategories = async () => {
@@ -192,7 +194,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
             setUnit([]);
         }
     };
-
+    
  
 
     const fetchBrand = async () => {
@@ -210,6 +212,27 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
             setBrand([]);
         }
     };
+
+
+    const fetchGstRate = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/v1/gstSettings/getAllTaxRate", config());
+            if (Array.isArray(response.data)) {
+                setGstRates(response.data);
+                console.log("gst rates", response)
+            }
+            else {
+                console.error("Error: Fetched data is not an array");
+                setGstRates([]);
+
+            }
+        } catch (error) {
+            console.error("Error fetching gstRate:", error);
+            setGstRates([]);
+        }
+    };
+
+
 
     const addMedicine = async (medicineData) => {
         try {
@@ -569,14 +592,20 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             onChange={handleGstRateChange}
                             select
                         >
+
+{gstRates?.map((gst) => (
+        <MenuItem key={gst._id} value={gst.taxRate}>
+            {gst.taxRate}
+        </MenuItem>
+))}
                             {/* {gstRateData.map((gst) => (
                                 <MenuItem key={gst._id} value={gst._id}>
                                     {gst.gstRate}
                                 </MenuItem>
                             ))} */}
-                            <MenuItem value="5%">5%</MenuItem>
+                            {/* <MenuItem value="5%">5%</MenuItem>
                             <MenuItem value="12%">12%</MenuItem>
-                            <MenuItem value="18%">18%</MenuItem>
+                            <MenuItem value="18%">18%</MenuItem> */}
                         </TextField>
                     </Grid>
                     {/* Tax Included Details */}

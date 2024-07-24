@@ -310,7 +310,7 @@ const DashboardCard = () => {
           headers: { Authorization: `Bearer ${auth.token}` },
         }
       );
-      // console.log("API  Medcine Response:", response.data.result);
+      console.log("API  Medcine Response:", response.data.result);
 
       if (Array.isArray(response.data.result)) {
         setMedcine(response.data.result);
@@ -700,7 +700,8 @@ const DashboardCard = () => {
                               align="right"
                               className={classes.statisticTableCell}
                             >
-                              {row.unit.name}
+                              {console.log(row.unit?.name)}
+                              {row.unit?.name}
                             </StyledTableCell>
                           </StyledTableRow>
                         ))}
