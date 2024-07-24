@@ -603,7 +603,7 @@ const AddMedicineModal = ({setSuccess, formType, selectedData}) => {
                             onChange={handleUnit}
                         >
                             {unit.map((units) => (
-                                <MenuItem key={units._id} value={units._id} >
+                                <MenuItem key={units.name} value={units.name} >
                                     {units.name}
 
                                 </MenuItem>
