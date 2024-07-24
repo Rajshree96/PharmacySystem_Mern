@@ -26,18 +26,21 @@ const bankTransactionSchema = new mongoose.Schema({
             required: function() { 
                 return this.transactionType === 'Bank to Bank' || this.transactionType === 'Cash Deposit in Bank'; 
             },
-
-        },
+          
         amount:{
             type:Number,
-            required: function() { 
-                return  this.transactionType === 'Cash Withdrawal from Bank'; 
-            },
+            // required: function() { 
+            //     return this.transactionType === "Bank To Bank" || this.transactionType === 'Cash Withdrawal from Bank' || this.transactionType === 'Cash Deposit in Bank';
+
+            // },
+            required:true,
+           
 
         }
     },
+
     
-{timestamps:true});
+},{timestamps:true});
 
 const Transaction = mongoose.model("Transaction", bankTransactionSchema)
 export default Transaction;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container, Typography, TextField, Button, Box, Grid, Paper, IconButton, Modal,
   Table,
@@ -12,6 +12,8 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import EditButton from '../../../common-components/ButtonContainer/EditButton';
 import DeleteButton from '../../../common-components/ButtonContainer/DeleteButton';
+import axios from 'axios';
+import { updateTaxRate } from '../../../../server/controllers/gstSettingController';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,43 +35,160 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const TaxRate = () => {
-  const [taxName, setTaxName] = useState('');
-  const [taxRate, setTaxRate] = useState('');
+   const [taxName, setTaxName] = useState('');
+  const [taxRate, setTaxRate] = useState([]);
   const [savedTaxRates, setSavedTaxRates] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedTaxName, setEditedTaxName] = useState('');
+   const [editedTaxName, setEditedTaxName] = useState('');
   const [editedTaxRate, setEditedTaxRate] = useState('');
 
-  const handleSave = () => {
+
+  useEffect(()=>{
+    fetchTaxRates();
+  },[]);
+
+  const fetchTaxRates = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.get('http://localhost:4000/api/v1/gstSettings/getAllTaxRate', {
+        headers: {
+          "Authorization": `Bearer ${auth.token}`
+        }
+      });
+      setSavedTaxRates(response.data);
+    } catch (error) {
+      console.error("Error fetching tax types:", error);
+    }
+  };
+
+  const handleSave = async () => {
     if (editIndex !== null) {
-      const updatedTaxRates = [...savedTaxRates];
-      updatedTaxRates[editIndex] = { name: editedTaxName, rate: editedTaxRate };
-      setSavedTaxRates(updatedTaxRates);
-      setEditIndex(null);
-      setIsModalOpen(false);
+      // const updatedTaxRates = [...savedTaxRates];
+      // updatedTaxRates[editIndex] = { name: editedTaxName, rate: editedTaxRate };
+      // setSavedTaxRates(updatedTaxRates);
+      // setEditIndex(null);
+      // setIsModalOpen(false);
+      const taxRateToUpdae = savedTaxRates[editIndex];
+
+      await updateTaxRates(taxRateToUpdae._id, editedTaxRate);
+
+
     } else {
-      setSavedTaxRates([...savedTaxRates, { name: taxName, rate: taxRate }]);
+      // setSavedTaxRates([...savedTaxRates, { name: taxName, rate: taxRate }]);
+      await addTaxRate({taxRate});
+
     }
     setTaxName('');
+    setIsModalOpen(false);
     setTaxRate('');
   };
 
+  
+
   const handleEdit = (index) => {
     setEditIndex(index);
-    setEditedTaxName(savedTaxRates[index].name);
-    setEditedTaxRate(savedTaxRates[index].rate);
+    setEditedTaxRate(savedTaxRates[index].taxRate);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (index) => {
-    setSavedTaxRates(savedTaxRates.filter((_, i) => i !== index));
+  const handleDelete = async(index) => {
+    // setSavedTaxRates(savedTaxRates.filter((_, i) => i !== index));
+    const taxRateToUpdae = savedTaxRates[index];
+    await deleteTaxRates(taxRateToUpdae._id);
+    fetchTaxRates();
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
     setEditIndex(null);
   };
+
+  useEffect(()=>{
+    addTaxRate();
+  },[taxRate])
+
+  const addTaxRate = async({taxRate})=>{
+    console.log(taxRate);
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+       const  response = await axios.post('http://localhost:4000/api/v1/gstSettings/addtaxrate',
+       { taxRate},
+        {
+          headers:{
+            "content-type": "application/json",
+             "Authorization": `Bearer ${auth.token}`
+          }
+        }
+       );
+       console.log("gstSettings response", response);
+       if (response.data.status === 201) {
+        console.log("Gst Settings  created successfully ");
+        } 
+        else {
+          console.log("Unexpected response status:", response.data.status);
+
+        }
+        return response.data;
+      
+
+    } catch (error) {
+      console.log("Somthing went wrong");
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Error data:", error.response.data);
+        console.error("Error status:", error.response.status);
+        console.error("Error headers:", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+      }
+      throw error; // Re-throw the error so it can be handled by the caller
+    
+
+    }
+  }
+
+
+  const updateTaxRates = async (id, newName) => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+     const response =  await axios.put(`http://localhost:4000/api/v1/gstSettings/edittaxrate/${id}`,
+       {taxRate:newName},
+        {
+          headers: {
+            "content-type": "application/json",
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating tax Rates:", error);
+      throw error;
+    }
+  };
+  const deleteTaxRates = async (id) => {
+    try {
+      const auth = JSON.parse(localStorage.getItem('auth'));
+      const response = await axios.delete(`http://localhost:4000/api/v1/gstSettings/deleteTaxRate/${id}`,
+        {
+          headers: {
+            "Authorization": `Bearer ${auth.token}`
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting tax Rates:", error);
+      throw error;
+    }
+  };
+
 
   return (
     <>
@@ -111,8 +230,8 @@ const TaxRate = () => {
                   </TableHead>
                   <TableBody>
                     {savedTaxRates.map((tax, index) => (
-                      <StyledTableRow>
-                        <StyledTableCell>{tax.rate}</StyledTableCell>
+                      <StyledTableRow key={tax._id}>
+                        <StyledTableCell>{tax.taxRate}</StyledTableCell>
 
                         <StyledTableCell>
                           <Box
@@ -122,7 +241,9 @@ const TaxRate = () => {
                               sx={{ mr: 1, color: "#1976d2" }}
                               label="edit"
                               icon={Edit}
+                              // onClick={handleEdit(index)}
                               onClick={() => handleEdit(index)}
+
                             />
                             <DeleteButton
                               sx={{ mr: 1, color: "red" }}

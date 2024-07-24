@@ -51,7 +51,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const ManageBankTransaction = () => {
   const [ modalType, setModalType ] = useState("");
   const [ selectedManageBankTransaction, setSelectedManageBankTransaction ] = useState(null);
-
   const [transaction, setTransaction] = useState([]);
   const breadcrumbs = ["Bank", "Manage Bank Transaction"];
 
@@ -105,29 +104,29 @@ const handleCloseModal = () => {
   }, []);
 
 
-  // const handleDeleteClick = async (_id) => {
-  //   const auth = JSON.parse(localStorage.getItem('auth'));
-  //   if (!auth || !auth.token) {
-  //     console.error("No token found in local storage");
-  //     return;
-  //   }
+  const handleDeleteClick = async (_id) => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
 
-  //   try {
-  //     const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
-  //       headers: { Authorization: `Bearer ${auth.token}` }
-  //     });
-  //     console.log("API Response:", response);
+    try {
+      const response = await axios.delete(`http://localhost:4000/api/v1/transaction/delete/${_id}`, {
+        headers: { Authorization: `Bearer ${auth.token}` }
+      });
+      console.log("API Response:", response);
 
-  //     if (response.data.status === "ok" || response.status === 200) {
-  //       console.log("Deleted customer with _id code:", _id);
-  //       fetchCustomer();
-  //     } else {
-  //       console.error("Failed to delete customer:", response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting customer:", error);
-  //   }
-  // };
+      if (response.data.status || response.status === 200) {
+        console.log("Deleted Transaction with _id code:", _id);
+        fetchTransactions();
+      } else {
+        console.error("Failed to delete transaction:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  };
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -180,7 +179,7 @@ const handleCloseModal = () => {
                           sx={{ mr: 1, color: "red  " }}
                           label="delete"
                           icon={Delete}
-                          // onClick={() => handleDeleteClick(transaction._id)}
+                           onClick={() => handleDeleteClick(transaction._id)}
                         />                    
                       </Box>
                     </StyledTableCell>

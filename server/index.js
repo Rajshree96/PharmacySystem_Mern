@@ -28,6 +28,8 @@ import expenseRouter from "./routes/expenseRoutes.js";
 import fixedAssetsRouter from "./routes/fixedAssetsRoutes.js";
 import journalRouter from "./routes/journalRouter.js";
 import transactionRouter from "./routes/bankTransactionRoutes.js";
+import expireyRouter from "./routes/expireyDateRoutes.js";
+import gstSettingRouter from "./routes/gstSettingRoutes.js";
 
 
 dotenv.config();
@@ -67,6 +69,8 @@ app.use('/api/v1/expense', expenseRouter);
 app.use('/api/v1/fixedassets', fixedAssetsRouter);
 app.use('/api/v1/journal', journalRouter);
 app.use('/api/v1/transaction', transactionRouter);
+app.use('/api/v1/expiry', expireyRouter);
+app.use('/api/v1/gstSettings', gstSettingRouter);
 
 
 

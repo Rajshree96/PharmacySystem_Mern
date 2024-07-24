@@ -34,3 +34,17 @@ export const createPOs = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+// Get all POS entries
+export const getAllPOs = async (req, res) => {
+    try {
+        const posEntries = await POS.find();
+        res.status(200).json({
+            message: "POS entries fetched successfully",
+            count: posEntries.length,
+            posEntries
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
