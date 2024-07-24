@@ -189,12 +189,13 @@ const handleCloseModal = () => {
                           sx={{ mr: 1, color: "green  " }}
                           label="View"
                           icon={Visibility}
+                          onClick={() => handleOpenModal("view supplier", suppliers)}
                         />
                         <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}
                           label="edit"
                           icon={Edit}
-                          onClick={() => handleOpenModal("edit supplier", suppliers)} // Pass the supplier object as a prop
+                          onClick={() => handleOpenModal("edit supplier", suppliers)} 
                         />
                         <DeleteButton
                           sx={{ mr: 1, color: "red  " }}
