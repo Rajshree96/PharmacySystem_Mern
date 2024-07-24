@@ -176,7 +176,7 @@ const AddManufacturer = ({ formType, selectedData, setSuccess }) => {
             setSelectedState(selectedData.state);
             setName(selectedData.name);
             setAddress(selectedData.address);
-            setPinCode(selectedData.pinCode);
+            setPinCode(selectedData.pincode);
             setContact(selectedData.contact);
             setEmail(selectedData.email);
             setWebsite(selectedData.website);
@@ -225,104 +225,7 @@ const AddManufacturer = ({ formType, selectedData, setSuccess }) => {
         setSelectedState(val);
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         // Validate name
-    //         await validationSchema.validateAt("name", {name});
-    //         setNameError(""); // Clear any previous error
-    //     } catch (err) {
-    //         setNameError(err.message); // Set error message for name
-    //     }
-
-    //     try {
-    //         // Validate gstin
-    //         await validationSchema.validateAt("gstin", {gstin});
-    //         setGstError("");
-    //     } catch (err) {
-    //         setGstError(err.message);
-    //     }
-
-    //     try {
-    //         // Validate state
-    //         await validationSchema.validateAt("state", {state: selectedState});
-    //         setStateError("");
-    //     } catch (err) {
-    //         setStateError(err.message);
-    //     }
-
-    //     try {
-    //         // Validate registration type
-    //         await validationSchema.validateAt("registrationType", {registrationType});
-    //         setRegistrationTypeError("");
-    //     } catch (err) {
-    //         setRegistrationTypeError(err.message);
-    //     }
-
-    //     // Check overall validity after individual validations
-    //     const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
-
-    //     if (!isValid) {
-    //         // Handle any additional logic if the overall form is not valid
-    //         return;
-    //     }
-    //     const manufacturerData = {
-    //         name: name,
-    //         address: address,
-    //         state: selectedState,
-    //         pincode: pinCode,
-    //         country: selectedCountry,
-    //         contact: contact,
-    //         email: email,
-    //         website: website,
-    //         bankingDetails: {
-    //             bankName: bankName,
-    //             bankAddress: bankAddress,
-    //             ifscCode: ifscCode,
-    //             accountHolderName: accountHolderName,
-    //             accountNumber: accountNumber,
-    //         },
-    //         statutoryDetails: {
-    //             registrationType: registrationType,
-    //             gstin: gstin,
-    //         },
-    //         openingBalance: {
-    //             asOnFirstDayOfFinancialYear: openingBalance,
-    //         },
-    //     };
-
-    // try {
-    //     const auth = JSON.parse(localStorage.getItem("auth"));
-    //     const response = await axios.post("http://localhost:4000/api/v1/admin/add-manufacturer", manufacturerData, {
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${auth.token}`,
-    //         },
-    //     });
-    //     if (response.status === 201) {
-    //         console.log("Manufacturer added successfully:", response.data);
-    //         setSelectedCountry("");
-    //         setSelectedState("");
-    //         setName("");
-    //         setAddress("");
-    //         setPinCode("");
-    //         setContact("");
-    //         setEmail("");
-    //         setWebsite("");
-    //         setBankName("");
-    //         setBankAddress("");
-    //         setIfscCode("");
-    //         setAccountHolderName("");
-    //         setAccountNumber("");
-    //         setGstin("");
-    //         setOpeningBalance("");
-    //         setRegistrationType("");
-    //         toast.success("manufacturer added successfully");
-    //     }
-    // } catch (error) {
-    //     console.log("Error adding manufacturer:", error);
-    // }
-    // };
+   
 
 
     const addManufacturer = async (manufacturerData) => {

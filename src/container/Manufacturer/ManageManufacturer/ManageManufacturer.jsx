@@ -217,6 +217,7 @@ const ManageManufacturer = () => {
                                                     sx={{mr: 1, color: "green  "}}
                                                     label="View"
                                                     icon={Visibility}
+                                                    onClick={() => handleOpenModal("view manufacturer", manufacturer)} // Pass the manufacturer object as a 
                                                 />
                                                 <EditButton
                                                     sx={{mr: 1, color: "#1976d2"}}
@@ -254,6 +255,8 @@ const ManageManufacturer = () => {
                 selectedData={selectedManufacturer}
                 style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
             />
+            
+            
         </Container>
     );
 };

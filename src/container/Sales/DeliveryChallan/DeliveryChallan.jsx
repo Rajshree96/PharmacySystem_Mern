@@ -286,35 +286,28 @@ function DeliveryChallan({formType, selectedData, setSuccess}) {
     });
 
     useEffect(() => {
-      if (formType === "edit salesdeliverychalan" && selectedData && selectedData.length > 0) {
-          const data = selectedData[0]; // Use the first object for pre-filling the form
-          console.log("Selected Data: ", data);
+      if (formType === "edit salesdeliverychalan" && selectedData) {
+         
+          console.log("Selected Data: ", selectedData);
           
-          setDate(data.date || "");
-          setPaymentTerms(data.paymentTerms || "");
-          setDueDate(data.dueDate || "");
-          setCharges(data.charges || []);
-          setTotalCharges(data.totalCharges || 0);
-          setCurrentCharge(data.currentCharge || "");
-          setDeliveryChallanNo(data.deliveryChallanNo || "");
-          setCustomerName(data.customerName || "");
-          setPlaceOfSupply(data.placeOfSupply || "");
-          setBillingAddress(data.billingAddress || "");
+          setDate(selectedData.date );
+          setPaymentTerms(selectedData.paymentTerms);
+          setDueDate(selectedData.dueDate );
+          setCharges(selectedData.charges );
+          setTotalCharges(selectedData.totalCharges);
+          setCurrentCharge(selectedData.currentCharge);
+          setDeliveryChallanNo(selectedData.deliveryChallanNo);
+          setCustomerName(selectedData.customerName);
+          setPlaceOfSupply(selectedData.placeOfSupply);
+          setBillingAddress(selectedData.billingAddress);
   
-          console.log("Amounts: ", data.amounts);
-          setGrossAmount(data.amounts?.grossAmount || "");
-          setGstAmount(data.amounts?.gstAmount || "");
-          setNetAmount(data.amounts?.netAmount || "");
+          console.log("Amounts: ", selectedData.amounts);
+          setGrossAmount(selectedData.amounts?.grossAmount);
+          setGstAmount(selectedData.amounts?.gstAmount);
+          setNetAmount(selectedData.amounts?.netAmount);
           
-          setNarration(data.narration || "");
-          setTransPortDetails(data.transPortDetails || {
-              receiptNumber: "",
-              dispatchedThrough: "",
-              destination: "",
-              carrierName: "",
-              billOfLading: "",
-              vehicleNumber: "",
-          });
+          setNarration(selectedData.narration );
+          
       } else {
           resetForm();
       }
@@ -335,14 +328,7 @@ function DeliveryChallan({formType, selectedData, setSuccess}) {
       setGstAmount("");
       setNetAmount("");
       setNarration("");
-      setTransPortDetails({
-          receiptNumber: "",
-          dispatchedThrough: "",
-          destination: "",
-          carrierName: "",
-          billOfLading: "",
-          vehicleNumber: "",
-      });
+     
   };
   
 
