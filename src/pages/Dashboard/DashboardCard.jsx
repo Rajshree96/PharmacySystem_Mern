@@ -659,14 +659,14 @@ const DashboardCard = () => {
                     <Table className={classes.statisticTable}>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell>Medicine Name</StyledTableCell>
-                          <StyledTableCell align="right">
+                          <StyledTableCell align="center">Medicine Name</StyledTableCell>
+                          <StyledTableCell align="center">
                             Category
                           </StyledTableCell>
-                          <StyledTableCell align="right">
+                          <StyledTableCell align="center">
                             Medicine Type
                           </StyledTableCell>
-                          <StyledTableCell align="right">Unit</StyledTableCell>
+                          <StyledTableCell align="center">Unit</StyledTableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -675,15 +675,15 @@ const DashboardCard = () => {
                             <StyledTableCell
                               component="th"
                               scope="row"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                               {row.medicineName}
                             </StyledTableCell>
-
                            
                               <StyledTableCell
                         
-                                align="right"
+                                align="center"
                                 className={classes.statisticTableCell}
                               >
                                 {row.medicineCategory.name}
@@ -691,13 +691,13 @@ const DashboardCard = () => {
                             
 
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                               {row.medicineType.mediType}
                             </StyledTableCell>
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                               {console.log(row.unit?.name)}
@@ -735,14 +735,14 @@ const DashboardCard = () => {
                     <Table className={classes.tableContainer}>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell>Sale Invoice NO</StyledTableCell>
-                          <StyledTableCell align="right">
-                            CustomerName
+                          <StyledTableCell align="center">Sale Invoice No</StyledTableCell>
+                          <StyledTableCell align="center">
+                            Customer Name
                           </StyledTableCell>
-                          <StyledTableCell align="right">
-                            PlaceOfSupply
+                          <StyledTableCell align="center">
+                            Place Of Supply
                           </StyledTableCell>
-                          <StyledTableCell align="right">
+                          <StyledTableCell align="center">
                             Date
                           </StyledTableCell>
                         </TableRow>
@@ -753,12 +753,13 @@ const DashboardCard = () => {
                             <StyledTableCell
                               component="th"
                               scope="row"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                               {row.invoiceNo}
                             </StyledTableCell>
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                                
@@ -766,14 +767,14 @@ const DashboardCard = () => {
                             </StyledTableCell>
                             
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                               {row.placeOfSupply}
                             </StyledTableCell>
                           
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
                               {row.date}
