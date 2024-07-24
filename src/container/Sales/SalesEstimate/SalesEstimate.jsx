@@ -18,6 +18,8 @@ import {
     TableHead,
     TableRow,
     Modal,
+    List,
+    ListItem,
 } from "@mui/material";
 import {AddCircle, RemoveCircle} from "@mui/icons-material";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
@@ -264,9 +266,10 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
     const [ date, setDate ] = useState("");
     const [ paymentTerms, setPaymentTerms ] = useState("");
     const [ dueDate, setDueDate ] = useState("");
-    const [ charges, setCharges ] = useState("");
+    const [ charges, setCharges ] = useState([]);
     const [ totalCharges, setTotalCharges ] = useState(0);
     const [ currentCharge, setCurrentCharge ] = useState("");
+    const [ chargeLabel, setChargeLabel ] = useState("");
     // const[orderNo, setOrderNo]=useState('')
     const [ estimateNo, setEstimateNo ] = useState("");
     const [ customerName, setCustomerName ] = useState("");
@@ -318,7 +321,7 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
         setDate("");
         setPaymentTerms("");
         setDueDate("");
-        setCharges("");
+        setCharges([]);
         setTotalCharges(0);
         setCurrentCharge("");
         setEstimateNo("");
@@ -383,14 +386,17 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+  
     const handleAddCharge = () => {
-        const charge = parseFloat(currentCharge);
-        if (!isNaN(charge)) {
-            setCharges([ ...charges, charge ]);
-            setTotalCharges(totalCharges + charge);
+        const chargeAmount = parseFloat(currentCharge);
+        if (chargeLabel && !isNaN(chargeAmount)) {
+            const newCharge = {label: chargeLabel, amount: chargeAmount};
+            setCharges([ ...charges, newCharge ]);
+            setTotalCharges(totalCharges + chargeAmount);
+            setChargeLabel("");
             setCurrentCharge("");
+            setOpen(false);
         }
-        setOpen(false);
     };
 
     const handleRowChange = (tableId, updatedRows) => {
@@ -655,7 +661,14 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
                                     <TextField
                                         fullWidth
                                         sx={{mt: 2}}
-                                        label="Other Charges"
+                                        label="Other Charges Name"
+                                        value={chargeLabel}
+                                        onChange={(e) => setChargeLabel(e.target.value)}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        sx={{mt: 2}}
+                                        label="Other Charges Amount"
                                         value={currentCharge}
                                         onChange={(e) => setCurrentCharge(e.target.value)}
                                     />
@@ -666,6 +679,13 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
                                     >
                                         Add
                                     </Button>
+                                    <List>
+                                        {charges.map((charge, index) => (
+                                            <ListItem key={index}>
+                                                {charge.label}: {charge.amount.toFixed(2)}
+                                            </ListItem>
+                                        ))}
+                                    </List>
                                 </Grid>
                             </Grid>
                         </Modal>
