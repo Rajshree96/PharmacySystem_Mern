@@ -30,6 +30,7 @@ const AllSalesModal = ({open, handleClose, formType, selectedData, style}) => {
                 );
             case "add salesinvoice":
             case "edit salesinvoice":
+                case "create salesinvoice":
                 return (
                     <>
                       <SalesInvoice setSuccess={setSuccess} formType={formType} selectedData={selectedData} />

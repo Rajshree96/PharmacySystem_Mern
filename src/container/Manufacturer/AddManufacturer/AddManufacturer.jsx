@@ -55,8 +55,32 @@ const registrationTypes = [
 const accountHeadTypes = [
     { value: "Bank Accounts", label: "Bank Accounts" },
     { value: "Bank OCC", label: "Bank OCC" },
+    { value: "Bank Account", label: "Bank Account" },
     { value: "Capital Account", label: "Capital Account" },
-    
+    { value: "Cash in Hand", label: "Cash in Hand" },
+    { value: "Current Assets", label: "Current Assets" },
+    { value: "Current Liabilities", label: "Current Liabilities" },
+    { value: "Deposit ( Assets)", label: "Deposit ( Assets)" },
+    { value: "Direct Expenses", label: "Direct Expenses" },
+    { value: "Direct Income", label: "Direct Income" },
+    { value: "Fixed Assets", label: "Fixed Assets" },
+    { value: "Indirect Expenses", label: "Indirect Expenses" },
+    { value: "Indirect Income", label: "Indirect Income" },
+    { value: "Investment", label: "Investment" },
+    { value: "Loans & Advances ( Assets)", label: "Loans & Advances ( Assets)" },
+    { value: "Loan ( Liability)", label: "Loan ( Liability)" },
+    { value: "Provision", label: "Provision" },
+    { value: "Profit & Loss Account", label: "Profit & Loss Account" },
+    { value: "Purchase Account", label: "Purchase Account" },
+    { value: "Reserve & Surplus", label: "Reserve & Surplus" },
+    { value: "Retain earning", label: "Retain earning" },
+    { value: "Sales Accounts", label: "Sales Accounts" },
+    { value: "Secured Loan", label: "Secured Loan" },
+    { value: "Stock in hand", label: "Stock in hand" },
+    { value: "Sundry Creditors", label: "Sundry Creditors" },
+    { value: "Sundry Debtors", label: "Sundry Debtors" },
+    { value: "Suspense Account", label: "Suspense Account" },
+    { value: "Unsecured Loans", label: "Unsecured Loans" },    
 ];
 
 const theme = createTheme({

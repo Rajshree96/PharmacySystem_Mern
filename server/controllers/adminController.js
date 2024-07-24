@@ -13,6 +13,8 @@ import { Try } from "@mui/icons-material";
 
 
 export async function addMedicineController(req, res) {
+    console.log(req.body);
+
     try {
       const {
         itemCode,
@@ -70,7 +72,7 @@ export async function addMedicineController(req, res) {
   
       // Save to database
       const savedMedicine = await newMedicine.save();
-  
+      console.log("saved data ", savedMedicine);
       return res.send(success(201, "Medicine added successfully"));
     } catch (err) {
         return res.send(error(500, err.message));
@@ -150,6 +152,53 @@ export async function deleteMedicineController(req, res) {
     }
 }
 
+
+
+export const getExpiredMedicinesCount = async (req, res) => {
+    try {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Set to start of day
+      console.log("Current date:", currentDate);
+  
+      // Find all medicines
+      const allMedicines = await medicineModel.find({}, 'medicineName expiryDate');
+      console.log("All medicines:", allMedicines);
+  
+      // Manually count expired medicines
+      let manualCount = 0;
+      allMedicines.forEach(medicine => {
+        if (medicine.expiryDate) {
+          const expiryDate = new Date(medicine.expiryDate);
+          expiryDate.setHours(0, 0, 0, 0); // Set to start of day
+          if (expiryDate <= currentDate) {
+            manualCount++;
+            console.log("Expired medicine:", medicine.medicineName, "Expiry date:", expiryDate);
+          }
+        }
+      });
+  
+      // Use countDocuments for comparison
+      const expiredMedicinesCount = await medicineModel.countDocuments({ 
+        expiryDate: { $lte: currentDate } 
+      });
+  
+      console.log("Manual count:", manualCount);
+      console.log("countDocuments result:", expiredMedicinesCount);
+  
+      res.status(200).json({
+        countFromQuery: expiredMedicinesCount,
+        manualCount: manualCount
+      });
+    } catch (error) {
+      console.error("Error in getExpiredMedicinesCount:", error);
+      res.status(500).json({
+        success: false,
+        message: `Error retrieving expired medicines count: ${error.message}`
+      });
+    }
+  };
+
+  
 export async function getAllMedicinePhotoController(req, res) {
     try {
         

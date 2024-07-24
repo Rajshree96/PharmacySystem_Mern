@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Container,
   Box,
@@ -12,6 +12,7 @@ import {
   TableCell,
   TableBody,
   tableCellClasses,
+  Button
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
@@ -22,6 +23,8 @@ import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import AllSalesModal from "../../../common-components/Modals/saleModals/AllSalesModal";
+import { useReactToPrint } from "react-to-print";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,8 +46,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ManageDeliveryChallan = () => {
-  const [ modalType, setModalType ] = useState("");
-  const [ selectedSaleDeliveryChallan, setSelectedSaleDeliveryChallan ] = useState(null);
+  const [modalType, setModalType] = useState("");
+  const [selectedSaleDeliveryChallan, setSelectedSaleDeliveryChallan] = useState(null);
 
   const [deliveryChallan, setDeliveryChallan] = useState([]);
   const breadcrumbs = ["Sales", "Manage Delivery Challan"];
@@ -52,17 +55,17 @@ const ManageDeliveryChallan = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    // modal handler function to open and close
-    const handleOpenModal = (type, salesdeliverychalan = null) => {
-      setModalType(type);
-      setSelectedSaleDeliveryChallan(salesdeliverychalan);
+  // modal handler function to open and close
+  const handleOpenModal = (type, salesdeliverychalan = null) => {
+    setModalType(type);
+    setSelectedSaleDeliveryChallan(salesdeliverychalan);
   };
-  
+
   const handleCloseModal = () => {
-      setModalType("");
-      setSelectedSaleDeliveryChallan(null);
+    setModalType("");
+    setSelectedSaleDeliveryChallan(null);
   };
-  
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -102,9 +105,6 @@ const ManageDeliveryChallan = () => {
     }
   };
 
- 
-
-
   const handleDeleteClick = async (id) => {
     try {
       const auth = JSON.parse(localStorage.getItem("auth"));
@@ -128,9 +128,22 @@ const ManageDeliveryChallan = () => {
     fetchDeliveryChallan();
   }, []);
 
+  const [selectedChallan, setSelectedChallan] = useState(null);
+  const resumeRef = useRef();
+
+  const handlePrintClick = (id) => {
+    const estimate = deliveryChallan.find(item => item._id === id);
+    setSelectedChallan(estimate);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => resumeRef.current,
+    documentTitle: `salesEstimate_${selectedChallan ? selectedChallan._id : ''}`,
+  });
+
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} ref={resumeRef}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
@@ -142,14 +155,16 @@ const ManageDeliveryChallan = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                <StyledTableCell>S NO.</StyledTableCell>
+                  <StyledTableCell>S NO.</StyledTableCell>
                   <StyledTableCell>Date</StyledTableCell>
                   <StyledTableCell>Challan No.</StyledTableCell>
                   <StyledTableCell>Customer Name</StyledTableCell>
                   <StyledTableCell>Place of Supply</StyledTableCell>
                   <StyledTableCell>Due Date</StyledTableCell>
                   <StyledTableCell>Total Value</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell>
+                    <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>
+                  </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -157,7 +172,7 @@ const ManageDeliveryChallan = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((delivery, index) => (
                     <StyledTableRow key={delivery._id}>
-                       <StyledTableCell>
+                      <StyledTableCell>
                         {page * rowsPerPage + index + 1}
                         {/* {delivery.date} */}
                       </StyledTableCell>
@@ -177,7 +192,7 @@ const ManageDeliveryChallan = () => {
                         {delivery.dueDate}
                       </StyledTableCell>
                       <StyledTableCell>{delivery.purchaseTable[0].totalValue}</StyledTableCell>
-                    
+
                       <StyledTableCell>
                         <Box
                           style={{ display: "flex", justifyContent: "center" }}
@@ -197,8 +212,19 @@ const ManageDeliveryChallan = () => {
                             sx={{ mr: 1, color: "red" }}
                             label="delete"
                             icon={Delete}
-                             onClick={() => handleDeleteClick(delivery._id)}
+                            onClick={() => handleDeleteClick(delivery._id)}
                           />
+                          <Button
+                            className="btn-design-print"
+                            sx={{ color: 'white', height: '2.3rem' }}
+                            label="Print"
+                            onClick={() => {
+                              handlePrintClick(delivery._id);
+                              handlePrint();
+                            }}
+                          >
+                            Print
+                          </Button>
                         </Box>
                       </StyledTableCell>
                     </StyledTableRow>
@@ -218,12 +244,12 @@ const ManageDeliveryChallan = () => {
       </Box>
       {/* Modal */}
       <AllSalesModal
-       open={!!modalType}
-       handleClose={handleCloseModal}
-       formType={modalType}
-       selectedData={selectedSaleDeliveryChallan}
-       style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
-      />      
+        open={!!modalType}
+        handleClose={handleCloseModal}
+        formType={modalType}
+        selectedData={selectedSaleDeliveryChallan}
+        style={{ width: "80%", maxWidth: "60%" }}  // Adjust the width of the modal as needed
+      />
     </Container>
   );
 };

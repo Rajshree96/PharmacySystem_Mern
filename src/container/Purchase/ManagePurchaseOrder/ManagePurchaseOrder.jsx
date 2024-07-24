@@ -323,7 +323,7 @@ const handleInvoiceClick = async (purchaseData) => {
                         <Button
                           className="btn-design-invoice"
                           sx={{ color: 'white', height: '2.3rem' }}
-                          label="Print"
+                          label="Invoice"
                           // onClick={() => addPurchaseInvoice(purchaseData.orderNo)} // Pass the supplier object as a prop
                           onClick={() => handleOpenModal("add purchaseinvoice", purchaseData)} 
                           // onClick={() => handleInvoiceClick(purchaseData) }                                             

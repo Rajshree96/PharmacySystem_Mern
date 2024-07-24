@@ -56,7 +56,7 @@ const OpeningBalanceSchema = new mongoose.Schema({
     required: true,
   },
   unit: {
-    type: Number,
+    type: String,
     required: true,
   },
   amount: {
@@ -147,7 +147,10 @@ const MedicineSchema = new mongoose.Schema({
     type: OpeningBalanceSchema,
     required: true,
   },
-  
+  expiryStatus:{
+    type:Boolean,
+    default:false,
+  }
 },{timestamps:true});
 
 function arrayLimit(val) {

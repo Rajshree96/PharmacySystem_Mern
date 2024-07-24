@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Container,
   Box,
@@ -27,6 +27,7 @@ import DeleteButton from "../../../common-components/ButtonContainer/DeleteButto
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 import AllSalesModal from "../../../common-components/Modals/saleModals/AllSalesModal";
+import { useReactToPrint } from "react-to-print";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -134,8 +135,22 @@ const handleCloseModal = () => {
     
   };
 
+  const [selectedEstimate, setSelectedEstimate] = useState(null);
+  const resumeRef = useRef();
+
+  const handlePrintClick = (id) => {
+    const estimate = saleEstimate.find(item => item._id === id);
+    setSelectedEstimate(estimate);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => resumeRef.current,
+    documentTitle: `salesEstimate_${selectedEstimate ? selectedEstimate._id : ''}`,
+  });
+
+
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} ref={resumeRef}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
@@ -154,7 +169,9 @@ const handleCloseModal = () => {
                   <StyledTableCell>Place of Supply</StyledTableCell>
                   <StyledTableCell>Due Date</StyledTableCell>
                   <StyledTableCell>Total Value</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell>
+                  <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>                    
+                    </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -172,7 +189,7 @@ const handleCloseModal = () => {
                     <StyledTableCell>{saleEstimate.purchaseTable[0].totalValue}</StyledTableCell>
                     <StyledTableCell>
                       <Box
-                        style={{ display: "flex", justifyContent: "center" }}
+                        style={{ display: "flex", justifyContent: "space-between",gap:"2px" }}
                       >
                         <ViewButton
                           sx={{ mr: 1, color: "green  " }}
@@ -192,7 +209,26 @@ const handleCloseModal = () => {
                            onClick={() => handleDeleteClick(saleEstimate._id)}
 
                         />
-                        
+                        <Button
+                          className="btn-design-invoice"
+                          sx={{ color: 'white', height: '2.3rem'}}
+                          label="Invoice"
+                          onClick={() => handleOpenModal("create salesinvoice", saleEstimate)} 
+                        >
+                          <Typography sx={{fontSize:'12px',width:'95px'}}>Sales Invoice</Typography>
+                          
+                        </Button>
+                        <Button
+                          className="btn-design-print"
+                          sx={{ color: 'white', height: '2.3rem' }}
+                          label="Print"
+                          onClick={() => {
+                            handlePrintClick(saleEstimate._id);
+                            handlePrint();
+                          }}
+                        >
+                          Print
+                        </Button>                        
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>

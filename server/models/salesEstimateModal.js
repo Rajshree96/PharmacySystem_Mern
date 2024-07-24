@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const salesEstimateSchema  = new mongoose.Schema({
     date: { type: String, required: true },
-    estimateNo: { type: String, required: true },
+    estimateNo: { type: Number, required: true, unique:true },
     customerName: { type: String, required: true },
     placeOfSupply: { type: String, required: true },
     paymentTerm: { type: String, required: true },

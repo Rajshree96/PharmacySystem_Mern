@@ -32,7 +32,7 @@ import { PieChart } from "react-minimal-pie-chart";
 import { Bar, Line } from "react-chartjs-2";
 import "chart.js/auto";
 import hexToRgba from "hex-to-rgba";
-import SalesEstimate from "../../container/Sales/SalesEstimate/SalesEstimate"
+import SalesEstimate from "../../container/Sales/SalesEstimate/SalesEstimate";
 import { getAllCategories } from "../../categoriesApi";
 import axios from "axios";
 
@@ -137,7 +137,7 @@ const useStyles = makeStyles({
     display: "flex",
     maxWidth: "auto",
     height: "130px",
-    cursor:'pointer'
+    cursor: "pointer",
   },
   saleBoxIcon: {
     display: "flex",
@@ -168,7 +168,7 @@ const useStyles = makeStyles({
   legend: {
     display: "flex",
     justifyContent: "center",
-    gap:"15px",
+    gap: "15px",
   },
   legendItem: {
     display: "flex",
@@ -179,7 +179,6 @@ const useStyles = makeStyles({
     height: "15px",
     borderRadius: "50%",
   },
-
 });
 
 const MiniLineGraph = ({ color }) => {
@@ -225,116 +224,162 @@ const MiniLineGraph = ({ color }) => {
 const DashboardCard = () => {
   const classes = useStyles();
   const [customers, setCustomers] = useState([]);
-  const [ manufacturer, setmanufacturer ] = useState([]);
-   const[medicines, setMedcine] = useState([]);
-   const [invoices, setInvoice] = useState([]);
-
+  const [manufacturer, setmanufacturer] = useState([]);
+  const [medicines, setMedcine] = useState([]);
+  const [invoices, setInvoice] = useState([]);
+  const [expiredMedicinesCount, setExpiredMedicinesCount] = useState(0);
 
   useEffect(() => {
     fetchCustomer();
   }, []);
-  
 
   const fetchCustomer = async () => {
     try {
-        const auth = JSON.parse(localStorage.getItem("auth"));
-        if (!auth || !auth.token) {
-            console.error("No token found in local storage");
-            return;
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+      }
+      const response = await axios.get(
+        "http://localhost:4000/api/v1/customer/getall",
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
         }
-        const response = await axios.get("http://localhost:4000/api/v1/customer/getall", {
-            headers: {Authorization: `Bearer ${auth.token}`},
-        });
-        console.log("API Response:", response);
+      );
+      // console.log("API Response:", response);
 
-        if (Array.isArray(response.data)) {
-              setCustomers(response.data);
-        }
-        else {
-            console.error("API response does not contain cutomer array:", response.data);
-        }
+      if (Array.isArray(response.data)) {
+        setCustomers(response.data);
+      } else {
+        console.error(
+          "API response does not contain cutomer array:",
+          response.data
+        );
+      }
     } catch (error) {
-        console.error("Error fetching manufacturer:", error);
-    }
-};
-
-const fetchManufacturer = async () => {
-  try {
-      const auth = JSON.parse(localStorage.getItem("auth"));
-      if (!auth || !auth.token) {
-          console.error("No token found in local storage");
-          return;
-      }
-      const response = await axios.get("http://localhost:4000/api/v1/admin/getAllManufacturer", {
-          headers: {Authorization: `Bearer ${auth.token}`},
-      });
-      console.log("API Response:", response.data.result);
-
-      if (Array.isArray(response.data.result)) {
-          setmanufacturer(response.data.result);
-      }
-      else {
-          console.error("API response does not contain manufacturer array:", response.data);
-      }
-  } catch (error) {
       console.error("Error fetching manufacturer:", error);
-  }
-};
+    }
+  };
 
-useEffect(() => {
-  fetchManufacturer();
-  fetchMedicine();
-  fetchSales();
-}, []);
-
-
-
-
-const fetchMedicine = async () => {
-  try {
+  const fetchManufacturer = async () => {
+    try {
       const auth = JSON.parse(localStorage.getItem("auth"));
       if (!auth || !auth.token) {
-          console.error("No token found in local storage");
-          return;
+        console.error("No token found in local storage");
+        return;
       }
-      const response = await axios.get("http://localhost:4000/api/v1/admin/getallmedicine", {
-          headers: {Authorization: `Bearer ${auth.token}`},
-      });
-      console.log("API Response:", response.data.result);
+      const response = await axios.get(
+        "http://localhost:4000/api/v1/admin/getAllManufacturer",
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        }
+      );
+      // console.log("API Response:", response.data.result);
 
       if (Array.isArray(response.data.result)) {
-           setMedcine(response.data.result);
+        setmanufacturer(response.data.result);
+      } else {
+        console.error(
+          "API response does not contain manufacturer array:",
+          response.data
+        );
       }
-      else {
-          console.error("API response does not contain medicine array:", response.data);
+    } catch (error) {
+      console.error("Error fetching manufacturer:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchManufacturer();
+    fetchMedicine();
+    fetchSales();
+    fetchExpiredMedicinesCount();
+    
+  }, []);
+
+  const fetchMedicine = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
       }
-  } catch (error) {
+      const response = await axios.get(
+        "http://localhost:4000/api/v1/admin/getallmedicine",
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        }
+      );
+      console.log("API  Medcine Response:", response.data.result);
+
+      if (Array.isArray(response.data.result)) {
+        setMedcine(response.data.result);
+      } else {
+        console.error(
+          "API response does not contain medicine array:",
+          response.data
+        );
+      }
+    } catch (error) {
       console.error("Error fetching medcine:", error);
-  }
-};
-
-
-const fetchSales = async () => {
-  try {
-    const auth = JSON.parse(localStorage.getItem('auth'));
-    if (!auth || !auth.token) {
-      console.error("No token found in local storage");
-      return;
     }
-    const response = await axios.get("http://localhost:4000/api/v1/salesinvoice/getAll", {
-      headers: { Authorization: `Bearer ${auth.token}` }
-    });
-    console.log("API Response:", response.data);
+  };
 
-    if (Array.isArray(response.data)) {
-      setInvoice(response.data);
-    } else {
-      console.error("API response does not contain invoice array:", response.data.result);
+  const fetchSales = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+      }
+      const response = await axios.get(
+        "http://localhost:4000/api/v1/salesinvoice/getAll",
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        }
+      );
+      console.log("API sales  Response:", response.data);
+
+      if (Array.isArray(response.data)) {
+        setInvoice(response.data);
+      } else {
+        console.error(
+          "API response does not contain invoice array:",
+          response.data.result
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching invoice:", error);
     }
-  } catch (error) {
-    console.error("Error fetching invoice:", error);
-  }
-};
+  };
+
+  const fetchExpiredMedicinesCount = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (!auth || !auth.token) {
+        console.error("No token found in local storage");
+        return;
+      }
+      const response = await axios.get(
+        "http://localhost:4000/api/v1/expiry/expired-medcine-count",
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        }
+      );
+      console.log("API Response:", response.data);
+
+      setExpiredMedicinesCount(response.data);
+    } catch (error) {
+      console.error("Error fetching expired medicines count:", error);
+    }
+  };
+
+  
+  
+  
+  
+  
+
   const cardData = [
     {
       img: customer,
@@ -355,19 +400,57 @@ const fetchSales = async () => {
       title: "Total Medicine",
     },
     { img: inventry, end: 89, color: "#BB271A", title: "Out of Stock" },
-    { img: expire, end: 56, color: "#8C1AF6", title: "Expired" },
-    { img: invoice, end: invoices.length, color: "#F19E39", title: "Total Invoice" },
+    {
+      img: expire,
+      end: expiredMedicinesCount.manualCount,
+      color: "#8C1AF6",
+      title: "Expired",
+    },
+    {
+      img: invoice,
+      end: invoices.length,
+      color: "#F19E39",
+      title: "Total Invoice",
+    },
   ];
   const pieData = [
-    { title: "Total Medicine", value: 10, color: "#E38627" },
-    { title: "Out of Stock", value: 15, color: "#C13C37" },
-    { title: "Total Invoice", value: 20, color: "#6A2135" },
+    { title: "Total Medicine", value: medicine.length, color: "#E38627" },
+    {
+      title: "Total Manufacturer ",
+      value: manufacturer.length,
+      color: "#C13C37",
+    },
+    { title: "Total Customers", value: customers.length, color: "#6A2135" },
   ];
   const reports = [
-    { value: 70, color: "#EA3323", title: "Sales Report", img: sales,  route: <SalesEstimate/> },
-    { value: 50, color: "#8C1AF6", title: "Purchase Report", img: purchase,  route:<SalesEstimate/> },
-    { value: 90, color: "#78A75A", title: "Stock Report", img: stock,  route:<SalesEstimate/> },
-    { value: 30, color: "#0000F5", title: "Day Book", img: day,  route:<SalesEstimate/> },
+    {
+      value: 70,
+      color: "#EA3323",
+      title: "Sales Report",
+      img: sales,
+      route: <SalesEstimate />,
+    },
+    {
+      value: 50,
+      color: "#8C1AF6",
+      title: "Purchase Report",
+      img: purchase,
+      route: <SalesEstimate />,
+    },
+    {
+      value: 90,
+      color: "#78A75A",
+      title: "Stock Report",
+      img: stock,
+      route: <SalesEstimate />,
+    },
+    {
+      value: 30,
+      color: "#0000F5",
+      title: "Day Book",
+      img: day,
+      route: <SalesEstimate />,
+    },
   ];
   const data = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -442,31 +525,31 @@ const fetchSales = async () => {
 
         {/* Additional Grids for Reports */}
         <Grid container spacing={2} mt="1rem">
-        {reports.map((item, index) => (
-          <Grid item lg={3} md={3} sm={6} xs={12} key={index}>
-            <Box>
-              <Card onClick={() => handleCardClick(item.route)}>
-                <CardContent className={classes.saleCard}>
-                  <Grid item md={12} sm={12} className={classes.saleBox}>
-                    <img src={item.img} alt="logo" height={50} width={50} />
-                    <Typography
-                      gutterBottom
-                      variant="h6"
-                      component="div"
-                      style={{
-                        color: item.color,
-                        fontWeight: "600",
-                        fontSize: "19px",
-                      }}
-                    >
-                      {item.title}
-                    </Typography>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Box>
-          </Grid>
-        ))}
+          {reports.map((item, index) => (
+            <Grid item lg={3} md={3} sm={6} xs={12} key={index}>
+              <Box>
+                <Card onClick={() => handleCardClick(item.route)}>
+                  <CardContent className={classes.saleCard}>
+                    <Grid item md={12} sm={12} className={classes.saleBox}>
+                      <img src={item.img} alt="logo" height={50} width={50} />
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="div"
+                        style={{
+                          color: item.color,
+                          fontWeight: "600",
+                          fontSize: "19px",
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Grid>
+          ))}
         </Grid>
 
         {/* Statistics Grids */}
@@ -514,7 +597,7 @@ const fetchSales = async () => {
                   Inventory Report
                 </Typography>
                 <Box className={classes.pieChart}>
-                <Box className={classes.legend}>
+                  <Box className={classes.legend}>
                     {pieData.map((entry, index) => (
                       <div key={index} className={classes.legendItem}>
                         <div
@@ -545,7 +628,6 @@ const fetchSales = async () => {
                     animationDuration={600}
                     style={{ height: "250px" }} // adjust this value as needed
                   />
-                 
                 </Box>
               </CardContent>
             </Card>
@@ -577,43 +659,49 @@ const fetchSales = async () => {
                     <Table className={classes.statisticTable}>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell>Medicine Name</StyledTableCell>
-                          <StyledTableCell align="right">
+                          <StyledTableCell align="center">Medicine Name</StyledTableCell>
+                          <StyledTableCell align="center">
                             Category
                           </StyledTableCell>
-                          <StyledTableCell align="right">
+                          <StyledTableCell align="center">
                             Medicine Type
                           </StyledTableCell>
-                          <StyledTableCell align="right">Unit</StyledTableCell>
+                          <StyledTableCell align="center">Unit</StyledTableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {rows.map((row) => (
+                        {medicines?.map((row) => (
                           <StyledTableRow key={row.name}>
                             <StyledTableCell
                               component="th"
                               scope="row"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
-                              {row.name}
+                              {row.medicineName}
+                            </StyledTableCell>
+                           
+                              <StyledTableCell
+                        
+                                align="center"
+                                className={classes.statisticTableCell}
+                              >
+                                {row.medicineCategory.name}
+                              </StyledTableCell>
+                            
+
+                            <StyledTableCell
+                              align="center"
+                              className={classes.statisticTableCell}
+                            >
+                              {row.medicineType.mediType}
                             </StyledTableCell>
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
-                              {row.calories}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="right"
-                              className={classes.statisticTableCell}
-                            >
-                              {row.fat}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="right"
-                              className={classes.statisticTableCell}
-                            >
-                              {row.carbs}
+                              {console.log(row.unit?.name)}
+                              {row.unit?.name}
                             </StyledTableCell>
                           </StyledTableRow>
                         ))}
@@ -647,45 +735,49 @@ const fetchSales = async () => {
                     <Table className={classes.tableContainer}>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell>Sale Invoice</StyledTableCell>
-                          <StyledTableCell align="right">
-                            POS Scale
+                          <StyledTableCell align="center">Sale Invoice No</StyledTableCell>
+                          <StyledTableCell align="center">
+                            Customer Name
                           </StyledTableCell>
-                          <StyledTableCell align="right">
-                            GUI Scale
+                          <StyledTableCell align="center">
+                            Place Of Supply
                           </StyledTableCell>
-                          <StyledTableCell align="right">
-                            Sale Return
+                          <StyledTableCell align="center">
+                            Date
                           </StyledTableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {rows.map((row) => (
+                        {invoices.map((row) => (
                           <StyledTableRow key={row.name}>
                             <StyledTableCell
                               component="th"
                               scope="row"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
-                              {row.name}
+                              {row.invoiceNo}
                             </StyledTableCell>
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
-                              {row.calories}
+                               
+                              {row.customerName}
                             </StyledTableCell>
+                            
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
-                              {row.fat}
+                              {row.placeOfSupply}
                             </StyledTableCell>
+                          
                             <StyledTableCell
-                              align="right"
+                              align="center"
                               className={classes.statisticTableCell}
                             >
-                              {row.carbs}
+                              {row.date}
                             </StyledTableCell>
                           </StyledTableRow>
                         ))}
