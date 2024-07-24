@@ -192,6 +192,26 @@ const handleCloseModal = () => {
                            onClick={() => handleDeleteClick(saleEstimate._id)}
 
                         />
+                        <Button
+                          className="btn-design-invoice"
+                          sx={{ color: 'white', height: '2.3rem' }}
+                          label="Invoice"
+                          // onClick={() => handleOpenModal("add purchaseinvoice", purchaseData)} 
+                        >
+                          <Typography sx={{fontSize:'10px',width:'50px'}}>Sales Invoice</Typography>
+                          
+                        </Button>
+                        <Button
+                          className="btn-design-print"
+                          sx={{ color: 'white', height: '2.3rem' }}
+                          label="Print"
+                          onClick={() => {
+                            handlePrintClick(saleEstimate._id);
+                            handlePrint();
+                          }}
+                        >
+                          Print
+                        </Button>
                         
                       </Box>
                     </StyledTableCell>

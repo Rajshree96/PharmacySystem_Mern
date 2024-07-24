@@ -266,6 +266,9 @@ function SalesInvoice({formType, selectedData, setSuccess}) {
     const [ date, setDate ] = useState("");
     const [ paymentTerms, setPaymentTerms ] = useState("");
     const [ dueDate, setDueDate ] = useState("");
+    const [ estimateNo, setEstimateNo ] = useState("");
+    const[estimates,setEstimates]=useState([]);
+    
     const [ charges, setCharges ] = useState([]);
     const [ totalCharges, setTotalCharges ] = useState(0);
     const [ currentCharge, setCurrentCharge ] = useState("");
@@ -520,7 +523,22 @@ function SalesInvoice({formType, selectedData, setSuccess}) {
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
-                                label="Invoic No."
+                                select
+                                label="Estimate No."
+                                fullWidth
+                                value={estimateNo}
+                                onChange={handleSaveSalesEstimate}
+                            >                           
+                                {estimates.map((estimate) => (
+                                    <MenuItem key={estimate._id} value={estimate.estimateNo}>
+                                        {estimate.estimateNo}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                label="Invoice No."
                                 fullWidth
                                 value={invoiceNo}
                                 onChange={(e) => setInvoiceNo(e.target.value)}
