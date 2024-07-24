@@ -210,130 +210,251 @@ const resetForm = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
   const breadcrumbs = ["Customer", "Add Customer"];
-  const handleSubmit = async (e) => {
+  // const handleSubmit = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     try {
+  //       // Validate name
+  //       await validationSchema.validateAt("name", { name });
+  //       setNameError(""); // Clear any previous error
+  //     } catch (err) {
+  //       setNameError(err.message); // Set error message for name
+  //     }
+
+  //     try {
+  //       // Validate gstin
+  //       await validationSchema.validateAt("gstin", { gstin });
+  //       setGstError("");
+  //     } catch (err) {
+  //       setGstError(err.message);
+  //     }
+
+  //     try {
+  //       // Validate state
+  //       await validationSchema.validateAt("state", { state: selectedState });
+  //       setStateError("");
+  //     } catch (err) {
+  //       setStateError(err.message);
+  //     }
+
+  //     try {
+  //       // Validate registration type
+  //       await validationSchema.validateAt("registrationType", { registrationType });
+  //       setRegistrationTypeError("");
+  //     } catch (err) {
+  //       setRegistrationTypeError(err.message);
+  //     }
+
+  //     // Check overall validity after individual validations
+  //     const isValid = await validationSchema.isValid({ name, gstin, state: selectedState, registrationType });
+
+  //     if (!isValid) {
+  //       // Handle any additional logic if the overall form is not valid
+  //       return;
+  //     }
+
+  //     const customerDetails = {
+  //       customerDetails: {
+  //         name: name,
+  //         address: address,
+  //         state: selectedState,
+  //         pinCode: pinCode,
+  //         country: selectedCountry,
+  //         contact: contact,
+  //         email: email,
+  //         website: website,
+  //         bankDetails: {
+  //           bankName: bankName,
+  //           bankAddress: bankAddress,
+  //           ifscCode: ifscCode,
+  //           accountHolderName: accountHolderName,
+  //           accountNumber: accountNumber,
+  //         },
+  //         statutoryDetails: {
+  //           stateRegistrationType: registrationType,
+  //           gstin: gstin,
+  //         },
+  //         openingBalance: {
+  //           asOnFirstDayOfFinancialYear: openingBalance,
+  //         },
+  //       }
+  //     };
+  //     console.log("data@@@@", customerDetails);
+
+  //     const auth = JSON.parse(localStorage.getItem("auth"));
+  //     const response = await axios.post(
+  //       "http://localhost:4000/api/v1/cutomer/add",
+  //       customerDetails,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${auth.token}`,
+  //         },
+  //       }
+  //     );
+  //     if (response.status === 201) {
+  //       console.log("customer added successfully:", response.data);
+  //       setSelectedCountry("");
+  //       setSelectedState("");
+  //       setName("");
+  //       setAddress("");
+  //       setPinCode("");
+  //       setContact("");
+  //       setEmail("");
+  //       setWebsite("");
+  //       setBankName("");
+  //       setBankAddress("");
+  //       setIfscCode("");
+  //       setAccountHolderName("");
+  //       setAccountNumber("");
+  //       setGstin("");
+  //       setOpeningBalance("");
+  //       setRegistrationType("");
+  //       toast.success("customer added successfully");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error adding customer:", error);
+  //   }
+  // };
+
+//   const handleSaveCustomer = async () => {
+//     try {
+//         if (formType === "edit customer") {
+//             console.log("Customer updated successfully");
+//         }
+//         else {
+//             console.log("Customer added successfully");
+//         }
+//         setSuccess(true);
+        
+//     } catch (error) {
+//         console.error(`Error ${formType === "edit customer" ? "editing" : "adding"}  manufacturer:`, error);
+//     }
+// };
+
+   // Edit mode -> Form styles changes conditionally
+   const addCustomer = async (customerData) => {
+    console.log(customerData);
     try {
-      e.preventDefault();
-      try {
-        // Validate name
-        await validationSchema.validateAt("name", { name });
-        setNameError(""); // Clear any previous error
-      } catch (err) {
-        setNameError(err.message); // Set error message for name
-      }
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        const response = await axios.post("http://localhost:4000/api/v1/customer/add", customerData, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.token}`,
+            },
+        });
+        console.log("response-----  ", response);
+        if (response.status === 201) {
+            console.log(" customer added successfully:", response.data);
+            setSelectedCountry("");
+            setSelectedState("");
+            setName("");
+            setAddress("");
+            setPinCode("");
+            setContact("");
+            setEmail("");
+            setWebsite("");
+            setBankName("");
+            setBankAddress("");
+            setIfscCode("");
+            setAccountHolderName("");
+            setAccountNumber("");
+            setGstin("");
+            setOpeningBalance("");
+            setRegistrationType("");
+            toast.success("customer  added successfully");
+        }
+    } catch (error) {
+        console.log("Error adding customer:", error);
+    }
+}
 
-      try {
-        // Validate gstin
-        await validationSchema.validateAt("gstin", { gstin });
-        setGstError("");
-      } catch (err) {
-        setGstError(err.message);
-      }
 
-      try {
-        // Validate state
-        await validationSchema.validateAt("state", { state: selectedState });
-        setStateError("");
-      } catch (err) {
-        setStateError(err.message);
-      }
+const editCustomer = async (id, customer) => {
+    console.log("Manufacturer@@@@", customer._id);
 
-      try {
-        // Validate registration type
-        await validationSchema.validateAt("registrationType", { registrationType });
-        setRegistrationTypeError("");
-      } catch (err) {
-        setRegistrationTypeError(err.message);
-      }
-
-      // Check overall validity after individual validations
-      const isValid = await validationSchema.isValid({ name, gstin, state: selectedState, registrationType });
-
-      if (!isValid) {
-        // Handle any additional logic if the overall form is not valid
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    if (!auth || !auth.token) {
+        console.error("No token found in local storage");
         return;
-      }
+    }
 
-      const customerDetails = {
-        customerDetails: {
-          name: name,
-          address: address,
-          state: selectedState,
-          pinCode: pinCode,
-          country: selectedCountry,
-          contact: contact,
-          email: email,
-          website: website,
-          bankDetails: {
+    // // Check if the _id field is defined
+    // if (!manufacturer.id) {
+    //     console.error("Manufacturer _id is undefined");
+    //     return;
+    // }
+
+    try {
+        const response = await axios.put(`http://localhost:4000/api/v1/customer/edit/${id}`, customer, {
+            headers: { Authorization: `Bearer ${auth.token}` },
+        });
+        console.log("customer updated:", response.data);
+        console.log(customer);
+        // setManufacturers((prevManufacturer) =>
+        //     prevManufacturer.map((manu) => (manu._id === manufacturer._id ? manufacturer : manu))
+        // );
+    } catch (error) {
+        console.error("Error updating customer:", error);
+    }
+};
+
+const handleSaveCustomer = async (e) => {
+    e.preventDefault();
+    const customerData = {
+       customerDetails:{
+        name: name,
+        address: address,
+        state: selectedState,
+        pincode: pinCode,
+        country: selectedCountry,
+        contact: contact,
+        email: email,
+        website: website,
+       } ,
+        bankingDetails: {
             bankName: bankName,
             bankAddress: bankAddress,
             ifscCode: ifscCode,
             accountHolderName: accountHolderName,
             accountNumber: accountNumber,
-          },
-          statutoryDetails: {
-            stateRegistrationType: registrationType,
+        },
+        statutoryDetails: {
+            registrationType: registrationType,
             gstin: gstin,
-          },
-          openingBalance: {
+        },
+        openingBalance: {
             asOnFirstDayOfFinancialYear: openingBalance,
-          },
-        }
-      };
-      console.log("data@@@@", customerDetails);
-
-      const auth = JSON.parse(localStorage.getItem("auth"));
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/customer/add",
-        customerDetails,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      );
-      if (response.status === 201) {
-        console.log("customer added successfully:", response.data);
-        setSelectedCountry("");
-        setSelectedState("");
-        setName("");
-        setAddress("");
-        setPinCode("");
-        setContact("");
-        setEmail("");
-        setWebsite("");
-        setBankName("");
-        setBankAddress("");
-        setIfscCode("");
-        setAccountHolderName("");
-        setAccountNumber("");
-        setGstin("");
-        setOpeningBalance("");
-        setRegistrationType("");
-        toast.success("customer added successfully");
-      }
-    } catch (error) {
-      console.log("Error adding customer:", error);
-    }
-  };
-
-  const handleSaveCustomer = async () => {
+        },
+    };
     try {
         if (formType === "edit customer") {
-          
-            console.log("Customer updated successfully");
+
+          await editCustomer(selectedData._id, customerData);
+            console.log("customer updated successfully");
+            setSuccess(true);
+            // toast.success("Manufacturer edited successfully");
+
+
         }
         else {
+
+           await addCustomer(customerData);
             console.log("Customer added successfully");
+            setSuccess(true);
+            // toast.success("Manufacturer added successfully");
         }
-        setSuccess(true);
-        
+
+       
+        // setManufacturersName("");
     } catch (error) {
-        console.error(`Error ${formType === "edit customer" ? "editing" : "adding"}  manufacturer:`, error);
+        console.error(`Error ${formType === "edit customer" ? "editing" : "adding"}  customer:`, error);
     }
 };
 
-   // Edit mode -> Form styles changes conditionally
+
+
+
    const editModeStyles =
    formType === "edit customer"
        ? {
@@ -376,7 +497,7 @@ const paperStyles =
             variants={containerVariants}
           >
 
-            <form onSubmit={handleSubmit}>
+            <form >
               <motion.div variants={itemVariants}>
                 {/* name */}
                 <Grid container spacing={3}>

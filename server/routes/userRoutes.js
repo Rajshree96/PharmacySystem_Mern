@@ -1,6 +1,7 @@
 import express from "express";
 import { loginController, registerController } from "../controllers/userController.js";
 import { checkUserLogin, isAdmin } from "../middlewares/middleware.js";
+
 const userRouter = express.Router();
 
 userRouter.post('/register',registerController);

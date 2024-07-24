@@ -193,204 +193,189 @@ const AddSupplier = ({formType, selectedData, setSuccess}) => {
     };
     const breadcrumbs = [ "Supplier", "Add Supplier" ];
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         // Validate name
+    //         await validationSchema.validateAt("name", {name});
+    //         setNameError(""); // Clear any previous error
+    //     } catch (err) {
+    //         setNameError(err.message); // Set error message for name
+    //     }
+
+    //     try {
+    //         // Validate gstin
+    //         await validationSchema.validateAt("gstin", {gstin});
+    //         setGstError("");
+    //     } catch (err) {
+    //         setGstError(err.message);
+    //     }
+
+    //     try {
+    //         // Validate state
+    //         await validationSchema.validateAt("state", {state: selectedState});
+    //         setStateError("");
+    //     } catch (err) {
+    //         setStateError(err.message);
+    //     }
+
+    //     try {
+    //         // Validate registration type
+    //         await validationSchema.validateAt("registrationType", {registrationType});
+    //         setRegistrationTypeError("");
+    //     } catch (err) {
+    //         setRegistrationTypeError(err.message);
+    //     }
+
+    //     // Check overall validity after individual validations
+    //     const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
+
+    //     if (!isValid) {
+    //         // Handle any additional logic if the overall form is not valid
+    //         return;
+    //     }
+    //     const supplierData = {
+    //         name: name,
+    //         address: address,
+    //         state: selectedState,
+    //         pincode: pinCode,
+    //         country: selectedCountry,
+    //         contact: contact,
+    //         email: email,
+    //         website: website,
+    //         bankingDetails: {
+    //             bankName: bankName,
+    //             bankAddress: bankAddress,
+    //             ifscCode: ifscCode,
+    //             accountHolderName: accountHolderName,
+    //             accountNumber: accountNumber,
+    //         },
+    //         statutoryDetails: {
+    //             registrationType: registrationType,
+    //             gstin: gstin,
+    //         },
+    //         openingBalance: {
+    //             asOnFirstDayOfFinancialYear: openingBalance,
+    //         },
+    //     };
+
+    //     try {
+    //         const auth = JSON.parse(localStorage.getItem("auth"));
+    //         const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${auth.token}`,
+    //             },
+    //         });
+    //         if (response.status === 201) {
+    //             console.log("Supplier added successfully:", response.data);
+    //             setSelectedCountry("");
+    //             setSelectedState("");
+    //             setName("");
+    //             setAddress("");
+    //             setPinCode("");
+    //             setContact("");
+    //             setEmail("");
+    //             setWebsite("");
+    //             setBankName("");
+    //             setBankAddress("");
+    //             setIfscCode("");
+    //             setAccountHolderName("");
+    //             setAccountNumber("");
+    //             setGstin("");
+    //             setOpeningBalance("");
+    //             setRegistrationType("");
+    //             toast.success("supplier added successfully");
+    //         }
+    //     } catch (error) {
+    //         console.log("Error adding supplier:", error);
+    //     }
+    // };
+
+    // const handleSaveSupplier = async () => {
+    //     try {
+    //         if (formType === "edit supplier") {
+    //             console.log("Supplier updated successfully");
+    //         }
+    //         else {
+    //             console.log("Supplier added successfully");
+    //         }
+    //         setSuccess(true);
+            
+    //     } catch (error) {
+    //         console.error(`Error ${formType === "edit supplier" ? "editing" : "adding"}  supplier:`, error);
+    //     }
+    // };
+
+    // Edit mode -> Form styles changes conditionally
+
+    const addSupplier = async (supplierData) => {
         try {
-            // Validate name
-            await validationSchema.validateAt("name", {name});
-            setNameError(""); // Clear any previous error
-        } catch (err) {
-            setNameError(err.message); // Set error message for name
+            const auth = JSON.parse(localStorage.getItem("auth"));
+            const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${auth.token}`,
+                },
+            });
+            console.log("response-----  ", response);
+            if (response.status === 201) {
+                console.log("supplier added successfully:", response.data);
+                setSelectedCountry("");
+                setSelectedState("");
+                setName("");
+                setAddress("");
+                setPinCode("");
+                setContact("");
+                setEmail("");
+                setWebsite("");
+                setBankName("");
+                setBankAddress("");
+                setIfscCode("");
+                setAccountHolderName("");
+                setAccountNumber("");
+                setGstin("");
+                setOpeningBalance("");
+                setRegistrationType("");
+                toast.success("supplier added successfully");
+            }
+        } catch (error) {
+            console.log("Error adding supplier:", error);
         }
+    }
 
-        try {
-            // Validate gstin
-            await validationSchema.validateAt("gstin", {gstin});
-            setGstError("");
-        } catch (err) {
-            setGstError(err.message);
-        }
 
-        try {
-            // Validate state
-            await validationSchema.validateAt("state", {state: selectedState});
-            setStateError("");
-        } catch (err) {
-            setStateError(err.message);
-        }
-
-        try {
-            // Validate registration type
-            await validationSchema.validateAt("registrationType", {registrationType});
-            setRegistrationTypeError("");
-        } catch (err) {
-            setRegistrationTypeError(err.message);
-        }
-
-        // Check overall validity after individual validations
-        const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
-
-        if (!isValid) {
-            // Handle any additional logic if the overall form is not valid
+    const editSupplier = async (id, supplier) => {
+        console.log("Manufacturer@@@@", supplier._id);
+    
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (!auth || !auth.token) {
+            console.error("No token found in local storage");
             return;
         }
-        // const supplierData = {
-        //     name: name,
-        //     address: address,
-        //     state: selectedState,
-        //     pincode: pinCode,
-        //     country: selectedCountry,
-        //     contact: contact,
-        //     email: email,
-        //     website: website,
-        //     bankingDetails: {
-        //         bankName: bankName,
-        //         bankAddress: bankAddress,
-        //         ifscCode: ifscCode,
-        //         accountHolderName: accountHolderName,
-        //         accountNumber: accountNumber,
-        //     },
-        //     statutoryDetails: {
-        //         registrationType: registrationType,
-        //         gstin: gstin,
-        //     },
-        //     openingBalance: {
-        //         asOnFirstDayOfFinancialYear: openingBalance,
-        //     },
-        // };
-
-        // try {
-        //     const auth = JSON.parse(localStorage.getItem("auth"));
-        //     const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             Authorization: `Bearer ${auth.token}`,
-        //         },
-        //     });
-        //     if (response.status === 201) {
-        //         console.log("Supplier added successfully:", response.data);
-        //         setSelectedCountry("");
-        //         setSelectedState("");
-        //         setName("");
-        //         setAddress("");
-        //         setPinCode("");
-        //         setContact("");
-        //         setEmail("");
-        //         setWebsite("");
-        //         setBankName("");
-        //         setBankAddress("");
-        //         setIfscCode("");
-        //         setAccountHolderName("");
-        //         setAccountNumber("");
-        //         setGstin("");
-        //         setOpeningBalance("");
-        //         setRegistrationType("");
-        //         toast.success("supplier added successfully");
-        //     }
-        // } catch (error) {
-        //     console.log("Error adding supplier:", error);
+    
+        // // Check if the _id field is defined
+        // if (!manufacturer.id) {
+        //     console.error("Manufacturer _id is undefined");
+        //     return;
         // }
+    
+        try {
+            const response = await axios.put(`http://localhost:4000/api/v1/admin/update/supplier/${id}`, supplier, {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            });
+            console.log("supplier updated:", response.data);
+            console.log(supplier);
+            // setManufacturers((prevManufacturer) =>
+            //     prevManufacturer.map((manu) => (manu._id === manufacturer._id ? manufacturer : manu))
+            // );
+        } catch (error) {
+            console.error("Error updating supplier:", error);
+        }
     };
 
-const addSupplier = async (supplierData) => {
-    try {
-        const auth = JSON.parse(localStorage.getItem("auth"));
-        const response = await axios.post("http://localhost:4000/api/v1/admin/add-supplier", supplierData, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.token}`,
-            },
-        });
-        if (response.status === 201) {
-            console.log("Supplier added successfully:", response.data);
-            setSelectedCountry("");
-            setSelectedState("");
-            setName("");
-            setAddress("");
-            setPinCode("");
-            setContact("");
-            setEmail("");
-            setWebsite("");
-            setBankName("");
-            setBankAddress("");
-            setIfscCode("");
-            setAccountHolderName("");
-            setAccountNumber("");
-            setGstin("");
-            setOpeningBalance("");
-            setRegistrationType("");
-            toast.success("supplier added successfully");
-        }
-    } catch (error) {
-        console.log("Error adding supplier:", error);
-    }
-}
-
-
-const editSupplier = async (id, supplier) => {
-    console.log("Manufacturer@@@@", supplier._id);
-
-    const auth = JSON.parse(localStorage.getItem("auth"));
-    if (!auth || !auth.token) {
-        console.error("No token found in local storage");
-        return;
-    }
-
-    try {
-        const response = await axios.put(`http://localhost:4000/api/v1/admin/update/supplier/${id}`, supplier, {
-            headers: { Authorization: `Bearer ${auth.token}` },
-        });
-        console.log("Supplier updated:", response.data);
-        console.log("supplier-----",supplier);
-
-    } catch (error) {
-        console.error("Error updating supplier:", error);
-    }
-};
-
-
     const handleSaveSupplier = async (e) => {
-        try {
         e.preventDefault();
-            // Validate name
-            await validationSchema.validateAt("name", {name});
-            setNameError(""); // Clear any previous error
-        } catch (err) {
-            setNameError(err.message); // Set error message for name
-        }
-
-        try {
-            // Validate gstin
-            await validationSchema.validateAt("gstin", {gstin});
-            setGstError("");
-        } catch (err) {
-            setGstError(err.message);
-        }
-
-        try {
-            // Validate state
-            await validationSchema.validateAt("state", {state: selectedState});
-            setStateError("");
-        } catch (err) {
-            setStateError(err.message);
-        }
-
-        try {
-            // Validate registration type
-            await validationSchema.validateAt("registrationType", {registrationType});
-            setRegistrationTypeError("");
-        } catch (err) {
-            setRegistrationTypeError(err.message);
-        }
-
-        // Check overall validity after individual validations
-        const isValid = await validationSchema.isValid({name, gstin, state: selectedState, registrationType});
-
-        if (!isValid) {
-            // Handle any additional logic if the overall form is not valid
-            return;
-        }
-
         const supplierData = {
             name: name,
             address: address,
@@ -415,24 +400,30 @@ const editSupplier = async (id, supplier) => {
                 asOnFirstDayOfFinancialYear: openingBalance,
             },
         };
-
         try {
             if (formType === "edit supplier") {
-                await editSupplier(selectedData._id,  supplierData );
-                // console.log("Supplier updated successfully");
+
+              await editSupplier(selectedData._id, supplierData);
+                console.log("supplier updated successfully");
+                setSuccess(true);
+                // toast.success("Manufacturer edited successfully");
+
+
             }
             else {
-                await addSupplier(supplierData);
-                // console.log("Supplier added successfully");
+
+               await addSupplier(supplierData);
+                console.log("supplier added successfully");
+                setSuccess(true);
+                // toast.success("Manufacturer added successfully");
             }
-            setSuccess(true);
-            
+
+           
+            // setManufacturersName("");
         } catch (error) {
             console.error(`Error ${formType === "edit supplier" ? "editing" : "adding"}  supplier:`, error);
         }
     };
-
-    // Edit mode -> Form styles changes conditionally
 
     const editModeStyles =
         formType === "edit supplier"
@@ -474,7 +465,7 @@ const editSupplier = async (id, supplier) => {
               </Typography>
             )} */}
 
-                        <form onSubmit={handleSaveSupplier}>
+                        <form >
                             <motion.div variants={itemVariants}>
                                 <Typography variant="h6" gutterBottom className={classes.sectionTitle}>
                                     <BusinessIcon className={classes.sectionIcon} /> Supplier Details

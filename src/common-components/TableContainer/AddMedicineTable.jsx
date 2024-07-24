@@ -889,15 +889,15 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
               medicines.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((medicine, index) => (
                 <TableRow key={medicine._id}>
                   <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                  <TableCell>{medicine.itemCode}</TableCell>
-                  <TableCell>{medicine.medicineName}</TableCell>
-                  <TableCell>{medicine.batchNo}</TableCell>
-                  <TableCell>{medicine.expiryDate}</TableCell>
-                  <TableCell>{medicine.medicineCategory.name}</TableCell>
-                  <TableCell>{medicine.medicineType.mediType}</TableCell>
-                  <TableCell>{medicine.brand.brand}</TableCell>
-                  <TableCell>{medicine.unit.name}</TableCell>
-                  <TableCell>{medicine.netWeight}</TableCell>
+                  <TableCell>{medicine?.itemCode}</TableCell>
+                  <TableCell>{medicine?.medicineName}</TableCell>
+                  <TableCell>{medicine?.batchNo}</TableCell>
+                  <TableCell>{medicine?.expiryDate}</TableCell>
+                  <TableCell>{medicine?.medicineCategory?.name}</TableCell>
+                  <TableCell>{medicine?.medicineType?.mediType}</TableCell>
+                  <TableCell>{medicine?.brand?.brand}</TableCell>
+                  <TableCell>{medicine?.unit?.name}</TableCell>
+                  <TableCell>{medicine?.netWeight}</TableCell>
                   <TableCell>
                     <EditButton
                       label={"edit"}
@@ -909,7 +909,7 @@ const AddMedicineTable = ({ onEditAddMedicine }) => {
                       label={"delete"}
                       icon={DeleteIcon}
                       sx={{ mr: 1, color: "red" }}
-                      onClick={() => handleDeleteClick(medicine)}
+                      onClick={() => handleDeleteClick(medicine.itemCode)}
                     />
                   </TableCell>
                 </TableRow>

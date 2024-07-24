@@ -1,4 +1,4 @@
-import Purchase from "../models/purchaseModal.js";
+import PurchaseInvoice from "../models/purchaseInvoiceModel.js";
 
 
 // Add a new purchase record with all fields
@@ -40,12 +40,13 @@ import Purchase from "../models/purchaseModal.js";
 // };
 
 
-export const addPurchase = async (req, res) => {
+export const addPurchaseInvoice = async (req, res) => {
     try {
         
-        const newPurchase =  new Purchase({
+        const newPurchase =  new PurchaseInvoice({
             date: req.body.date,
             orderNo: req.body.orderNo,
+            invoiceNo:req.body.invoiceNo,
             supplierName: req.body.supplierName,
             placeOfSupply: req.body.placeOfSupply,
             paymentTerm: req.body.paymentTerm,
@@ -88,31 +89,22 @@ export const addPurchase = async (req, res) => {
 };
 
 //getall purchesh 
-export const getAllPurchases = async (req, res) => {
+export const getAllPurchasesInvoice = async (req, res) => {
     try {
-        const purchases = await Purchase.find();
+        const purchases = await PurchaseInvoice.find();
         res.status(200).json(purchases);
     } catch (error) {
         res.status(500).json({ message: "Failed to retrieve purchases", error: error.message });
     }
 };
  
-export async function getAllOrderNumber(req, res) {
-    try {
-        const purchases = await Purchase.find({}, 'orderNo'); // Only select the orderNo field
-        // const orderNumbers = purchases.map(purchase => purchase.orderNo);
-        res.status(200).json(purchases);
-    } catch (error) {
-        res.status(500).json({ message: "Failed to retrieve order numbers", error: error.message });
-    }
-}
 // Update a purchase record
-export const updatePurchase = async (req, res) => {
+export const updatePurchaseInvoice = async (req, res) => {
     const { id } = req.params;
     const {...updatedData}= req.body;
 
     try {
-        const updatedPurchase = await Purchase.findByIdAndUpdate({ _id:id },
+        const updatedPurchase = await PurchaseInvoice.findByIdAndUpdate({ _id:id },
             updatedData,
             { new: true } );
         if (!updatedPurchase) {
@@ -126,11 +118,11 @@ export const updatePurchase = async (req, res) => {
 
 
 // Delete a purchase record
-export const deletePurchase = async (req, res) => {
+export const deletePurchaseInvoice = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const deletedPurchase = await Purchase.findByIdAndDelete(id);
+        const deletedPurchase = await PurchaseInvoice.findByIdAndDelete(id);
         if (!deletedPurchase) {
             return res.status(404).json({ message: "Purchase not found" });
         }

@@ -2,10 +2,12 @@ import React, {useState} from "react";
 import {Button, Dialog, DialogContent, DialogContentText, DialogTitle, Box} from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import PurchaseOrder from "../../../container/Purchase/PurchaseOrder/PurchaseOrder";
-import PurchaseInvoice from "../../../container/Purchase/PurchaseInvoice/PurchaseInvoice";
+import SalesEstimate from "../../../container/Sales/SalesEstimate/SalesEstimate";
+import SalesInvoice from "../../../container/Sales/SalesInvoice/SalesInvoice";
+import DeliveryChallan from "../../../container/Sales/DeliveryChallan/DeliveryChallan";
 
-const AllPurchaseModal = ({open, handleClose, formType, selectedData, style}) => {
+
+const AllSalesModal = ({open, handleClose, formType, selectedData, style}) => {
     const [ success, setSuccess ] = useState(false);
 
     const resetForm = () => {
@@ -19,21 +21,28 @@ const AllPurchaseModal = ({open, handleClose, formType, selectedData, style}) =>
 
     const renderForm = () => {
         switch (formType) {
-            case "add purchaseorder":
-            case "edit purchaseorder":
+            case "add salesestimate":
+            case "edit salesestimate":
                 return (
                     <>
-                        <PurchaseOrder setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                      <SalesEstimate setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
                     </>
                 );
-            case "add purchaseinvoice":
-            case "edit purchaseinvoice":
-            case "create purchaseinvoice":
+            case "add salesinvoice":
+            case "edit salesinvoice":
                 return (
                     <>
-                        <PurchaseInvoice setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                      <SalesInvoice setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
                     </>
                 );
+            case "add salesdeliverychalan":
+            case "edit salesdeliverychalan":
+                return (
+                    <>
+                      <DeliveryChallan setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                    </>
+                );
+            
             default:
                 return null;
         }
@@ -75,4 +84,4 @@ const AllPurchaseModal = ({open, handleClose, formType, selectedData, style}) =>
     );
 };
 
-export default AllPurchaseModal;
+export default AllSalesModal;
