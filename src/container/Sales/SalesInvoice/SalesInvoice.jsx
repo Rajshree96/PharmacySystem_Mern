@@ -452,7 +452,7 @@ function SalesInvoice() {
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField label="Invoic No." fullWidth 
+              <TextField label="Invoice No." fullWidth 
               value={invoiceNo}
               onChange={(e)=> setInvoiceNo(e.target.value)}
               />
