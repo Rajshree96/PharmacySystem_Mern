@@ -51,7 +51,7 @@ const ManagePurchaseInvoice = () => {
     const [ modalType, setModalType ] = useState("");
     const [ selectedPurchaseInvoice, setSelectedPurchaseInvoice ] = useState(null);
 
-    const [ customers, setCustomers ] = useState([]);
+    const [purchaseInvoiceData, setPurchaseInvoiceData] = useState([]);
     const breadcrumbs = [ "Purchase", "Manage Purchase Invoice" ];
 
     const [ page, setPage ] = useState(0);
@@ -76,32 +76,34 @@ const ManagePurchaseInvoice = () => {
         setPage(0);
     };
 
-    const fetchCustomer = async () => {
+    const fetchPurchaseInvoiceList = async () => {
         try {
-            const auth = JSON.parse(localStorage.getItem("auth"));
-            if (!auth || !auth.token) {
-                console.error("No token found in local storage");
-                return;
+          const auth = JSON.parse(localStorage.getItem('auth'));
+          if (!auth || !auth.token) {
+            console.error("No token found in local storage");
+            return;
+          }
+          const response = await axios.get("http://localhost:4000/api/v1/purchase-invoice/getall",
+            {
+              headers: { Authorization: `Bearer ${auth.token}` }
             }
-            const response = await axios.get("http://localhost:4000/api/v1/customer/getall", {
-                headers: {Authorization: `Bearer ${auth.token}`},
-            });
-            console.log("API Response:", response.data);
-
-            if (Array.isArray(response.data)) {
-                setCustomers(response.data);
-            }
-            else {
-                console.error("API response does not contain cutomer array:", response.data.result);
-            }
+          );
+          console.log("API Response:", response.data);
+    
+          if (Array.isArray(response.data)) {
+            setPurchaseInvoiceData(response.data);
+          } else {
+            console.error("API response does not contain purchase array:", response.data.result);
+          }
         } catch (error) {
-            console.error("Error fetching manufacturer:", error);
+          console.error("Error fetching purchase list:", error);
         }
-    };
-
-    useEffect(() => {
-        fetchCustomer();
-    }, []);
+      };
+    
+      useEffect(() => {
+        fetchPurchaseInvoiceList();
+    
+      }, []);
     // console.log("customer data",customers);
 
     const handleDeleteClick = async (_id) => {
@@ -112,20 +114,20 @@ const ManagePurchaseInvoice = () => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:4000/api/v1/cutomer/delete/${_id}`, {
+            const response = await axios.delete(`http://localhost:4000/api/v1/purchase-invoice/delete/${_id}`, {
                 headers: {Authorization: `Bearer ${auth.token}`},
             });
             console.log("API Response:", response);
 
             if (response.data.status === "ok" || response.status === 200) {
-                console.log("Deleted customer with _id code:", _id);
-                fetchCustomer();
+                console.log("Deleted invoice with _id code:", _id);
+                fetchPurchaseInvoiceList();
             }
             else {
-                console.error("Failed to delete customer:", response.data);
+                console.error("Failed to delete INVoice:", response.data);
             }
         } catch (error) {
-            console.error("Error deleting customer:", error);
+            console.error("Error deleting INVoice:", error);
         }
     };
 
@@ -142,9 +144,10 @@ const ManagePurchaseInvoice = () => {
                         <Table sx={{minWidth: 700}} aria-label="customized table">
                             <TableHead>
                                 <TableRow>
+                                <StyledTableCell>S no.</StyledTableCell>
                                     <StyledTableCell>Date</StyledTableCell>
                                     <StyledTableCell>Invoice No.</StyledTableCell>
-                                    <StyledTableCell>Supplier Invoice No.</StyledTableCell>
+                                    <StyledTableCell>Order No.</StyledTableCell>
                                     <StyledTableCell>Supplier Name</StyledTableCell>
                                     <StyledTableCell>Place of Supply</StyledTableCell>
                                     <StyledTableCell>Due Date</StyledTableCell>
@@ -156,23 +159,20 @@ const ManagePurchaseInvoice = () => {
                             </TableHead>
                             <TableBody>
                                 {/* console.log(customers) */}
-                                {customers
+                                {purchaseInvoiceData
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((customers, index) => (
-                                    <StyledTableRow key={customers._id}>
+                                .map((purchaseInvoiceData, index) => (
+                                    <StyledTableRow key={purchaseInvoiceData._id}>
                                         <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                                         <StyledTableCell component="th" scope="row">
-                                            {customers.customerDetails.name}
+                                            {purchaseInvoiceData.date}
                                         </StyledTableCell>
-                                        <StyledTableCell>{customers.customerDetails.address}</StyledTableCell>
-                                        <StyledTableCell>{customers.customerDetails.state}</StyledTableCell>
-                                        <StyledTableCell>{customers.customerDetails.contact}</StyledTableCell>
-                                        <StyledTableCell>
-                                            {customers.customerDetails.statutoryDetails.stateRegistrationType}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {customers.customerDetails.statutoryDetails.gstin}
-                                        </StyledTableCell>
+                                        <StyledTableCell>{purchaseInvoiceData.invoiceNo}</StyledTableCell>
+                                        <StyledTableCell>{purchaseInvoiceData.orderNo}</StyledTableCell>
+                                        <StyledTableCell>{purchaseInvoiceData.supplierName}</StyledTableCell>
+                                        <StyledTableCell>{purchaseInvoiceData.placeOfSupply}</StyledTableCell>
+                                        <StyledTableCell>{purchaseInvoiceData.dueDate}</StyledTableCell>
+                                        <StyledTableCell>{purchaseInvoiceData.paymentStatus}</StyledTableCell>
                                         <StyledTableCell>
                                             <Box style={{display: "flex", justifyContent: "center"}}>
                                                 <ViewButton
@@ -183,13 +183,13 @@ const ManagePurchaseInvoice = () => {
                                                 <EditButton
                                                  sx={{mr: 1, color: "#1976d2"}} label="edit"
                                                   icon={Edit} 
-                                                  onClick={() => handleOpenModal("edit purchaseinvoice", customers)} // Pass the supplier object as a prop
+                                                  onClick={() => handleOpenModal("edit purchaseinvoice", purchaseInvoiceData)} // Pass the supplier object as a prop
                                                   />
                                                 <DeleteButton
                                                     sx={{mr: 1, color: "red  "}}
                                                     label="delete"
                                                     icon={Delete}
-                                                    onClick={() => handleDeleteClick(customers._id)}
+                                                    onClick={() => handleDeleteClick(purchaseInvoiceData._id)}
                                                 />
                                             </Box>
                                         </StyledTableCell>
@@ -200,7 +200,7 @@ const ManagePurchaseInvoice = () => {
                     </TableContainer>
 
                     <TablePaginations
-                        count={customers.length}
+                        count={purchaseInvoiceData.length}
                         page={page}
                         rowsPerPage={rowsPerPage}
                         onPageChange={handleChangePage}

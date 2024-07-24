@@ -59,6 +59,42 @@ const ManagePurchaseOrder = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+//   const [ tables, setTables ] = useState([
+//     {
+//         id: Date.now(),
+//         rows: [ initialRow ],
+//     },
+// ]);
+// const [ otherCharges, setOtherCharges ] = useState([]);
+// const [ reverseCharge, setReverseCharge ] = useState("No");
+// const [ date, setDate ] = useState("");
+// const [ paymentTerms, setPaymentTerms ] = useState("");
+// const [ dueDate, setDueDate ] = useState("");
+// const [ charges, setCharges ] = useState([]);
+// const [ totalCharges, setTotalCharges ] = useState(0);
+// const [ currentCharge, setCurrentCharge ] = useState("");
+// const [ chargeLabel, setChargeLabel ] = useState("");
+// const [ invoiceNo, setInvoiceNo ] = useState("");
+// const [ supplier, setSupplier ] = useState([]);
+// const [ selectedSupplier, setSelectedSupplier ] = useState("");
+// const [ orderNo, setOrderNo ] = useState("");
+// const[orders,setOrders]=useState([]);
+// const [ placeOfSupply, setPlaceOfSupply ] = useState("");
+// const [ billingAddress, setBillingAddress ] = useState("");
+// const [ grossAmount, setGrossAmount ] = useState("");
+// const [ gstAmount, setGstAmount ] = useState("");
+// const [ netAmount, setNetAmount ] = useState("");
+// const [ narration, setNarration ] = useState("");
+// const [ taxType, setTaxType ] = useState("");
+
+// const [ transPortDetails, setTransPortDetails ] = useState({
+//     receiptNumber: "",
+//     dispatchedThrough: "",
+//     destination: "",
+//     carrierName: "",
+//     billOfLading: "",
+//     vehicleNumber: "",
+// });
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -106,7 +142,7 @@ const handleCloseModal = () => {
     fetchPurchaseList();
 
   }, []);
-  // console.log("customer data",customers);
+ 
 
   const handleDeleteClick = async (_id) => {
     const auth = JSON.parse(localStorage.getItem('auth'));
@@ -151,6 +187,79 @@ const handleCloseModal = () => {
   };
 
  
+const fetchPurchaseByOrderNumber = async (orderNo) => {
+        
+  try {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    if (!auth || !auth.token) {
+      console.error("No token found in local storage");
+      return;
+    }
+    const response = await axios.get(`http://localhost:4000/api/v1/purchase/get/${orderNo}`,
+      {
+        
+        headers: { Authorization: `Bearer ${auth.token}` }
+      },
+    );
+    console.log("API Response:", response.data);
+
+    if (response.data) {
+        return response.data;
+    } else {
+      console.error("API response does not contain purchase data:", response.data);
+    }
+  } catch (error) {
+    console.error("Error fetching purchase data:", error);
+    
+  } 
+};
+
+
+const addPurchaseInvoice = async (orderNo) => {
+  handleOpenModal();
+  try {
+    const purchaseData = await fetchPurchaseByOrderNumber(orderNo);
+     if (purchaseData) {
+    //   console.log("Fetched Purchase Data:", purchaseData);
+    //   setDate(purchaseData.date);
+    //   setInvoiceNo(purchaseData.invoiceNo);
+    //   setSelectedSupplier(purchaseData.supplierName);
+    //   setPlaceOfSupply(purchaseData.placeOfSupply);
+    //   setPaymentTerms(purchaseData.paymentTerm);
+    //   setDueDate(purchaseData.dueDate);
+    //   setTransPortDetails(purchaseData.transPortDetails);
+    //   setBillingAddress(purchaseData.billingAddress);
+    //   setReverseCharge(purchaseData.reverseCharge);
+    //   setTables([{ id: Date.now(), rows: purchaseData.purchaseTable }]);
+    //   setGrossAmount(purchaseData.amounts.grossAmount);
+    //   setGstAmount(purchaseData.amounts.gstAmount);
+    //   setOtherCharges(purchaseData.amounts.otherCharge);
+    //   setNetAmount(purchaseData.amounts.netAmount);
+    //   setNarration(purchaseData.Narration);
+
+    //   console.log(purchaseData);
+
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      const response = await axios.post("http://localhost:4000/api/v1/purchase-invoice/add", purchaseData, {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      console.log(response);
+      if (response.data.status === 201) {
+        console.log("purchase created successfully");
+      }
+    }
+  } catch (error) {
+    console.log("something went wrong", error);
+  }
+};
+const handleInvoiceClick = async (purchaseData) => {
+  handleOpenModal("add purchaseinvoice", purchaseData);
+  await addPurchaseInvoice(purchaseData.orderNo);
+  
+};
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} ref={resumeRef}>
@@ -215,7 +324,9 @@ const handleCloseModal = () => {
                           className="btn-design-invoice"
                           sx={{ color: 'white', height: '2.3rem' }}
                           label="Print"
-                          onClick={() => handleOpenModal("create purchaseinvoice", purchaseData)} // Pass the supplier object as a prop                                               
+                          // onClick={() => addPurchaseInvoice(purchaseData.orderNo)} // Pass the supplier object as a prop
+                          onClick={() => handleOpenModal("add purchaseinvoice", purchaseData)} 
+                          // onClick={() => handleInvoiceClick(purchaseData) }                                             
                         >
                           Invoice
                         </Button>
