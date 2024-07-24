@@ -162,14 +162,14 @@ const handleCloseModal = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                <StyledTableCell>S No</StyledTableCell>
-                  <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell>Estimate No.</StyledTableCell>
-                  <StyledTableCell>Customer Name</StyledTableCell>
-                  <StyledTableCell>Place of Supply</StyledTableCell>
-                  <StyledTableCell>Due Date</StyledTableCell>
-                  <StyledTableCell>Total Value</StyledTableCell>
-                  <StyledTableCell>
+                <StyledTableCell align="center">S No</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                  <StyledTableCell align="center">Estimate No.</StyledTableCell>
+                  <StyledTableCell align="center">Customer Name</StyledTableCell>
+                  <StyledTableCell align="center">Place of Supply</StyledTableCell>
+                  <StyledTableCell align="center">Due Date</StyledTableCell>
+                  <StyledTableCell align="center">Total Value</StyledTableCell>
+                  <StyledTableCell align="center">
                   <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>                    
                     </StyledTableCell>
                 </TableRow>
@@ -178,15 +178,15 @@ const handleCloseModal = () => {
                 {/* console.log(customers) */}
               {saleEstimate.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((saleEstimate,index) => (
                   <StyledTableRow key={saleEstimate._id}>
-                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
+                    <StyledTableCell align="center">{page * rowsPerPage + index + 1}</StyledTableCell>
+                    <StyledTableCell align="center" component="th" scope="row">
                       {saleEstimate.date}
                     </StyledTableCell>
-                    <StyledTableCell>{saleEstimate.estimateNo}</StyledTableCell>
-                    <StyledTableCell>{saleEstimate.customerName}</StyledTableCell>
-                    <StyledTableCell>{saleEstimate.placeOfSupply}</StyledTableCell>
-                    <StyledTableCell>{saleEstimate.dueDate}</StyledTableCell>
-                    <StyledTableCell>{saleEstimate.purchaseTable[0].totalValue}</StyledTableCell>
+                    <StyledTableCell align="center">{saleEstimate.estimateNo}</StyledTableCell>
+                    <StyledTableCell align="center">{saleEstimate.customerName}</StyledTableCell>
+                    <StyledTableCell align="center">{saleEstimate.placeOfSupply}</StyledTableCell>
+                    <StyledTableCell align="center">{saleEstimate.dueDate}</StyledTableCell>
+                    <StyledTableCell align="center">{saleEstimate.purchaseTable[0].totalValue}</StyledTableCell>
                     <StyledTableCell>
                       <Box
                         style={{ display: "flex", justifyContent: "space-between",gap:"2px" }}

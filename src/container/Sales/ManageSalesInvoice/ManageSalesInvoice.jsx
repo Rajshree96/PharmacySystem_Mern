@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Container,
   Box,
@@ -12,6 +12,7 @@ import {
   TableCell,
   TableBody,
   tableCellClasses,
+  Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BreadcrumbContainer from "../../../common-components/BreadcrumbContainer/BreadcrumbContainer";
@@ -22,6 +23,8 @@ import { Edit, Delete, Visibility } from "@mui/icons-material";
 import axios from "axios";
 import TablePaginations from "../../../common-components/TablePagination/TablePaginations";
 import AllSalesModal from "../../../common-components/Modals/saleModals/AllSalesModal";
+import { useReactToPrint } from "react-to-print";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -123,9 +126,21 @@ const handleCloseModal = () => {
     }
   };
   
+  const [selectedSalesInvoice, setSelectedSalesInvoice] = useState(null);
+  const resumeRef = useRef();
+
+  const handlePrintClick = (id) => {
+    const estimate = invoice.find(item => item._id === id);
+    setSelectedSalesInvoice(estimate);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => resumeRef.current,
+    documentTitle: `salesInvoice_${selectedSalesInvoice ? selectedSalesInvoice._id : ''}`,
+  });
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}  ref={resumeRef}>
       <Box>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h4" gutterBottom>
@@ -137,27 +152,28 @@ const handleCloseModal = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                <StyledTableCell>S No</StyledTableCell>
-                  <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell>Invoice No.</StyledTableCell>
-                  <StyledTableCell>Customer Name</StyledTableCell>
-                  <StyledTableCell>Place of Supply</StyledTableCell>
-                  <StyledTableCell>Due Date</StyledTableCell>
-                  <StyledTableCell>Total Value</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                <StyledTableCell align="center">S No</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                  <StyledTableCell align="center">Invoice No.</StyledTableCell>
+                  <StyledTableCell align="center">Customer Name</StyledTableCell>
+                  <StyledTableCell align="center">Place of Supply</StyledTableCell>
+                  <StyledTableCell align="center">Due Date</StyledTableCell>
+                  <StyledTableCell align="center">Total Value</StyledTableCell>
+                  <StyledTableCell align="center">
+                  <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>                    
+                    </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {invoice.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((invoice, index) => (
                   <StyledTableRow key={invoice._id}>
-                                        <StyledTableCell>                        {page * rowsPerPage + index + 1}
-                                        </StyledTableCell>
-                    <StyledTableCell>{invoice.date}</StyledTableCell>
-                    <StyledTableCell>{invoice.invoiceNo}</StyledTableCell>
-                    <StyledTableCell>{invoice.customerName}</StyledTableCell>
-                    <StyledTableCell>{invoice.placeOfSupply}</StyledTableCell>
-                    <StyledTableCell>{invoice.dueDate}</StyledTableCell>
-                    <StyledTableCell>{invoice.purchaseTable[0].totalValue}</StyledTableCell>
+                  <StyledTableCell align="center">{page * rowsPerPage + index + 1}</StyledTableCell>
+                    <StyledTableCell align="center">{invoice.date}</StyledTableCell>
+                    <StyledTableCell align="center">{invoice.invoiceNo}</StyledTableCell>
+                    <StyledTableCell align="center">{invoice.customerName}</StyledTableCell>
+                    <StyledTableCell align="center">{invoice.placeOfSupply}</StyledTableCell>
+                    <StyledTableCell align="center">{invoice.dueDate}</StyledTableCell>
+                    <StyledTableCell align="center">{invoice.purchaseTable[0].totalValue}</StyledTableCell>
                     <StyledTableCell>
                       <Box style={{ display: "flex", justifyContent: "center" }}>
                         <ViewButton
@@ -176,7 +192,18 @@ const handleCloseModal = () => {
                           label="Delete"
                           icon={Delete}
                            onClick={() => handleDeleteClick(invoice._id)}
-                        />
+                        />                        
+                        <Button
+                          className="btn-design-print"
+                          sx={{ color: 'white', height: '2.3rem' }}
+                          label="Print"
+                          onClick={() => {
+                            handlePrintClick(invoice._id);
+                            handlePrint();
+                          }}
+                        >
+                          Print
+                        </Button>   
                       </Box>
                     </StyledTableCell>
                   </StyledTableRow>

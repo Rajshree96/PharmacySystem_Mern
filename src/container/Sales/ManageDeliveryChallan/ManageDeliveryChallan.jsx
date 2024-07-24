@@ -155,13 +155,13 @@ const ManageDeliveryChallan = () => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell>S NO.</StyledTableCell>
-                  <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell>Challan No.</StyledTableCell>
-                  <StyledTableCell>Customer Name</StyledTableCell>
-                  <StyledTableCell>Place of Supply</StyledTableCell>
-                  <StyledTableCell>Due Date</StyledTableCell>
-                  <StyledTableCell>Total Value</StyledTableCell>
+                  <StyledTableCell align="center">S NO.</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                  <StyledTableCell align="center">Challan No.</StyledTableCell>
+                  <StyledTableCell align="center">Customer Name</StyledTableCell>
+                  <StyledTableCell align="center">Place of Supply</StyledTableCell>
+                  <StyledTableCell align="center">Due Date</StyledTableCell>
+                  <StyledTableCell align="center">Total Value</StyledTableCell>
                   <StyledTableCell>
                     <Typography sx={{ display: "flex", justifyContent: "center" }}>Action</Typography>
                   </StyledTableCell>
@@ -172,26 +172,26 @@ const ManageDeliveryChallan = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((delivery, index) => (
                     <StyledTableRow key={delivery._id}>
-                      <StyledTableCell>
+                      <StyledTableCell align="center">
                         {page * rowsPerPage + index + 1}
                         {/* {delivery.date} */}
                       </StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell align="center">
                         {delivery.date}
                       </StyledTableCell>
-                      <StyledTableCell component="th" scope="row">
+                      <StyledTableCell align="center" component="th" scope="row">
                         {delivery.deliveryChallanNo}
                       </StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell align="center">
                         {delivery.customerName}
                       </StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell align="center">
                         {delivery.placeOfSupply}
                       </StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell align="center">
                         {delivery.dueDate}
                       </StyledTableCell>
-                      <StyledTableCell>{delivery.purchaseTable[0].totalValue}</StyledTableCell>
+                      <StyledTableCell align="center">{delivery.purchaseTable[0].totalValue}</StyledTableCell>
 
                       <StyledTableCell>
                         <Box
