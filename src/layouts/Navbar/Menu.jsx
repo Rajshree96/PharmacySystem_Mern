@@ -86,7 +86,7 @@ const searchs = [
 const settings = [
   { label: "Business Setup" },
   { label: "GST Settings" },
-  { label: "Accounts Settings" },
+  // { label: "Accounts Settings" },
   // { label: "Inventory Settings" },
   { label: "User Settings" },
 ];
