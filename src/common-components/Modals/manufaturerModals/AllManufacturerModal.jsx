@@ -3,6 +3,7 @@ import {Button, Dialog, DialogContent, DialogContentText, DialogTitle, Box} from
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import AddManufacturer from "../../../container/Manufacturer/AddManufacturer/AddManufacturer";
+import ViewManufacturer from "../../../container/Manufacturer/AddManufacturer/ViewManufacturer";
 
 const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}) => {
     const [ success, setSuccess ] = useState(false);
@@ -23,6 +24,12 @@ const AllManufacturerModal = ({open, handleClose, formType, selectedData, style}
                 return (
                     <>
                         <AddManufacturer setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
+                    </>
+                );
+            case "view manufacturer":
+                return (
+                    <>
+                        <ViewManufacturer selectedData={selectedData} />
                     </>
                 );
             default:
