@@ -303,6 +303,8 @@ function SalesInvoice({formType, selectedData, setSuccess}) {
             setNetAmount(selectedData.amounts.netAmount);
             setNarration(selectedData.Narration);
             setTransPortDetails(selectedData.transPortDetails);
+            // Update tables state with the selected data
+            setTables([ {id: Date.now(), rows: selectedData.purchaseTable} ]);
         }
         else {
             resetForm();

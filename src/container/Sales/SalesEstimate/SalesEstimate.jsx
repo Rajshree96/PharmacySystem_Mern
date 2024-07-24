@@ -25,7 +25,7 @@ import TransportDetails from "../../../common-components/Modals/PurchaseModal/Tr
 import {useReactToPrint} from "react-to-print";
 import {format, addDays} from "date-fns";
 import axios from "axios";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, {Toaster} from "react-hot-toast";
 // import salesEstimate from "../../../../server/controllers/salesEstimateController";
 
 const style = {
@@ -304,6 +304,8 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
             setNetAmount(selectedData.amounts.netAmount);
             setNarration(selectedData.Narration);
             setTransPortDetails(selectedData.transPortDetails);
+            // Update tables state with the selected data
+            setTables([ {id: Date.now(), rows: selectedData.purchaseTable} ]);
         }
         else {
             resetForm();
@@ -396,7 +398,7 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
     };
 
     const addSalesEstimate = async (salesEstimateData) => {
-        console.log("addSalesEstimate--------------",salesEstimateData);
+        console.log("addSalesEstimate--------------", salesEstimateData);
         try {
             const auth = JSON.parse(localStorage.getItem("auth"));
             const response = await axios.post("http://localhost:4000/api/v1/sales/sales-estimates", salesEstimateData, {
@@ -481,7 +483,6 @@ function SalesEstimate({formType, selectedData, setSuccess}) {
                 await addSalesEstimate(salesEstimateData);
                 toast.success("Sales Estimate added successfully");
             }
-
         } catch (error) {
             console.error(`Error ${formType === "edit salesestimate" ? "editing" : "adding"}   salesestimate:`, error);
         }
