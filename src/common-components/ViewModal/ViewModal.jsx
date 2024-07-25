@@ -9,7 +9,7 @@ const ViewModal = ({ open, handleClose, formType, formData }) => {
         switch (formType) {
             case 'view manufacturer':
                 return <ViewManufacturer />;
-          
+            
             default:
                 return <Typography>No form available</Typography>;
         }

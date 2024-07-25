@@ -16,8 +16,8 @@
                 // console.log("manufacturer name:", selectedData.manufactureId.name);
                 
                 setBrandName(selectedData.brand);
-                setSelectedManufacturer(selectedData.manufactureId?.name);
-                // setSelectedManufacturer(selectedData.manufactureId);
+                // setSelectedManufacturer(selectedData.manufactureId?.name);
+                setSelectedManufacturer(selectedData.manufactureId._id);
             }
             else {
                 resetForm(); // Reset form if form type is not "edit brand"

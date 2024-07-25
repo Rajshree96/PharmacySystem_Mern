@@ -307,6 +307,7 @@ const handleInvoiceClick = async (purchaseData) => {
                           sx={{ mr: 1, color: "green  " }}
                           label="View"
                           icon={Visibility}
+                          onClick={() => handleOpenModal("view purchaseorder", purchaseData)}
                         />
                         <EditButton
                           sx={{ mr: 1, color: "#1976d2" }}

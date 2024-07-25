@@ -4,6 +4,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import PurchaseOrder from "../../../container/Purchase/PurchaseOrder/PurchaseOrder";
 import PurchaseInvoice from "../../../container/Purchase/PurchaseInvoice/PurchaseInvoice";
+import ViewPurchaseOrder from "../../../container/Purchase/PurchaseOrder/ViewPurchaseOrder";
 
 const AllPurchaseModal = ({open, handleClose, formType, selectedData, style}) => {
     const [ success, setSuccess ] = useState(false);
@@ -26,6 +27,12 @@ const AllPurchaseModal = ({open, handleClose, formType, selectedData, style}) =>
                         <PurchaseOrder setSuccess={setSuccess} formType={formType} selectedData={selectedData} />
                     </>
                 );
+            case "view purchaseorder":
+                return (
+                    <>
+                        <ViewPurchaseOrder selectedData={selectedData} />
+                    </>
+                )
             case "add purchaseinvoice":
             case "edit purchaseinvoice":
             case "create purchaseinvoice":
